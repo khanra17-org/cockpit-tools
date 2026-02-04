@@ -25,7 +25,7 @@
 
 .instances-list-header {
   display: grid;
-  grid-template-columns: minmax(200px, 1.1fr) minmax(320px, 2.4fr) auto;
+  grid-template-columns: minmax(200px, 1.1fr) minmax(320px, 2.2fr) minmax(110px, 0.6fr) auto;
   padding: 0 18px;
   color: var(--text-muted);
   font-size: 12px;
@@ -39,7 +39,7 @@
   border-radius: var(--radius-lg);
   padding: 14px 18px;
   display: grid;
-  grid-template-columns: minmax(200px, 1.1fr) minmax(320px, 2.4fr) auto;
+  grid-template-columns: minmax(200px, 1.1fr) minmax(320px, 2.2fr) minmax(110px, 0.6fr) auto;
   align-items: center;
   gap: 12px;
   box-shadow: var(--shadow-sm);
@@ -147,6 +147,25 @@
 /* Account */
 .instance-account {
   min-width: 0;
+}
+
+/* PID */
+.instance-pid {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.instance-pid .pid-value {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  min-height: 22px;
 }
 
 /* Actions */

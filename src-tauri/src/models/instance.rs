@@ -10,6 +10,8 @@ pub struct InstanceProfile {
     pub bind_account_id: Option<String>,
     pub created_at: i64,
     pub last_launched_at: Option<i64>,
+    #[serde(default)]
+    pub last_pid: Option<u32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -38,6 +40,8 @@ pub struct DefaultInstanceSettings {
     pub extra_args: String,
     #[serde(default = "default_follow_local_account")]
     pub follow_local_account: bool,
+    #[serde(default)]
+    pub last_pid: Option<u32>,
 }
 
 fn default_follow_local_account() -> bool {
@@ -50,6 +54,7 @@ impl Default for DefaultInstanceSettings {
             bind_account_id: None,
             extra_args: String::new(),
             follow_local_account: true,
+            last_pid: None,
         }
     }
 }
@@ -64,6 +69,7 @@ pub struct InstanceProfileView {
     pub bind_account_id: Option<String>,
     pub created_at: i64,
     pub last_launched_at: Option<i64>,
+    pub last_pid: Option<u32>,
     pub running: bool,
     pub is_default: bool,
     pub follow_local_account: bool,
@@ -79,6 +85,7 @@ impl InstanceProfileView {
             bind_account_id: profile.bind_account_id,
             created_at: profile.created_at,
             last_launched_at: profile.last_launched_at,
+            last_pid: profile.last_pid,
             running,
             is_default: false,
             follow_local_account: false,

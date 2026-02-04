@@ -1,8 +1,9 @@
 use std::collections::HashSet;
-use std::process::Command;
+use std::path::Path;
+use std::process::{Child, Command, Stdio};
 use std::thread;
 use std::time::Duration;
-use sysinfo::System;
+use sysinfo::{Pid, System};
 #[cfg(target_os = "windows")]
 use crate::modules::config;
 
@@ -11,6 +12,47 @@ const OPENCODE_APP_NAME: &str = "OpenCode";
 const CODEX_APP_PATH: &str = "/Applications/Codex.app/Contents/MacOS/Codex";
 #[cfg(target_os = "macos")]
 const ANTIGRAVITY_APP_PATH: &str = "/Applications/Antigravity.app/Contents/MacOS/Electron";
+
+#[cfg(target_os = "windows")]
+const CREATE_NEW_PROCESS_GROUP: u32 = 0x0000_0200;
+#[cfg(target_os = "windows")]
+const DETACHED_PROCESS: u32 = 0x0000_0008;
+
+fn should_detach_child() -> bool {
+    if let Ok(value) = std::env::var("COCKPIT_CHILD_LOGS") {
+        let lowered = value.trim().to_lowercase();
+        if matches!(lowered.as_str(), "1" | "true" | "yes" | "on") {
+            return false;
+        }
+    }
+    if let Ok(value) = std::env::var("COCKPIT_CHILD_DETACH") {
+        let lowered = value.trim().to_lowercase();
+        if matches!(lowered.as_str(), "0" | "false" | "no" | "off") {
+            return false;
+        }
+    }
+    true
+}
+
+#[cfg(any(target_os = "macos", target_os = "linux"))]
+fn spawn_detached_unix(cmd: &mut Command) -> Result<Child, String> {
+    use std::os::unix::process::CommandExt;
+    if !should_detach_child() {
+        return cmd.spawn().map_err(|e| format!("启动失败: {}", e));
+    }
+    cmd.stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null());
+    unsafe {
+        cmd.pre_exec(|| {
+            if libc::setsid() == -1 {
+                return Err(std::io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    cmd.spawn().map_err(|e| format!("启动失败: {}", e))
+}
 
 fn normalize_custom_path(value: Option<&str>) -> Option<String> {
     let trimmed = value.unwrap_or("").trim();
@@ -86,6 +128,15 @@ pub fn is_antigravity_running() -> bool {
     }
 
     false
+}
+
+pub fn is_pid_running(pid: u32) -> bool {
+    if pid == 0 {
+        return false;
+    }
+    let mut system = System::new();
+    system.refresh_processes(sysinfo::ProcessesToUpdate::All, true);
+    system.process(Pid::from(pid as usize)).is_some()
 }
 
 fn extract_user_data_dir(args: &[std::ffi::OsString]) -> Option<String> {
@@ -989,6 +1040,78 @@ pub fn close_antigravity_instance(user_data_dir: &str, timeout_secs: u64) -> Res
     Ok(())
 }
 
+pub fn close_pid(pid: u32, timeout_secs: u64) -> Result<(), String> {
+    if pid == 0 {
+        return Err("PID 无效，无法关闭进程".to_string());
+    }
+    if !is_pid_running(pid) {
+        return Ok(());
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        let _ = timeout_secs;
+        let _ = Command::new("taskkill")
+            .args(["/F", "/T", "/PID", &pid.to_string()])
+            .output();
+        thread::sleep(Duration::from_millis(300));
+        if is_pid_running(pid) {
+            return Err("无法关闭实例进程，请手动关闭后重试".to_string());
+        }
+        return Ok(());
+    }
+
+    #[cfg(any(target_os = "macos", target_os = "linux"))]
+    {
+        let _ = Command::new("kill").args(["-15", &pid.to_string()]).output();
+        let graceful_timeout = (timeout_secs * 7) / 10;
+        let start = std::time::Instant::now();
+        while start.elapsed() < Duration::from_secs(graceful_timeout) {
+            if !is_pid_running(pid) {
+                return Ok(());
+            }
+            thread::sleep(Duration::from_millis(400));
+        }
+        let _ = Command::new("kill").args(["-9", &pid.to_string()]).output();
+        thread::sleep(Duration::from_millis(400));
+        if is_pid_running(pid) {
+            return Err("无法关闭实例进程，请手动关闭后重试".to_string());
+        }
+        return Ok(());
+    }
+}
+
+pub fn force_kill_pid(pid: u32) -> Result<(), String> {
+    if pid == 0 {
+        return Err("PID 无效，无法关闭进程".to_string());
+    }
+    if !is_pid_running(pid) {
+        return Ok(());
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        let _ = Command::new("taskkill")
+            .args(["/F", "/T", "/PID", &pid.to_string()])
+            .output();
+        thread::sleep(Duration::from_millis(200));
+        if is_pid_running(pid) {
+            return Err("无法强制关闭实例进程，请手动关闭后重试".to_string());
+        }
+        return Ok(());
+    }
+
+    #[cfg(any(target_os = "macos", target_os = "linux"))]
+    {
+        let _ = Command::new("kill").args(["-9", &pid.to_string()]).output();
+        thread::sleep(Duration::from_millis(300));
+        if is_pid_running(pid) {
+            return Err("无法强制关闭实例进程，请手动关闭后重试".to_string());
+        }
+        return Ok(());
+    }
+}
+
 /// 强制关闭指定实例（按 user-data-dir 匹配，直接 SIGKILL / taskkill /F）
 pub fn force_kill_antigravity_instance(user_data_dir: &str) -> Result<(), String> {
     let target = normalize_path_for_compare(user_data_dir);
@@ -1027,47 +1150,33 @@ pub fn force_kill_antigravity_instance(user_data_dir: &str) -> Result<(), String
 }
 
 /// 启动 Antigravity
-pub fn start_antigravity() -> Result<(), String> {
+pub fn start_antigravity() -> Result<u32, String> {
     start_antigravity_with_args("", &[])
 }
 
 /// 启动 Antigravity（支持 user-data-dir 与附加参数）
-pub fn start_antigravity_with_args(user_data_dir: &str, extra_args: &[String]) -> Result<(), String> {
+pub fn start_antigravity_with_args(user_data_dir: &str, extra_args: &[String]) -> Result<u32, String> {
     crate::modules::logger::log_info("正在启动 Antigravity...");
 
     #[cfg(target_os = "macos")]
     {
-        let mut cmd = Command::new("open");
-        let force_new = !user_data_dir.trim().is_empty()
-            || extra_args.iter().any(|arg| !arg.trim().is_empty());
-        if force_new {
-            cmd.args(["-n", "-a", "Antigravity", "--args"]);
-            if !user_data_dir.trim().is_empty() {
-                cmd.arg("--user-data-dir");
-                cmd.arg(user_data_dir.trim());
-            }
-            for arg in extra_args {
-                if !arg.trim().is_empty() {
-                    cmd.arg(arg);
-                }
-            }
-        } else {
-            cmd.args(["-a", "Antigravity"]);
+        if !Path::new(ANTIGRAVITY_APP_PATH).exists() {
+            return Err("未找到 Antigravity 应用，请确保已安装 Antigravity".to_string());
         }
-
-        let output = cmd
-            .output()
+        let mut cmd = Command::new(ANTIGRAVITY_APP_PATH);
+        if !user_data_dir.trim().is_empty() {
+            cmd.arg("--user-data-dir");
+            cmd.arg(user_data_dir.trim());
+        }
+        for arg in extra_args {
+            if !arg.trim().is_empty() {
+                cmd.arg(arg);
+            }
+        }
+        let child = spawn_detached_unix(&mut cmd)
             .map_err(|e| format!("启动 Antigravity 失败: {}", e))?;
-
-        if !output.status.success() {
-            let stderr = String::from_utf8_lossy(&output.stderr);
-            if stderr.contains("Unable to find application") {
-                return Err("未找到 Antigravity 应用，请确保已安装 Antigravity".to_string());
-            }
-            return Err(format!("启动 Antigravity 失败: {}", stderr));
-        }
         crate::modules::logger::log_info("Antigravity 启动命令已发送");
-        return Ok(());
+        return Ok(child.id());
     }
 
     #[cfg(target_os = "windows")]
@@ -1095,7 +1204,14 @@ pub fn start_antigravity_with_args(user_data_dir: &str, extra_args: &[String]) -
                 }
             }
             let mut cmd = Command::new(&candidate);
-            cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+            if should_detach_child() {
+                cmd.creation_flags(0x08000000 | CREATE_NEW_PROCESS_GROUP | DETACHED_PROCESS); // CREATE_NO_WINDOW | detached
+                cmd.stdin(Stdio::null())
+                    .stdout(Stdio::null())
+                    .stderr(Stdio::null());
+            } else {
+                cmd.creation_flags(0x08000000);
+            }
             if !user_data_dir.trim().is_empty() {
                 cmd.arg("--user-data-dir");
                 cmd.arg(user_data_dir.trim());
@@ -1105,10 +1221,11 @@ pub fn start_antigravity_with_args(user_data_dir: &str, extra_args: &[String]) -
                     cmd.arg(arg);
                 }
             }
-            cmd.spawn()
+            let child = cmd
+                .spawn()
                 .map_err(|e| format!("启动 Antigravity 失败: {}", e))?;
             crate::modules::logger::log_info(&format!("Antigravity 已启动: {}", candidate));
-            return Ok(());
+            return Ok(child.id());
         }
         return Err("未找到 Antigravity 可执行文件，请在设置中配置启动路径".to_string());
     }
@@ -1121,6 +1238,11 @@ pub fn start_antigravity_with_args(user_data_dir: &str, extra_args: &[String]) -
         for path in possible_paths {
             if std::path::Path::new(path).exists() {
                 let mut cmd = Command::new(path);
+                if should_detach_child() {
+                    cmd.stdin(Stdio::null())
+                        .stdout(Stdio::null())
+                        .stderr(Stdio::null());
+                }
                 if !user_data_dir.trim().is_empty() {
                     cmd.arg("--user-data-dir");
                     cmd.arg(user_data_dir.trim());
@@ -1130,15 +1252,20 @@ pub fn start_antigravity_with_args(user_data_dir: &str, extra_args: &[String]) -
                         cmd.arg(arg);
                     }
                 }
-                cmd.spawn()
+                let child = spawn_detached_unix(&mut cmd)
                     .map_err(|e| format!("启动 Antigravity 失败: {}", e))?;
                 crate::modules::logger::log_info(&format!("Antigravity 已启动: {}", path));
-                return Ok(());
+                return Ok(child.id());
             }
         }
 
         // 尝试 PATH 中的 antigravity
         let mut cmd = Command::new("antigravity");
+        if should_detach_child() {
+            cmd.stdin(Stdio::null())
+                .stdout(Stdio::null())
+                .stderr(Stdio::null());
+        }
         if !user_data_dir.trim().is_empty() {
             cmd.arg("--user-data-dir");
             cmd.arg(user_data_dir.trim());
@@ -1148,9 +1275,9 @@ pub fn start_antigravity_with_args(user_data_dir: &str, extra_args: &[String]) -
                 cmd.arg(arg);
             }
         }
-        if cmd.spawn().is_ok() {
+        if let Ok(child) = spawn_detached_unix(&mut cmd) {
             crate::modules::logger::log_info("Antigravity 已启动 (从 PATH)");
-            return Ok(());
+            return Ok(child.id());
         }
 
         return Err("未找到 Antigravity 可执行文件".to_string());
@@ -1339,7 +1466,7 @@ pub fn list_codex_home_dirs(default_home: &str) -> Vec<String> {
 }
 
 /// 启动 Codex（支持 CODEX_HOME 与附加参数，仅 macOS）
-pub fn start_codex_with_args(codex_home: &str, extra_args: &[String]) -> Result<(), String> {
+pub fn start_codex_with_args(codex_home: &str, extra_args: &[String]) -> Result<u32, String> {
     #[cfg(target_os = "macos")]
     {
         if !std::path::Path::new(CODEX_APP_PATH).exists() {
@@ -1352,10 +1479,10 @@ pub fn start_codex_with_args(codex_home: &str, extra_args: &[String]) -> Result<
                 cmd.arg(arg);
             }
         }
-        cmd.spawn()
+        let child = spawn_detached_unix(&mut cmd)
             .map_err(|e| format!("启动 Codex 失败: {}", e))?;
         crate::modules::logger::log_info("Codex 启动命令已发送");
-        return Ok(());
+        return Ok(child.id());
     }
 
     #[cfg(not(target_os = "macos"))]
@@ -1363,6 +1490,24 @@ pub fn start_codex_with_args(codex_home: &str, extra_args: &[String]) -> Result<
         let _ = (codex_home, extra_args);
         Err("Codex 多开实例仅支持 macOS".to_string())
     }
+}
+
+/// 启动 Codex 默认实例（不注入 CODEX_HOME/额外参数，仅 macOS）
+pub fn start_codex_default() -> Result<u32, String> {
+    #[cfg(target_os = "macos")]
+    {
+        if !std::path::Path::new(CODEX_APP_PATH).exists() {
+            return Err("未找到 Codex 应用，请确保已安装 Codex".to_string());
+        }
+        let mut cmd = Command::new(CODEX_APP_PATH);
+        let child = spawn_detached_unix(&mut cmd)
+            .map_err(|e| format!("启动 Codex 失败: {}", e))?;
+        crate::modules::logger::log_info("Codex 启动命令已发送");
+        return Ok(child.id());
+    }
+
+    #[cfg(not(target_os = "macos"))]
+    Err("Codex 多开实例仅支持 macOS".to_string())
 }
 
 /// 关闭 Codex 进程（仅 macOS）

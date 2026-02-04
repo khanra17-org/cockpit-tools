@@ -147,11 +147,11 @@
       },
       "safe": {
         "title": "Safe restart (recommended)",
-        "principle": "Send SIGTERM to all Antigravity processes so the app can save and exit, then relaunch the target instance (force kill if needed).",
-        "commandMac": "macOS/Linux: kill -15 <pid> (all Antigravity processes)",
-        "commandWin": "Windows: taskkill /F /PID <pid> (all Antigravity processes)",
+        "principle": "Send SIGTERM to the target instance processes so the app can save and exit, then relaunch that instance (force kill if needed).",
+        "commandMac": "macOS/Linux: kill -15 <pid> (matching --user-data-dir)",
+        "commandWin": "Windows: taskkill /F /PID <pid> (matching --user-data-dir)",
         "pros": "Closer to a normal exit, less likely to trigger crash prompts, safer for data.",
-        "cons": "Only supports full restart for all instances."
+        "cons": "May take longer while waiting for a graceful shutdown."
       },
       "force": {
         "title": "Force restart",
@@ -738,9 +738,9 @@
       },
       "restartStrategy": {
         "safe": {
-          "principle": "Send SIGTERM to all Codex processes so the app can save and exit, then relaunch the target instance (force kill if needed).",
-          "commandMac": "macOS: kill -15 <pid> (all Codex processes)",
-          "commandWin": "Windows: taskkill /F /PID <pid> (all Codex processes)"
+          "principle": "Send SIGTERM to the target Codex process so the app can save and exit, then relaunch that instance (force kill if needed).",
+          "commandMac": "macOS: kill -15 <pid> (match CODEX_HOME)",
+          "commandWin": "Windows: taskkill /F /PID <pid> (match CODEX_HOME)"
         },
         "force": {
           "principle": "Match processes by CODEX_HOME and terminate them forcibly (SIGKILL / taskkill /F), then relaunch the target instance.",

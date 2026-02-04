@@ -147,11 +147,11 @@
       },
       "safe": {
         "title": "安全重启（推荐）",
-        "principle": "向所有 Antigravity 进程发送 SIGTERM，请求应用自行保存并退出，退出后再启动目标实例（必要时会强制结束）。",
-        "commandMac": "macOS/Linux: kill -15 <pid> （全部 Antigravity 进程）",
-        "commandWin": "Windows: taskkill /F /PID <pid> （全部 Antigravity 进程）",
+        "principle": "向目标实例进程发送 SIGTERM，请求应用自行保存并退出，退出后再启动该实例（必要时会强制结束）。",
+        "commandMac": "macOS/Linux: kill -15 <pid> （匹配 --user-data-dir）",
+        "commandWin": "Windows: taskkill /F /PID <pid> （匹配 --user-data-dir）",
         "pros": "更接近正常退出，不易触发崩溃提示，数据更安全。",
-        "cons": "只能整体退出并重启，无法只重启单个实例。"
+        "cons": "需要等待进程优雅退出，耗时更长。"
       },
       "force": {
         "title": "强制重启",
@@ -738,9 +738,9 @@
       },
       "restartStrategy": {
         "safe": {
-          "principle": "向所有 Codex 进程发送 SIGTERM，请求应用自行保存并退出，退出后再启动目标实例（必要时会强制结束）。",
-          "commandMac": "macOS: kill -15 <pid> （全部 Codex 进程）",
-          "commandWin": "Windows: taskkill /F /PID <pid> （全部 Codex 进程）"
+          "principle": "向目标 Codex 进程发送 SIGTERM，请求应用自行保存并退出，退出后再启动该实例（必要时会强制结束）。",
+          "commandMac": "macOS: kill -15 <pid> （匹配 CODEX_HOME）",
+          "commandWin": "Windows: taskkill /F /PID <pid> （匹配 CODEX_HOME）"
         },
         "force": {
           "principle": "按 CODEX_HOME 匹配进程并强制终止（SIGKILL / taskkill /F），再启动目标实例。",

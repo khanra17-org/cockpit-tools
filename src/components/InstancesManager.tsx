@@ -804,9 +804,6 @@ export function InstancesManager<TAccount extends AccountLike>({
           >
             {t('instances.actions.refresh', '刷新')}
           </button>
-          <button className="btn btn-secondary" onClick={handleOpenStrategyModal}>
-            {t('instances.restartStrategy.button', '重启策略')}
-          </button>
         </div>
       </div>
 
@@ -835,6 +832,7 @@ export function InstancesManager<TAccount extends AccountLike>({
           <div className="instances-list-header">
             <div>{t('instances.columns.instance', '实例')}</div>
             <div>{t('instances.columns.email', '账号')}</div>
+            <div>PID</div>
             <div>{t('instances.columns.actions', '操作')}</div>
           </div>
           {filteredInstances.map((instance) => {
@@ -882,6 +880,10 @@ export function InstancesManager<TAccount extends AccountLike>({
                       setOpenInlineMenuId((prev) => (open ? instance.id : prev === instance.id ? null : prev));
                     }}
                   />
+                </div>
+
+                <div className="instance-pid">
+                  <span className="pid-value">{instance.lastPid ?? '-'}</span>
                 </div>
 
                 <div className="instance-actions">

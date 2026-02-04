@@ -235,6 +235,7 @@ pub fn create_instance(params: CreateInstanceParams) -> Result<InstanceProfile, 
         bind_account_id: params.bind_account_id,
         created_at: Utc::now().timestamp_millis(),
         last_launched_at: None,
+        last_pid: None,
     };
 
     store.instances.push(instance.clone());
@@ -350,4 +351,57 @@ pub fn update_instance_last_launched(instance_id: &str) -> Result<InstanceProfil
     let updated = updated.ok_or("实例不存在")?;
     save_instance_store(&store)?;
     Ok(updated)
+}
+
+pub fn update_instance_after_start(instance_id: &str, pid: u32) -> Result<InstanceProfile, String> {
+    let _lock = INSTANCE_STORE_LOCK.lock().map_err(|_| "无法获取实例锁")?;
+    let mut store = load_instance_store()?;
+    let mut updated = None;
+    for instance in &mut store.instances {
+        if instance.id == instance_id {
+            instance.last_launched_at = Some(Utc::now().timestamp_millis());
+            instance.last_pid = Some(pid);
+            updated = Some(instance.clone());
+            break;
+        }
+    }
+    let updated = updated.ok_or("实例不存在")?;
+    save_instance_store(&store)?;
+    Ok(updated)
+}
+
+pub fn update_instance_pid(instance_id: &str, pid: Option<u32>) -> Result<InstanceProfile, String> {
+    let _lock = INSTANCE_STORE_LOCK.lock().map_err(|_| "无法获取实例锁")?;
+    let mut store = load_instance_store()?;
+    let mut updated = None;
+    for instance in &mut store.instances {
+        if instance.id == instance_id {
+            instance.last_pid = pid;
+            updated = Some(instance.clone());
+            break;
+        }
+    }
+    let updated = updated.ok_or("实例不存在")?;
+    save_instance_store(&store)?;
+    Ok(updated)
+}
+
+pub fn update_default_pid(pid: Option<u32>) -> Result<DefaultInstanceSettings, String> {
+    let _lock = INSTANCE_STORE_LOCK.lock().map_err(|_| "无法获取实例锁")?;
+    let mut store = load_instance_store()?;
+    store.default_settings.last_pid = pid;
+    let updated = store.default_settings.clone();
+    save_instance_store(&store)?;
+    Ok(updated)
+}
+
+pub fn clear_all_pids() -> Result<(), String> {
+    let _lock = INSTANCE_STORE_LOCK.lock().map_err(|_| "无法获取实例锁")?;
+    let mut store = load_instance_store()?;
+    store.default_settings.last_pid = None;
+    for instance in &mut store.instances {
+        instance.last_pid = None;
+    }
+    save_instance_store(&store)?;
+    Ok(())
 }
