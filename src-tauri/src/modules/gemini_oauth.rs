@@ -10,14 +10,19 @@ use url::Url;
 
 use crate::models::gemini::{GeminiOAuthCompletePayload, GeminiOAuthStartResponse};
 use crate::modules::logger;
-use crate::modules::oauth;
 
 const GEMINI_OAUTH_AUTH_URL: &str = "https://accounts.google.com/o/oauth2/v2/auth";
 const GEMINI_OAUTH_TOKEN_URL: &str = "https://oauth2.googleapis.com/token";
 const GOOGLE_USERINFO_URL: &str = "https://www.googleapis.com/oauth2/v2/userinfo";
+const GEMINI_OAUTH_CLIENT_ID: &str =
+    "681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com";
+const GEMINI_OAUTH_CLIENT_SECRET: &str = "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";
 const OAUTH_TIMEOUT_SECONDS: i64 = 300;
 const OAUTH_CALLBACK_PATH: &str = "/oauth2callback";
 const OAUTH_POLL_INTERVAL_SECONDS: u64 = 1;
+const HTTP_REDIRECT_STATUS: u16 = 301;
+const SIGN_IN_SUCCESS_URL: &str = "https://developers.google.com/gemini-code-assist/auth_success_gemini";
+const SIGN_IN_FAILURE_URL: &str = "https://developers.google.com/gemini-code-assist/auth_failure_gemini";
 
 const OAUTH_SCOPES: [&str; 3] = [
     "https://www.googleapis.com/auth/cloud-platform",
@@ -85,11 +90,11 @@ fn normalize_non_empty(value: Option<&str>) -> Option<String> {
 }
 
 pub fn gemini_oauth_client_id() -> &'static str {
-    oauth::client_id()
+    GEMINI_OAUTH_CLIENT_ID
 }
 
 pub fn gemini_oauth_client_secret() -> &'static str {
-    oauth::client_secret()
+    GEMINI_OAUTH_CLIENT_SECRET
 }
 
 fn find_available_callback_port() -> Result<u16, String> {
@@ -114,8 +119,7 @@ fn build_auth_url(callback_url: &str, state_token: &str) -> Result<String, Strin
         .append_pair("redirect_uri", callback_url)
         .append_pair("access_type", "offline")
         .append_pair("scope", &scope)
-        .append_pair("state", state_token)
-        .append_pair("prompt", "consent");
+        .append_pair("state", state_token);
 
     Ok(url.to_string())
 }
@@ -193,6 +197,15 @@ fn respond_text(request: tiny_http::Request, status: StatusCode, body: &str) {
     let _ = request.respond(response);
 }
 
+fn respond_redirect(request: tiny_http::Request, location: &str) {
+    let mut response = Response::from_string(String::new())
+        .with_status_code(StatusCode(HTTP_REDIRECT_STATUS));
+    if let Ok(header) = Header::from_bytes("Location".as_bytes(), location.as_bytes()) {
+        response.add_header(header);
+    }
+    let _ = request.respond(response);
+}
+
 fn wait_for_oauth_code_blocking(
     login_id: String,
     callback_port: u16,
@@ -225,13 +238,13 @@ fn wait_for_oauth_code_blocking(
         let parsed = match Url::parse(&full_url) {
             Ok(url) => url,
             Err(_) => {
-                respond_text(request, StatusCode(400), "Invalid callback URL.");
+                respond_redirect(request, SIGN_IN_FAILURE_URL);
                 continue;
             }
         };
 
         if parsed.path() != OAUTH_CALLBACK_PATH {
-            respond_text(request, StatusCode(404), "Not Found.");
+            respond_redirect(request, SIGN_IN_FAILURE_URL);
             continue;
         }
 
@@ -242,11 +255,7 @@ fn wait_for_oauth_code_blocking(
                 .get("error_description")
                 .cloned()
                 .unwrap_or_else(|| "No details".to_string());
-            respond_text(
-                request,
-                StatusCode(200),
-                "Authentication failed, you can close this page.",
-            );
+            respond_redirect(request, SIGN_IN_FAILURE_URL);
             return Err(format!("Google OAuth 错误: {} ({})", error, desc));
         }
 
@@ -258,16 +267,12 @@ fn wait_for_oauth_code_blocking(
         let code = match params.get("code") {
             Some(value) if !value.trim().is_empty() => value.trim().to_string(),
             _ => {
-                respond_text(request, StatusCode(400), "No authorization code.");
+                respond_redirect(request, SIGN_IN_FAILURE_URL);
                 return Err("Google OAuth 回调缺少 code 参数".to_string());
             }
         };
 
-        respond_text(
-            request,
-            StatusCode(200),
-            "Authentication successful. You can close this page.",
-        );
+        respond_redirect(request, SIGN_IN_SUCCESS_URL);
         return Ok(code);
     }
 }
