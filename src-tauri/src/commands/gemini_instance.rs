@@ -388,51 +388,116 @@ fn escape_applescript(value: &str) -> String {
 pub async fn gemini_execute_instance_launch_command(instance_id: String) -> Result<String, String> {
     let context = resolve_instance_launch_context(&instance_id)?;
     let command = build_launch_command(&context);
+    let config = crate::modules::config::get_user_config();
+    let terminal = config.default_terminal;
 
     #[cfg(target_os = "macos")]
     {
+        let is_iterm = terminal.to_lowercase().contains("iterm");
+        let app_name = if terminal == "system" || terminal.is_empty() {
+            "Terminal"
+        } else {
+            &terminal
+        };
+
+        let script = if is_iterm {
+            format!(
+                "tell application \"iTerm\"
+                    if not (exists window 1) then
+                        create window with default profile
+                    end if
+                    tell current session of current window
+                        write text \"{}\"
+                    end tell
+                    activate
+                end tell",
+                escape_applescript(&command)
+            )
+        } else {
+            format!(
+                "tell application \"{}\"
+                    activate
+                    do script \"{}\"
+                end tell",
+                app_name,
+                escape_applescript(&command)
+            )
+        };
+
         let output = Command::new("osascript")
             .arg("-e")
-            .arg("tell application \"Terminal\" to activate")
-            .arg("-e")
-            .arg(format!(
-                "tell application \"Terminal\" to do script \"{}\"",
-                escape_applescript(&command)
-            ))
+            .arg(&script)
             .output()
-            .map_err(|e| format!("打开终端失败: {}", e))?;
+            .map_err(|e| format!("打开终端失败 ({}): {}", app_name, e))?;
 
         if !output.status.success() {
             let stderr = String::from_utf8_lossy(&output.stderr);
             return Err(format!("终端执行失败: {}", stderr.trim()));
         }
-        return Ok("已在终端执行 Gemini Cli 命令".to_string());
+        return Ok(format!("已在 {} 执行 Gemini Cli 命令", app_name));
     }
 
     #[cfg(target_os = "windows")]
     {
-        Command::new("cmd")
-            .args(["/C", "start", "", "cmd", "/K", &command])
-            .spawn()
-            .map_err(|e| format!("打开终端失败: {}", e))?;
+        if terminal == "PowerShell" || terminal == "powershell" {
+            Command::new("powershell")
+                .args(["-NoExit", "-Command", &command])
+                .spawn()
+                .map_err(|e| format!("打开 PowerShell 失败: {}", e))?;
+        } else if terminal == "pwsh" {
+            Command::new("pwsh")
+                .args(["-NoExit", "-Command", &command])
+                .spawn()
+                .map_err(|e| format!("打开 PowerShell Core 失败: {}", e))?;
+        } else if terminal == "wt" {
+            Command::new("wt")
+                .args(["-p", "Command Prompt", "cmd", "/K", &command])
+                .spawn()
+                .or_else(|_| {
+                    // 如果指定 profile 失败，尝试直接运行
+                    Command::new("wt")
+                        .args(["cmd", "/K", &command])
+                        .spawn()
+                })
+                .map_err(|e| format!("打开 Windows Terminal 失败: {}", e))?;
+        } else {
+            // 默认为 cmd
+            Command::new("cmd")
+                .args(["/C", "start", "", "cmd", "/K", &command])
+                .spawn()
+                .map_err(|e| format!("打开终端失败: {}", e))?;
+        }
         return Ok("已在终端执行 Gemini Cli 命令".to_string());
     }
 
     #[cfg(target_os = "linux")]
     {
         let shell_command = format!("{}; exec bash", command);
-        Command::new("x-terminal-emulator")
-            .args(["-e", "bash", "-lc", &shell_command])
+        let mut cmd = if terminal == "system" || terminal.is_empty() {
+            Command::new("x-terminal-emulator")
+        } else {
+            Command::new(&terminal)
+        };
+
+        cmd.args(["-e", "bash", "-lc", &shell_command])
             .spawn()
             .or_else(|_| {
-                Command::new("gnome-terminal")
-                    .args(["--", "bash", "-lc", &shell_command])
-                    .spawn()
+                if terminal == "system" || terminal.is_empty() {
+                    Command::new("gnome-terminal")
+                        .args(["--", "bash", "-lc", &shell_command])
+                        .spawn()
+                } else {
+                    Err(std::io::Error::new(std::io::ErrorKind::NotFound, "指定终端未找到"))
+                }
             })
             .or_else(|_| {
-                Command::new("konsole")
-                    .args(["-e", "bash", "-lc", &shell_command])
-                    .spawn()
+                if terminal == "system" || terminal.is_empty() {
+                    Command::new("konsole")
+                        .args(["-e", "bash", "-lc", &shell_command])
+                        .spawn()
+                } else {
+                    Err(std::io::Error::new(std::io::ErrorKind::NotFound, "指定终端未找到"))
+                }
             })
             .or_else(|_| Command::new("sh").args(["-lc", &command]).spawn())
             .map_err(|e| format!("执行 Gemini Cli 命令失败: {}", e))?;

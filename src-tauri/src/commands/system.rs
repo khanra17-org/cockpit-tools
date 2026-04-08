@@ -45,6 +45,8 @@ pub struct NetworkConfig {
 pub struct GeneralConfig {
     /// 界面语言
     pub language: String,
+    /// 默认终端
+    pub default_terminal: String,
     /// 应用主题: "light", "dark", "system"
     pub theme: String,
     /// 界面缩放比例（WebView Zoom）
@@ -337,6 +339,7 @@ pub fn save_network_config(
         global_proxy_no_proxy: next_global_proxy_no_proxy,
         // 保留其他设置不变
         language: current.language,
+        default_terminal: current.default_terminal,
         theme: current.theme,
         ui_scale: current.ui_scale,
         auto_refresh_minutes: current.auto_refresh_minutes,
@@ -442,6 +445,7 @@ pub fn get_general_config() -> Result<GeneralConfig, String> {
 
     let result = GeneralConfig {
         language: user_config.language,
+        default_terminal: user_config.default_terminal,
         theme: user_config.theme,
         ui_scale: user_config.ui_scale,
         auto_refresh_minutes: user_config.auto_refresh_minutes,
@@ -549,6 +553,7 @@ pub fn get_general_config() -> Result<GeneralConfig, String> {
 pub fn save_general_config(
     app: tauri::AppHandle,
     language: String,
+    default_terminal: Option<String>,
     theme: String,
     ui_scale: Option<f64>,
     auto_refresh_minutes: i32,
@@ -714,6 +719,7 @@ pub fn save_general_config(
         global_proxy_no_proxy: current.global_proxy_no_proxy,
         // 更新通用设置
         language: normalized_language.clone(),
+        default_terminal: default_terminal.unwrap_or(current.default_terminal),
         theme,
         ui_scale: normalized_ui_scale,
         auto_refresh_minutes,
