@@ -38,7 +38,9 @@
       "empty": {
         "title": "暫無帳號"
       },
-      "export": "匯出",
+      "export": {
+        "title": "匯出"
+      },
       "filter": {
         "all": "全部 ({{count}})",
         "enterprise": "企業 ({{count}})",

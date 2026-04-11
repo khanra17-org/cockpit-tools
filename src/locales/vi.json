@@ -38,7 +38,9 @@
       "empty": {
         "title": "Chưa có tài khoản"
       },
-      "export": "Xuất",
+      "export": {
+        "title": "Xuất"
+      },
       "filter": {
         "all": "Tất cả ({{count}})",
         "enterprise": "DOANH NGHIỆP ({{count}})",

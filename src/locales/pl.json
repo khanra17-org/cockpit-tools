@@ -38,7 +38,9 @@
       "empty": {
         "title": "Brak kont"
       },
-      "export": "Eksportuj",
+      "export": {
+        "title": "Eksportuj"
+      },
       "filter": {
         "all": "Wszystkie ({{count}})",
         "enterprise": "PRZEDSIĘBIORSTWO (__MASKA_0__)",

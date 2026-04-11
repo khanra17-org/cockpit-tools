@@ -38,7 +38,9 @@
       "empty": {
         "title": "계정 없음"
       },
-      "export": "내보내기",
+      "export": {
+        "title": "내보내기"
+      },
       "filter": {
         "all": "전체 ({{count}})",
         "enterprise": "기업({{count}})",

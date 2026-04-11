@@ -38,7 +38,9 @@
       "empty": {
         "title": "アカウントなし"
       },
-      "export": "エクスポート",
+      "export": {
+        "title": "エクスポート"
+      },
       "filter": {
         "all": "すべて ({{count}})",
         "enterprise": "エンタープライズ ({{count}})",

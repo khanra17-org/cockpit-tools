@@ -45,7 +45,9 @@
       "empty": {
         "title": "暂无账号"
       },
-      "export": "导出",
+      "export": {
+        "title": "导出"
+      },
       "filter": {
         "all": "全部 ({{count}})",
         "enterprise": "企业 ({{count}})",

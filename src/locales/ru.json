@@ -38,7 +38,9 @@
       "empty": {
         "title": "Нет аккаунтов"
       },
-      "export": "Экспорт",
+      "export": {
+        "title": "Экспорт"
+      },
       "filter": {
         "all": "Все ({{count}})",
         "enterprise": "ПРЕДПРИЯТИЕ ({{count}})",

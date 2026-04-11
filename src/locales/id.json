@@ -45,7 +45,9 @@
       "empty": {
         "title": "Belum Ada Akun"
       },
-      "export": "Ekspor",
+      "export": {
+        "title": "Ekspor"
+      },
       "filter": {
         "all": "Semua ({{count}})",
         "enterprise": "ENTERPRISE ({{count}})",

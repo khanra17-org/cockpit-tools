@@ -45,7 +45,9 @@
       "empty": {
         "title": "No Accounts"
       },
-      "export": "Export",
+      "export": {
+        "title": "Export"
+      },
       "filter": {
         "all": "All ({{count}})",
         "enterprise": "ENTERPRISE ({{count}})",

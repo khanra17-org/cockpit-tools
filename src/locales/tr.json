@@ -38,7 +38,9 @@
       "empty": {
         "title": "Hesap yok"
       },
-      "export": "Dışa aktar",
+      "export": {
+        "title": "Dışa aktar"
+      },
       "filter": {
         "all": "Tümü ({{count}})",
         "enterprise": "KURUMSAL ({{count}})",

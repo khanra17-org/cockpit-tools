@@ -38,7 +38,9 @@
       "empty": {
         "title": "لا توجد حسابات"
       },
-      "export": "تصدير",
+      "export": {
+        "title": "تصدير"
+      },
       "filter": {
         "all": "الكل ({{count}})",
         "enterprise": "المؤسسة ({{count}})",

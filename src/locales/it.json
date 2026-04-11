@@ -38,7 +38,9 @@
       "empty": {
         "title": "Nessun account"
       },
-      "export": "Esporta",
+      "export": {
+        "title": "Esporta"
+      },
       "filter": {
         "all": "Tutti ({{count}})",
         "enterprise": "IMPRESA ({{count}})",
