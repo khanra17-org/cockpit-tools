@@ -288,6 +288,12 @@
   padding: 0;
 }
 
+.header-icon-btn {
+  width: 28px;
+  min-width: 28px;
+  padding: 0;
+}
+
 .collapse-arrow {
   transition: transform 0.2s ease;
 }
