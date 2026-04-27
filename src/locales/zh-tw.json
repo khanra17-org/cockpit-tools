@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "優先選擇剩餘配額較低的帳號。",
       "routingDescriptionPlanHighFirst": "優先選擇較高訂閱檔位的帳號。",
       "routingDescriptionPlanLowFirst": "優先選擇較低訂閱檔位的帳號。",
+      "routingDescriptionExpirySoonFirst": "優先選擇訂閱有效期較早到期的帳號。",
       "clearStats": "清除統計",
       "clearStatsConfirm": "確定要清空 API 服務統計嗎？",
       "clearStatsSuccess": "API 服務統計已清空",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "優先高配額",
         "quotaLowFirst": "優先低配額",
         "planHighFirst": "優先高訂閱",
-        "planLowFirst": "優先低訂閱"
+        "planLowFirst": "優先低訂閱",
+        "expirySoonFirst": "優先近到期"
       },
       "statusUnconfigured": "未設定",
       "expandDetails": "展開詳情",

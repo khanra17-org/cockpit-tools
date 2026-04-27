@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "Upřednostní účty s nižší zbývající kvótou.",
       "routingDescriptionPlanHighFirst": "Upřednostní účty ve vyšších tarifech.",
       "routingDescriptionPlanLowFirst": "Upřednostní účty v nižších tarifech.",
+      "routingDescriptionExpirySoonFirst": "Upřednostní účty, jejichž předplatné končí dříve.",
       "clearStats": "Vymazat statistiky",
       "clearStatsConfirm": "Vymazat všechny statistiky služby API?",
       "clearStatsSuccess": "Statistiky služby API byly vymazány",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "Nejvyšší kvóta napřed",
         "quotaLowFirst": "Nejnižší kvóta napřed",
         "planHighFirst": "Nejvyšší tarif napřed",
-        "planLowFirst": "Nejnižší tarif napřed"
+        "planLowFirst": "Nejnižší tarif napřed",
+        "expirySoonFirst": "Brzy končící první"
       },
       "statusUnconfigured": "Nenastaveno",
       "expandDetails": "Rozbalit detail",

@@ -412,6 +412,9 @@ export function getCodexPlanBadgeLabel(account: CodexAccount): string {
 
 export function getCodexPlanBadgeClass(account: CodexAccount): string {
   const baseClass = normalizeCodexPlanKey(account.plan_type);
+  if (baseClass === 'plus') {
+    return 'plus codex-plus';
+  }
   if (baseClass !== 'pro') {
     return baseClass;
   }

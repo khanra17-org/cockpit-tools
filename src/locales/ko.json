@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "남은 할당량이 적은 계정을 우선합니다.",
       "routingDescriptionPlanHighFirst": "상위 구독 요금제 계정을 우선합니다.",
       "routingDescriptionPlanLowFirst": "하위 구독 요금제 계정을 우선합니다.",
+      "routingDescriptionExpirySoonFirst": "구독 만료일이 더 이른 계정을 우선합니다.",
       "clearStats": "통계 지우기",
       "clearStatsConfirm": "API 서비스 통계를 모두 지울까요?",
       "clearStatsSuccess": "API 서비스 통계를 지웠습니다",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "높은 할당량 우선",
         "quotaLowFirst": "낮은 할당량 우선",
         "planHighFirst": "상위 요금제 우선",
-        "planLowFirst": "하위 요금제 우선"
+        "planLowFirst": "하위 요금제 우선",
+        "expirySoonFirst": "만료 임박 우선"
       },
       "statusUnconfigured": "미설정",
       "expandDetails": "세부 정보 펼치기",

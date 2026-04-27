@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "残りクォータが少ないアカウントを優先します。",
       "routingDescriptionPlanHighFirst": "上位サブスクプランのアカウントを優先します。",
       "routingDescriptionPlanLowFirst": "下位サブスクプランのアカウントを優先します。",
+      "routingDescriptionExpirySoonFirst": "サブスクの有効期限が早いアカウントを優先します。",
       "clearStats": "統計をクリア",
       "clearStatsConfirm": "API サービスの統計をすべてクリアしますか？",
       "clearStatsSuccess": "API サービスの統計をクリアしました",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "高クォータ優先",
         "quotaLowFirst": "低クォータ優先",
         "planHighFirst": "上位プラン優先",
-        "planLowFirst": "下位プラン優先"
+        "planLowFirst": "下位プラン優先",
+        "expirySoonFirst": "期限が近い順"
       },
       "statusUnconfigured": "未設定",
       "expandDetails": "詳細を開く",

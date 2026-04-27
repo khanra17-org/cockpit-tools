@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "Kalan kotası daha düşük hesapları tercih eder.",
       "routingDescriptionPlanHighFirst": "Daha yüksek abonelik planındaki hesapları tercih eder.",
       "routingDescriptionPlanLowFirst": "Daha düşük abonelik planındaki hesapları tercih eder.",
+      "routingDescriptionExpirySoonFirst": "Aboneliği daha erken sona erecek hesapları tercih eder.",
       "clearStats": "İstatistikleri Temizle",
       "clearStatsConfirm": "API hizmeti istatistiklerinin tümü temizlensin mi?",
       "clearStatsSuccess": "API hizmeti istatistikleri temizlendi",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "Önce yüksek kota",
         "quotaLowFirst": "Önce düşük kota",
         "planHighFirst": "Önce yüksek plan",
-        "planLowFirst": "Önce düşük plan"
+        "planLowFirst": "Önce düşük plan",
+        "expirySoonFirst": "Yakında Biten Önce"
       },
       "statusUnconfigured": "Yapılandırılmadı",
       "expandDetails": "Ayrıntıları aç",

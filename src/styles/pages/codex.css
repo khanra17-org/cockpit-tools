@@ -846,6 +846,17 @@
   border: 1px solid var(--plan-plus-border);
 }
 
+.codex-account-card .tier-badge.codex-plus,
+.codex-accounts-page .account-table .tier-badge.codex-plus,
+.codex-accounts-page .folder-preview-item .tier-badge.codex-plus,
+.codex-wakeup-account-chip .tier-badge.codex-plus,
+.group-account-tier-badge.codex-plus {
+  background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 52%, #5eead4 100%);
+  color: #064e3b;
+  border: 1px solid rgba(16, 185, 129, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62), 0 1px 3px rgba(5, 150, 105, 0.14);
+}
+
 .codex-account-card .tier-badge.team,
 .codex-accounts-page .account-table .tier-badge.team {
   background: var(--plan-team-bg);

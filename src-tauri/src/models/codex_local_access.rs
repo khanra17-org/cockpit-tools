@@ -8,6 +8,7 @@ pub enum CodexLocalAccessRoutingStrategy {
     QuotaLowFirst,
     PlanHighFirst,
     PlanLowFirst,
+    ExpirySoonFirst,
 }
 
 impl Default for CodexLocalAccessRoutingStrategy {

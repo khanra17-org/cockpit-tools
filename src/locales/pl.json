@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "Preferuje konta z mniejszym pozostałym limitem.",
       "routingDescriptionPlanHighFirst": "Preferuje konta z wyższymi planami subskrypcji.",
       "routingDescriptionPlanLowFirst": "Preferuje konta z niższymi planami subskrypcji.",
+      "routingDescriptionExpirySoonFirst": "Preferuje konta, których subskrypcja wygasa wcześniej.",
       "clearStats": "Wyczyść statystyki",
       "clearStatsConfirm": "Wyczyścić wszystkie statystyki usługi API?",
       "clearStatsSuccess": "Statystyki usługi API zostały wyczyszczone",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "Najpierw wysoki limit",
         "quotaLowFirst": "Najpierw niski limit",
         "planHighFirst": "Najpierw wyższy plan",
-        "planLowFirst": "Najpierw niższy plan"
+        "planLowFirst": "Najpierw niższy plan",
+        "expirySoonFirst": "Najbliższe wygaśnięcie"
       },
       "statusUnconfigured": "Nieskonfigurowane",
       "expandDetails": "Rozwiń szczegóły",

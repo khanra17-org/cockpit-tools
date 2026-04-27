@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "Dà priorità agli account con meno quota residua.",
       "routingDescriptionPlanHighFirst": "Dà priorità agli account con livelli di abbonamento più alti.",
       "routingDescriptionPlanLowFirst": "Dà priorità agli account con livelli di abbonamento più bassi.",
+      "routingDescriptionExpirySoonFirst": "Dà priorità agli account con abbonamento in scadenza prima.",
       "clearStats": "Cancella statistiche",
       "clearStatsConfirm": "Cancellare tutte le statistiche del servizio API?",
       "clearStatsSuccess": "Le statistiche del servizio API sono state cancellate",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "Quota alta prima",
         "quotaLowFirst": "Quota bassa prima",
         "planHighFirst": "Piano alto prima",
-        "planLowFirst": "Piano basso prima"
+        "planLowFirst": "Piano basso prima",
+        "expirySoonFirst": "Scadenza vicina prima"
       },
       "statusUnconfigured": "Non configurato",
       "expandDetails": "Espandi dettagli",

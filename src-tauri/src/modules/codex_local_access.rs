@@ -170,6 +170,7 @@ struct RoutingCandidate {
     account_id: String,
     plan_rank: Option<i32>,
     remaining_quota: Option<i32>,
+    subscription_expiry_ms: Option<i64>,
 }
 
 fn gateway_runtime() -> &'static TokioMutex<GatewayRuntime> {
@@ -1699,6 +1700,25 @@ fn resolve_remaining_quota(account: &CodexAccount) -> Option<i32> {
     percentages.into_iter().min()
 }
 
+fn resolve_subscription_expiry_ms(account: &CodexAccount) -> Option<i64> {
+    let raw = account.subscription_active_until.as_deref()?.trim();
+    if raw.is_empty() {
+        return None;
+    }
+
+    if raw.chars().all(|ch| ch.is_ascii_digit()) {
+        let mut timestamp = raw.parse::<i64>().ok()?;
+        if timestamp < 1_000_000_000_000 {
+            timestamp *= 1000;
+        }
+        return Some(timestamp);
+    }
+
+    chrono::DateTime::parse_from_rfc3339(raw)
+        .ok()
+        .map(|parsed| parsed.timestamp_millis())
+}
+
 fn build_routing_candidates(ordered_account_ids: &[String]) -> Vec<RoutingCandidate> {
     ordered_account_ids
         .iter()
@@ -1709,6 +1729,7 @@ fn build_routing_candidates(ordered_account_ids: &[String]) -> Vec<RoutingCandid
                 account_id: account_id.clone(),
                 plan_rank: account.as_ref().and_then(resolve_plan_rank),
                 remaining_quota: account.as_ref().and_then(resolve_remaining_quota),
+                subscription_expiry_ms: account.as_ref().and_then(resolve_subscription_expiry_ms),
             }
         })
         .collect()
@@ -1734,6 +1755,12 @@ fn compare_routing_candidates(
         (None, Some(_)) => Ordering::Greater,
         (None, None) => Ordering::Equal,
     };
+    let compare_option_i64_asc = |a: Option<i64>, b: Option<i64>| match (a, b) {
+        (Some(left), Some(right)) => left.cmp(&right),
+        (Some(_), None) => Ordering::Less,
+        (None, Some(_)) => Ordering::Greater,
+        (None, None) => Ordering::Equal,
+    };
 
     let ordering = match strategy {
         CodexLocalAccessRoutingStrategy::Auto => {
@@ -1754,6 +1781,11 @@ fn compare_routing_candidates(
         }
         CodexLocalAccessRoutingStrategy::PlanLowFirst => {
             compare_option_asc(left.plan_rank, right.plan_rank)
+                .then_with(|| compare_option_desc(left.remaining_quota, right.remaining_quota))
+        }
+        CodexLocalAccessRoutingStrategy::ExpirySoonFirst => {
+            compare_option_i64_asc(left.subscription_expiry_ms, right.subscription_expiry_ms)
+                .then_with(|| compare_option_desc(left.plan_rank, right.plan_rank))
                 .then_with(|| compare_option_desc(left.remaining_quota, right.remaining_quota))
         }
     };

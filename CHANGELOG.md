@@ -7,6 +7,16 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.22.14] - 2026-04-28
+
+### Added
+- **Codex Local API Service routing can now prioritize accounts whose subscriptions expire sooner**: account pool routing adds an `Expiry Soon First` strategy that reads saved subscription expiry metadata and then falls back to plan tier and remaining quota ordering.
+
+### Changed
+- **Codex account overview no longer keeps a separate subscription-expiry filter**: the accounts page removes the expiry filter control and clears its persisted filter state while keeping subscription metadata available in account details.
+- **Codex Plus accounts now use a distinct badge treatment**: account lists, Local API Service member views, dashboard cards, floating cards, and instance badges can style Plus separately from other plan badges.
+
+---
 ## [0.22.13] - 2026-04-27
 
 ### Fixed

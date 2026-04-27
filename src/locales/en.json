@@ -1739,6 +1739,7 @@
       "routingDescriptionQuotaLowFirst": "Prefer accounts with less remaining quota.",
       "routingDescriptionPlanHighFirst": "Prefer accounts on higher subscription tiers.",
       "routingDescriptionPlanLowFirst": "Prefer accounts on lower subscription tiers.",
+      "routingDescriptionExpirySoonFirst": "Prefer accounts whose subscription expires sooner.",
       "portInvalid": "Enter a port between 1 and 65535",
       "statsTitle": "Totals",
       "clearStats": "Clear Stats",
@@ -1783,7 +1784,8 @@
         "quotaHighFirst": "High Quota First",
         "quotaLowFirst": "Low Quota First",
         "planHighFirst": "High Plan First",
-        "planLowFirst": "Low Plan First"
+        "planLowFirst": "Low Plan First",
+        "expirySoonFirst": "Expiry Soon First"
       },
       "stats": {
         "requests": "Requests",

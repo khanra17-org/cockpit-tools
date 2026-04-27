@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "Ưu tiên tài khoản còn ít hạn mức hơn.",
       "routingDescriptionPlanHighFirst": "Ưu tiên tài khoản ở bậc thuê bao cao hơn.",
       "routingDescriptionPlanLowFirst": "Ưu tiên tài khoản ở bậc thuê bao thấp hơn.",
+      "routingDescriptionExpirySoonFirst": "Ưu tiên tài khoản có gói đăng ký hết hạn sớm hơn.",
       "clearStats": "Xóa thống kê",
       "clearStatsConfirm": "Xóa toàn bộ thống kê dịch vụ API?",
       "clearStatsSuccess": "Đã xóa thống kê dịch vụ API",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "Ưu tiên hạn mức cao",
         "quotaLowFirst": "Ưu tiên hạn mức thấp",
         "planHighFirst": "Ưu tiên gói cao",
-        "planLowFirst": "Ưu tiên gói thấp"
+        "planLowFirst": "Ưu tiên gói thấp",
+        "expirySoonFirst": "Sắp hết hạn trước"
       },
       "statusUnconfigured": "Chưa cấu hình",
       "expandDetails": "Mở chi tiết",

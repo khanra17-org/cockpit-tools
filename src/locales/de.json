@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "Bevorzugt Konten mit weniger verbleibendem Kontingent.",
       "routingDescriptionPlanHighFirst": "Bevorzugt Konten mit höherer Abostufe.",
       "routingDescriptionPlanLowFirst": "Bevorzugt Konten mit niedrigerer Abostufe.",
+      "routingDescriptionExpirySoonFirst": "Bevorzugt Konten, deren Abonnement früher abläuft.",
       "clearStats": "Statistik löschen",
       "clearStatsConfirm": "Alle API-Service-Statistiken löschen?",
       "clearStatsSuccess": "API-Service-Statistiken wurden gelöscht",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "Hohe Quote zuerst",
         "quotaLowFirst": "Niedrige Quote zuerst",
         "planHighFirst": "Hohes Abo zuerst",
-        "planLowFirst": "Niedriges Abo zuerst"
+        "planLowFirst": "Niedriges Abo zuerst",
+        "expirySoonFirst": "Bald ablaufend zuerst"
       },
       "statusUnconfigured": "Nicht konfiguriert",
       "expandDetails": "Details aufklappen",

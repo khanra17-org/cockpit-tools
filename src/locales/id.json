@@ -1767,6 +1767,7 @@
       "routingDescriptionQuotaLowFirst": "Prioritaskan akun dengan kuota tersisa lebih kecil.",
       "routingDescriptionPlanHighFirst": "Prioritaskan akun dengan tier langganan lebih tinggi.",
       "routingDescriptionPlanLowFirst": "Prioritaskan akun dengan tier langganan lebih rendah.",
+      "routingDescriptionExpirySoonFirst": "Prioritaskan akun yang langganannya kedaluwarsa lebih cepat.",
       "clearStats": "Hapus Statistik",
       "clearStatsConfirm": "Hapus semua statistik layanan API?",
       "clearStatsSuccess": "Statistik layanan API telah dihapus",
@@ -1783,7 +1784,8 @@
         "quotaHighFirst": "Kuota Tinggi Dulu",
         "quotaLowFirst": "Kuota Rendah Dulu",
         "planHighFirst": "Paket Tinggi Dulu",
-        "planLowFirst": "Paket Rendah Dulu"
+        "planLowFirst": "Paket Rendah Dulu",
+        "expirySoonFirst": "Kedaluwarsa Cepat Dulu"
       },
       "statusUnconfigured": "Belum dikonfigurasi",
       "expandDetails": "Buka detail",

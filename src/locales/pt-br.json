@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "Prioriza contas com menos cota restante.",
       "routingDescriptionPlanHighFirst": "Prioriza contas em planos de assinatura mais altos.",
       "routingDescriptionPlanLowFirst": "Prioriza contas em planos de assinatura mais baixos.",
+      "routingDescriptionExpirySoonFirst": "Prioriza contas cuja assinatura vence mais cedo.",
       "clearStats": "Limpar estatísticas",
       "clearStatsConfirm": "Limpar todas as estatísticas do serviço API?",
       "clearStatsSuccess": "As estatísticas do serviço API foram limpas",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "Cota alta primeiro",
         "quotaLowFirst": "Cota baixa primeiro",
         "planHighFirst": "Plano alto primeiro",
-        "planLowFirst": "Plano baixo primeiro"
+        "planLowFirst": "Plano baixo primeiro",
+        "expirySoonFirst": "Vence antes primeiro"
       },
       "statusUnconfigured": "Não configurado",
       "expandDetails": "Expandir detalhes",

@@ -1007,8 +1007,7 @@ fn sync_identity_from_tokens(account: &mut CodexAccount) {
         subscription_active_until,
         id_token_account_id,
         id_token_org_id,
-    )) =
-        extract_user_info(&account.tokens.id_token)
+    )) = extract_user_info(&account.tokens.id_token)
     {
         if !email.trim().is_empty() {
             account.email = email;
@@ -1161,9 +1160,10 @@ pub fn extract_user_info(
         .auth_data
         .as_ref()
         .and_then(|d| d.chatgpt_plan_type.clone());
-    let subscription_active_until = payload.auth_data.as_ref().and_then(|d| {
-        normalize_optional_json_scalar(d.chatgpt_subscription_active_until.as_ref())
-    });
+    let subscription_active_until = payload
+        .auth_data
+        .as_ref()
+        .and_then(|d| normalize_optional_json_scalar(d.chatgpt_subscription_active_until.as_ref()));
     let account_id = payload
         .auth_data
         .as_ref()
@@ -1636,8 +1636,7 @@ fn upsert_account_with_hints(
         subscription_active_until,
         id_token_account_id,
         id_token_org_id,
-    ) =
-        extract_user_info(&tokens.id_token)?;
+    ) = extract_user_info(&tokens.id_token)?;
     let account_id = normalize_optional_value(
         extract_chatgpt_account_id_from_access_token(&tokens.access_token)
             .or(id_token_account_id)

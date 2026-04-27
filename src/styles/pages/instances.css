@@ -1328,6 +1328,13 @@
   color: var(--plan-plus-color);
 }
 
+.instances-page .instance-plan-badge.codex-plus {
+  background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 52%, #5eead4 100%);
+  border-color: rgba(16, 185, 129, 0.38);
+  color: #064e3b;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62), 0 1px 3px rgba(5, 150, 105, 0.14);
+}
+
 .instances-page .instance-plan-badge.team {
   background: var(--plan-team-bg);
   border-color: var(--plan-team-border);

@@ -70,7 +70,6 @@ import {
   formatCodexLoginProvider,
   getCodexAuthMetadata,
   getCodexPlanFilterKey,
-  getCodexSubscriptionExpiryBucket,
   getCodexSubscriptionPresentation,
   hasCodexAccountName,
   isCodexApiKeyAccount,
@@ -199,15 +198,6 @@ const FILTER_TYPES_FIELD = 'filter_types';
 const EXPIRY_FILTER_FIELD = 'expiry_filter';
 const GROUP_FILTER_FIELD = 'group_filter';
 const ACTIVE_GROUP_ID_FIELD = 'active_group_id';
-const CODEX_EXPIRY_FILTER_VALUES = [
-  'expired',
-  'within_24h',
-  'within_7d',
-  'within_30d',
-  'missing',
-] as const;
-
-type CodexExpiryFilterValue = 'all' | (typeof CODEX_EXPIRY_FILTER_VALUES)[number];
 
 type CodexOverviewLayoutMode = 'compact' | 'list' | 'grid';
 
@@ -283,20 +273,6 @@ export function CodexAccountsPage() {
       ? readAccountsOverviewFilterStringArray(CODEX_FILTER_PERSISTENCE_SCOPE, FILTER_TYPES_FIELD)
       : [],
   );
-  const [expiryFilter, setExpiryFilter] = useState<CodexExpiryFilterValue>(() => {
-    if (!readAccountsOverviewFilterPersistenceEnabled(CODEX_FILTER_PERSISTENCE_SCOPE)) {
-      return 'all';
-    }
-    const saved = readAccountsOverviewFilterField<string | null>(
-      CODEX_FILTER_PERSISTENCE_SCOPE,
-      EXPIRY_FILTER_FIELD,
-      null,
-    );
-    const isSavedExpiryFilter =
-      saved === 'all' ||
-      CODEX_EXPIRY_FILTER_VALUES.includes(saved as (typeof CODEX_EXPIRY_FILTER_VALUES)[number]);
-    return isSavedExpiryFilter ? (saved as CodexExpiryFilterValue) : 'all';
-  });
   const [exportFormat, setExportFormat] = useState<CodexExportFormat>('cockpit_tools');
   const [exportFileNameBase, setExportFileNameBase] = useState('codex_accounts');
   const [formattedExportJsonCopied, setFormattedExportJsonCopied] = useState(false);
@@ -488,12 +464,8 @@ export function CodexAccountsPage() {
   }, [filterPersistenceEnabled, filterPersistenceScope, filterTypes]);
 
   useEffect(() => {
-    if (!filterPersistenceEnabled) {
-      removeAccountsOverviewFilterField(filterPersistenceScope, EXPIRY_FILTER_FIELD);
-      return;
-    }
-    writeAccountsOverviewFilterField(filterPersistenceScope, EXPIRY_FILTER_FIELD, expiryFilter);
-  }, [expiryFilter, filterPersistenceEnabled, filterPersistenceScope]);
+    removeAccountsOverviewFilterField(filterPersistenceScope, EXPIRY_FILTER_FIELD);
+  }, [filterPersistenceScope]);
 
   useEffect(() => {
     if (!filterPersistenceEnabled) {
@@ -2592,53 +2564,6 @@ export function CodexAccountsPage() {
     buildValidAccountsFilterOption(t, tierCounts.VALID),
   ], [t, tierCounts]);
 
-  const expiryCounts = useMemo(() => {
-    const counts: Record<CodexExpiryFilterValue, number> = {
-      all: 0,
-      expired: 0,
-      within_24h: 0,
-      within_7d: 0,
-      within_30d: 0,
-      missing: 0,
-    };
-    overviewAccounts.forEach((account) => {
-      if (isCodexApiKeyAccount(account)) return;
-      counts.all += 1;
-      const bucket = getCodexSubscriptionExpiryBucket(account.subscription_active_until);
-      if (bucket in counts) {
-        counts[bucket as CodexExpiryFilterValue] += 1;
-      }
-    });
-    return counts;
-  }, [overviewAccounts]);
-
-  const expiryFilterOptions = useMemo<SingleSelectFilterOption[]>(() => [
-    {
-      value: 'all',
-      label: t('codex.subscription.filterAll', { count: expiryCounts.all }),
-    },
-    {
-      value: 'expired',
-      label: t('codex.subscription.filterExpired', { count: expiryCounts.expired }),
-    },
-    {
-      value: 'within_24h',
-      label: t('codex.subscription.filterWithin24h', { count: expiryCounts.within_24h }),
-    },
-    {
-      value: 'within_7d',
-      label: t('codex.subscription.filterWithin7d', { count: expiryCounts.within_7d }),
-    },
-    {
-      value: 'within_30d',
-      label: t('codex.subscription.filterWithin30d', { count: expiryCounts.within_30d }),
-    },
-    {
-      value: 'missing',
-      label: t('codex.subscription.filterMissing', { count: expiryCounts.missing }),
-    },
-  ], [expiryCounts, t]);
-
   const activeGroup = useMemo(() => {
     if (!activeGroupId) return null;
     return codexGroups.find((group) => group.id === activeGroupId) ?? null;
@@ -3151,12 +3076,6 @@ export function CodexAccountsPage() {
         });
       }
     }
-    if (expiryFilter !== 'all') {
-      result = result.filter((account) => {
-        if (isCodexApiKeyAccount(account)) return false;
-        return getCodexSubscriptionExpiryBucket(account.subscription_active_until) === expiryFilter;
-      });
-    }
     if (tagFilter.length > 0) {
       const selectedTags = new Set(tagFilter.map(normalizeTag));
       result = result.filter((a) => (a.tags || []).map(normalizeTag).some((tag) => selectedTags.has(tag)));
@@ -3186,7 +3105,7 @@ export function CodexAccountsPage() {
     }
     result.sort(compareAccountsBySort);
     return result;
-  }, [activeGroupId, codexGroups, compareAccountsBySort, expiryFilter, filterTypes, groupFilter, isAbnormalAccount, normalizeTag, overviewAccounts, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
+  }, [activeGroupId, codexGroups, compareAccountsBySort, filterTypes, groupFilter, isAbnormalAccount, normalizeTag, overviewAccounts, resolvePlanKey, resolvePresentation, searchQuery, tagFilter]);
 
   const filteredIds = useMemo(() => filteredAccounts.map((account) => account.id), [filteredAccounts]);
   const exportSelectionCount = getScopedSelectedCount(filteredIds);
@@ -4314,13 +4233,6 @@ export function CodexAccountsPage() {
               ariaLabel={t('common.shared.filterLabel', '筛选')}
               onToggleValue={toggleFilterTypeValue}
               onClear={clearFilterTypes}
-            />
-            <SingleSelectFilterDropdown
-              value={expiryFilter}
-              options={expiryFilterOptions}
-              ariaLabel={t('codex.subscription.filterLabel', '有效期筛选')}
-              icon={<Calendar size={14} />}
-              onChange={(value) => setExpiryFilter(value as CodexExpiryFilterValue)}
             />
             <div className="tag-filter" ref={tagFilterRef}>
               <button type="button" className={`tag-filter-btn ${tagFilter.length > 0 ? 'active' : ''}`} onClick={() => setShowTagFilter((prev) => !prev)} aria-label={t('accounts.filterTags', '标签筛选')}>

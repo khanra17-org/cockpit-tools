@@ -1764,6 +1764,7 @@
       "routingDescriptionQuotaLowFirst": "يفضّل الحسابات ذات الحصة المتبقية الأقل.",
       "routingDescriptionPlanHighFirst": "يفضّل الحسابات ذات باقات الاشتراك الأعلى.",
       "routingDescriptionPlanLowFirst": "يفضّل الحسابات ذات باقات الاشتراك الأقل.",
+      "routingDescriptionExpirySoonFirst": "يفضّل الحسابات التي ينتهي اشتراكها أقرب.",
       "clearStats": "مسح الإحصاءات",
       "clearStatsConfirm": "هل تريد مسح كل إحصاءات خدمة API؟",
       "clearStatsSuccess": "تم مسح إحصاءات خدمة API",
@@ -1780,7 +1781,8 @@
         "quotaHighFirst": "الأعلى حصة أولاً",
         "quotaLowFirst": "الأقل حصة أولاً",
         "planHighFirst": "الأعلى باقة أولاً",
-        "planLowFirst": "الأقل باقة أولاً"
+        "planLowFirst": "الأقل باقة أولاً",
+        "expirySoonFirst": "الأقرب انتهاءً أولاً"
       },
       "statusUnconfigured": "غير مُعدّ",
       "expandDetails": "توسيع التفاصيل",

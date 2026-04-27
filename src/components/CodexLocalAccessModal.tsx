@@ -511,6 +511,10 @@ export function CodexLocalAccessModal({
         value: 'plan_low_first',
         label: t('codex.localAccess.routingStrategy.planLowFirst', '优先低订阅'),
       },
+      {
+        value: 'expiry_soon_first',
+        label: t('codex.localAccess.routingStrategy.expirySoonFirst', '优先近到期'),
+      },
     ] satisfies Array<{ value: CodexLocalAccessRoutingStrategy; label: string }>,
     [t],
   );

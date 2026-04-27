@@ -1718,6 +1718,7 @@
       "routingDescriptionQuotaLowFirst": "Предпочитает аккаунты с меньшим остатком квоты.",
       "routingDescriptionPlanHighFirst": "Предпочитает аккаунты с более высоким уровнем подписки.",
       "routingDescriptionPlanLowFirst": "Предпочитает аккаунты с более низким уровнем подписки.",
+      "routingDescriptionExpirySoonFirst": "Предпочитает аккаунты, у которых подписка заканчивается раньше.",
       "clearStats": "Очистить статистику",
       "clearStatsConfirm": "Очистить всю статистику API-сервиса?",
       "clearStatsSuccess": "Статистика API-сервиса очищена",
@@ -1734,7 +1735,8 @@
         "quotaHighFirst": "Сначала высокая квота",
         "quotaLowFirst": "Сначала низкая квота",
         "planHighFirst": "Сначала высокий тариф",
-        "planLowFirst": "Сначала низкий тариф"
+        "planLowFirst": "Сначала низкий тариф",
+        "expirySoonFirst": "Скорое истечение сначала"
       },
       "statusUnconfigured": "Не настроено",
       "expandDetails": "Развернуть",

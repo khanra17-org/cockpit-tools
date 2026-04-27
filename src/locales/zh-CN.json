@@ -1739,6 +1739,7 @@
       "routingDescriptionQuotaLowFirst": "优先选择剩余配额更低的账号。",
       "routingDescriptionPlanHighFirst": "优先选择较高订阅档位的账号。",
       "routingDescriptionPlanLowFirst": "优先选择较低订阅档位的账号。",
+      "routingDescriptionExpirySoonFirst": "优先选择订阅有效期更早到期的账号。",
       "portInvalid": "请输入 1 到 65535 之间的端口",
       "statsTitle": "总量统计",
       "clearStats": "清除统计",
@@ -1783,7 +1784,8 @@
         "quotaHighFirst": "优先高配额",
         "quotaLowFirst": "优先低配额",
         "planHighFirst": "优先高订阅",
-        "planLowFirst": "优先低订阅"
+        "planLowFirst": "优先低订阅",
+        "expirySoonFirst": "优先近到期"
       },
       "stats": {
         "requests": "总请求数",
