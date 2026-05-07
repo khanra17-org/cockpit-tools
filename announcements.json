@@ -1,10 +1,10 @@
 {
   "version": "1.0",
-  "topRightAd": null,
-  "topRightAd_backup": {
+  "topRightAd_backup": null,
+  "topRightAd": {
     "id": "top-right-ad-2026-04-shop",
     "priority": 100,
-    "text": "此地址提供Codex Plus兑换码（无质保存货 到账40天左右），有需要可以支持一下，感谢。",
+    "text": "此地址提供Codex Plus成品号9.9元，非注册机日抛，质保首登时长无质保，可一键导入到此工具里。",
     "badge": "推广",
     "ctaLabel": "选购",
     "ctaUrl": "https://xiangzili.xyz",
@@ -16,7 +16,7 @@
     "expiresAt": null,
     "locales": {
       "zh-CN": {
-        "text": "此地址提供Codex Plus兑换码（无质保存货 到账40天左右），有需要可以支持一下，感谢。",  
+        "text": "此地址提供Codex Plus成品号9.9元，非注册机日抛，质保首登时长无质保，可一键导入到此工具里。",  
         "badge": "推广",
         "ctaLabel": "选购"
       }
