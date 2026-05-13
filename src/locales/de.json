@@ -365,7 +365,8 @@
       "instance": "Instanz",
       "email": "Konto",
       "quota": "Quota-Status",
-      "actions": "Aktionen"
+      "actions": "Aktionen",
+      "speed": "Tempo"
     },
     "empty": {
       "title": "Keine Instanzen",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "Das Kontextfenster muss eine Ganzzahl größer als 0 sein.",
           "autoCompactInvalid": "Der Grenzwert für die automatische Komprimierung muss eine Ganzzahl größer als 0 sein."
         }
-      }
+      },
+      "appSpeed": "Tempo",
+      "appSpeedDesc": "Schreibt das gewählte Tempo vor dem Start von Codex"
     },
     "quota": {
       "unbound": "Nicht gekoppelt",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "Alle Instanzen laufen bereits",
       "noneRunning": "Keine laufenden Instanzen gefunden",
       "syncThreadsNeedTwo": "Mindestens zwei Instanzen sind erforderlich, um Threads zu synchronisieren",
-      "launchPrepared": "Startbefehl ist bereit"
+      "launchPrepared": "Startbefehl ist bereit",
+      "speedUpdated": "Tempo aktualisiert"
     },
     "runningDialog": {
       "title": "Instanz läuft bereits",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "Pfad der angegebenen App",
       "codexSpecifiedAppPathDesc": "Pfad der App, die beim Codex-Wechsel mit neu gestartet wird.",
       "codexSpecifiedAppPathPlaceholder": "z. B. /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "Leeren"
+      "codexSpecifiedAppPathClear": "Leeren",
+      "codexAppSpeed": "Codex-Geschwindigkeit",
+      "codexAppSpeedDesc": "Speichert die offizielle Codex-Startgeschwindigkeit und schreibt sie vor jedem Start aus dieser App.",
+      "codexAppSpeedStandard": "Normal",
+      "codexAppSpeedFast": "Schnell",
+      "codexAppSpeedLaunch": "Codex neu starten",
+      "codexAppSpeedSaveFailed": "Codex-Geschwindigkeit konnte nicht gespeichert werden: {{error}}",
+      "codexAppSpeedLaunchFailed": "Codex konnte nicht neu gestartet werden: {{error}}"
     },
     "network": {
       "apiTitle": "Antigravity-Cockpit-API",
@@ -2422,6 +2433,15 @@
       "noStats": "Noch keine Statistik",
       "refreshHint": "Klicke auf Aktualisieren, um die Statistik dieses API-Schlüssels zu synchronisieren.",
       "dailyStats": "Tägliche Statistiken"
+    },
+    "speed": {
+      "title": "Tempo",
+      "standard": "Normal",
+      "standardDesc": "Standardtempo, normaler Verbrauch",
+      "fast": "Schnell",
+      "fastDesc": "1,5-faches Tempo, höherer Verbrauch",
+      "saveSuccess": "Tempo aktualisiert",
+      "saveFailed": "Tempo konnte nicht gespeichert werden: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "Das Kontextfenster muss eine Ganzzahl größer als 0 sein.",
           "autoCompactInvalid": "Der Grenzwert für die automatische Komprimierung muss eine Ganzzahl größer als 0 sein."
         }
+      },
+      "appSpeed": {
+        "title": "Codex-Geschwindigkeit",
+        "desc": "Als Startgeschwindigkeit gespeichert; wird vor dem Start geschrieben.",
+        "standard": "Normal",
+        "fast": "Schnell",
+        "launch": "Neustart",
+        "loadFailed": "Codex-Geschwindigkeit konnte nicht geladen werden: {{error}}",
+        "saveSuccess": "Codex-Startgeschwindigkeit gespeichert.",
+        "saveFailed": "Codex-Geschwindigkeit konnte nicht gespeichert werden: {{error}}",
+        "launchSuccess": "Codex wurde mit der gespeicherten Geschwindigkeit neu gestartet.",
+        "launchFailed": "Codex konnte nicht neu gestartet werden: {{error}}"
       }
     },
     "githubCopilot": {

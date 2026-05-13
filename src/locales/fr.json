@@ -365,7 +365,8 @@
       "instance": "Exemple",
       "email": "Compte",
       "quota": "État du quota",
-      "actions": "Actions"
+      "actions": "Actions",
+      "speed": "Vitesse"
     },
     "empty": {
       "title": "Aucune instance",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "La fenêtre contextuelle doit être un entier supérieur à 0.",
           "autoCompactInvalid": "La limite de compactage automatique doit être un entier supérieur à 0."
         }
-      }
+      },
+      "appSpeed": "Vitesse",
+      "appSpeedDesc": "Écrit la vitesse choisie avant de lancer Codex officiel"
     },
     "quota": {
       "unbound": "Compte non lié",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "Toutes les instances sont déjà en cours d'exécution",
       "noneRunning": "Aucune instance en cours d'exécution trouvée",
       "syncThreadsNeedTwo": "Au moins deux instances sont nécessaires pour synchroniser les threads",
-      "launchPrepared": "La commande de lancement est prête"
+      "launchPrepared": "La commande de lancement est prête",
+      "speedUpdated": "Vitesse mise à jour"
     },
     "runningDialog": {
       "title": "L'instance est déjà en cours d'exécution",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "Chemin de l’application spécifiée",
       "codexSpecifiedAppPathDesc": "Chemin de l’application à redémarrer lors du changement Codex.",
       "codexSpecifiedAppPathPlaceholder": "Par exemple /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "Effacer"
+      "codexSpecifiedAppPathClear": "Effacer",
+      "codexAppSpeed": "Vitesse Codex",
+      "codexAppSpeedDesc": "Enregistre la vitesse de lancement officielle de Codex et l’écrit avant chaque lancement depuis cette app.",
+      "codexAppSpeedStandard": "Normale",
+      "codexAppSpeedFast": "Rapide",
+      "codexAppSpeedLaunch": "Redémarrer Codex",
+      "codexAppSpeedSaveFailed": "Impossible d’enregistrer la vitesse Codex : {{error}}",
+      "codexAppSpeedLaunchFailed": "Impossible de redémarrer Codex : {{error}}"
     },
     "network": {
       "apiTitle": "API du cockpit antigravité",
@@ -2422,6 +2433,15 @@
       "noStats": "Aucune statistique",
       "refreshHint": "Cliquez sur actualiser pour synchroniser les statistiques de cette clé API.",
       "dailyStats": "Statistiques quotidiennes"
+    },
+    "speed": {
+      "title": "Vitesse",
+      "standard": "Normale",
+      "standardDesc": "Vitesse par défaut, usage normal",
+      "fast": "Rapide",
+      "fastDesc": "Vitesse 1,5x, usage accru",
+      "saveSuccess": "Vitesse mise à jour",
+      "saveFailed": "Impossible d’enregistrer la vitesse : {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "La fenêtre contextuelle doit être un entier supérieur à 0.",
           "autoCompactInvalid": "La limite de compactage automatique doit être un entier supérieur à 0."
         }
+      },
+      "appSpeed": {
+        "title": "Vitesse Codex",
+        "desc": "Vitesse de lancement enregistrée ; écrite avant le lancement.",
+        "standard": "Normale",
+        "fast": "Rapide",
+        "launch": "Redémarrer",
+        "loadFailed": "Impossible de charger la vitesse Codex : {{error}}",
+        "saveSuccess": "Vitesse de lancement Codex enregistrée.",
+        "saveFailed": "Impossible d’enregistrer la vitesse Codex : {{error}}",
+        "launchSuccess": "Codex a redémarré avec la vitesse enregistrée.",
+        "launchFailed": "Impossible de redémarrer Codex : {{error}}"
       }
     },
     "githubCopilot": {

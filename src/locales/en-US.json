@@ -423,7 +423,8 @@
       "instance": "Instance",
       "email": "Account",
       "quota": "Quota",
-      "actions": "Actions"
+      "actions": "Actions",
+      "speed": "Speed"
     },
     "empty": {
       "title": "No instances yet",
@@ -501,7 +502,9 @@
       },
       "nameRequired": "Please enter an instance name",
       "pathRequired": "Please select an instance directory",
-      "bindRequired": "Please select an account to bind"
+      "bindRequired": "Please select an account to bind",
+      "appSpeed": "Speed",
+      "appSpeedDesc": "Writes the selected speed before starting official Codex"
     },
     "quota": {
       "unbound": "No bound account",
@@ -522,7 +525,8 @@
       "closedAll": "Closed all instances",
       "allAlreadyRunning": "All instances are already running",
       "noneRunning": "No running instances found",
-      "syncThreadsNeedTwo": "At least two instances are required to sync threads"
+      "syncThreadsNeedTwo": "At least two instances are required to sync threads",
+      "speedUpdated": "Speed updated"
     },
     "runningDialog": {
       "title": "Instance already running",
@@ -885,7 +889,14 @@
       "qoderAutoRefreshDesc": "Background auto-refresh frequency",
       "qoderPathSelect": "Select",
       "workbuddyAutoRefresh": "WorkBuddy Auto Refresh",
-      "workbuddyAutoRefreshDesc": "Background auto-refresh frequency"
+      "workbuddyAutoRefreshDesc": "Background auto-refresh frequency",
+      "codexAppSpeed": "Codex Speed",
+      "codexAppSpeedDesc": "Saves the official Codex launch speed; this app writes it before each Codex launch.",
+      "codexAppSpeedStandard": "Standard",
+      "codexAppSpeedFast": "Fast",
+      "codexAppSpeedLaunch": "Restart Codex",
+      "codexAppSpeedSaveFailed": "Failed to save Codex speed: {{error}}",
+      "codexAppSpeedLaunchFailed": "Failed to restart Codex: {{error}}"
     },
     "network": {
       "apiTitle": "Antigravity Cockpit API",
@@ -2468,6 +2479,15 @@
     },
     "groups": {
       "addToGroup": "Add to Group"
+    },
+    "speed": {
+      "title": "Speed",
+      "standard": "Standard",
+      "standardDesc": "Default speed, regular usage",
+      "fast": "Fast",
+      "fastDesc": "1.5x speed, higher usage",
+      "saveSuccess": "Speed updated",
+      "saveFailed": "Failed to save speed: {{error}}"
     }
   },
   "codebuddy": {
@@ -2720,6 +2740,18 @@
           "contextWindowInvalid": "Context window must be an integer greater than 0.",
           "autoCompactInvalid": "Auto-compact limit must be an integer greater than 0."
         }
+      },
+      "appSpeed": {
+        "title": "Codex Speed",
+        "desc": "Saved as launch speed; written before this app starts Codex.",
+        "standard": "Standard",
+        "fast": "Fast",
+        "launch": "Restart",
+        "loadFailed": "Failed to load Codex speed: {{error}}",
+        "saveSuccess": "Codex launch speed saved.",
+        "saveFailed": "Failed to save Codex speed: {{error}}",
+        "launchSuccess": "Codex restarted with the saved speed.",
+        "launchFailed": "Failed to restart Codex: {{error}}"
       }
     },
     "githubCopilot": {

@@ -5,6 +5,7 @@ use std::sync::Mutex;
 use chrono::Utc;
 use uuid::Uuid;
 
+use crate::models::codex::CodexAppSpeed;
 use crate::models::{DefaultInstanceSettings, InstanceLaunchMode, InstanceProfile, InstanceStore};
 use crate::modules;
 use crate::modules::instance::InstanceDefaults;
@@ -36,6 +37,7 @@ pub struct CreateInstanceParams {
     pub copy_source_instance_id: Option<String>,
     pub init_mode: Option<String>,
     pub launch_mode: Option<InstanceLaunchMode>,
+    pub app_speed: Option<CodexAppSpeed>,
 }
 
 #[derive(Debug, Clone)]
@@ -46,6 +48,7 @@ pub struct UpdateInstanceParams {
     pub extra_args: Option<String>,
     pub bind_account_id: Option<Option<String>>,
     pub launch_mode: Option<InstanceLaunchMode>,
+    pub app_speed: Option<CodexAppSpeed>,
 }
 
 fn instances_path() -> Result<PathBuf, String> {
@@ -103,6 +106,17 @@ pub fn update_default_settings(
     }
 
     let updated = settings.clone();
+    save_instance_store(&store)?;
+    Ok(updated)
+}
+
+pub fn update_default_app_speed(speed: CodexAppSpeed) -> Result<DefaultInstanceSettings, String> {
+    let _lock = CODEX_INSTANCE_STORE_LOCK
+        .lock()
+        .map_err(|_| "无法获取实例锁")?;
+    let mut store = load_instance_store()?;
+    store.default_settings.app_speed = speed;
+    let updated = store.default_settings.clone();
     save_instance_store(&store)?;
     Ok(updated)
 }
@@ -696,6 +710,7 @@ pub fn create_instance(params: CreateInstanceParams) -> Result<InstanceProfile, 
             params.bind_account_id
         },
         launch_mode: params.launch_mode.unwrap_or_default(),
+        app_speed: params.app_speed.unwrap_or_default(),
         created_at: Utc::now().timestamp_millis(),
         last_launched_at: None,
         last_pid: None,
@@ -748,6 +763,9 @@ pub fn update_instance(params: UpdateInstanceParams) -> Result<InstanceProfile, 
     }
     if let Some(mode) = params.launch_mode {
         instance.launch_mode = mode;
+    }
+    if let Some(speed) = params.app_speed {
+        instance.app_speed = speed;
     }
 
     let updated = instance.clone();

@@ -443,6 +443,11 @@ pub fn run() {
             commands::codex::open_codex_config_toml,
             commands::codex::get_codex_quick_config,
             commands::codex::save_codex_quick_config,
+            commands::codex::get_codex_app_speed_config,
+            commands::codex::save_codex_app_speed,
+            commands::codex::get_codex_api_service_app_speed_config,
+            commands::codex::save_codex_api_service_app_speed,
+            commands::codex::update_codex_account_app_speed,
             commands::codex::refresh_codex_account_profile,
             commands::codex::switch_codex_account,
             commands::codex::delete_codex_account,
@@ -829,10 +834,8 @@ pub fn run() {
         {
             match event {
                 RunEvent::Reopen { .. } => {
-                    if let Some(window) = app_handle.get_webview_window("main") {
-                        let _ = window.show();
-                        let _ = window.unminimize();
-                        let _ = window.set_focus();
+                    if let Err(err) = modules::floating_card_window::show_main_window(app_handle) {
+                        logger::log_warn(&format!("[Window] Dock 重新打开主窗口失败: {}", err));
                     }
                 }
                 RunEvent::Opened { urls } => {

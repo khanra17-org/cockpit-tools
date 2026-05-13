@@ -6,6 +6,7 @@ use serde::Serialize;
 use tauri::AppHandle;
 use tauri_plugin_opener::OpenerExt;
 
+use crate::models::codex::CodexAppSpeed;
 use crate::models::{DefaultInstanceSettings, InstanceLaunchMode, InstanceProfile};
 use crate::modules;
 
@@ -21,6 +22,7 @@ pub struct CodexInstanceProfileView {
     pub extra_args: String,
     pub bind_account_id: Option<String>,
     pub launch_mode: InstanceLaunchMode,
+    pub app_speed: CodexAppSpeed,
     pub created_at: i64,
     pub last_launched_at: Option<i64>,
     pub last_pid: Option<u32>,
@@ -40,6 +42,7 @@ impl CodexInstanceProfileView {
             extra_args: profile.extra_args,
             bind_account_id: profile.bind_account_id,
             launch_mode: profile.launch_mode,
+            app_speed: profile.app_speed,
             created_at: profile.created_at,
             last_launched_at: profile.last_launched_at,
             last_pid: profile.last_pid,
@@ -109,6 +112,7 @@ fn default_instance_view(
         extra_args: default_settings.extra_args.clone(),
         bind_account_id,
         launch_mode: default_settings.launch_mode.clone(),
+        app_speed: default_settings.app_speed.clone(),
         created_at: 0,
         last_launched_at: None,
         last_pid,
@@ -420,6 +424,7 @@ pub async fn codex_create_instance(
     copy_source_instance_id: Option<String>,
     init_mode: Option<String>,
     launch_mode: Option<InstanceLaunchMode>,
+    app_speed: Option<CodexAppSpeed>,
 ) -> Result<CodexInstanceProfileView, String> {
     let instance =
         modules::codex_instance::create_instance(modules::codex_instance::CreateInstanceParams {
@@ -431,6 +436,7 @@ pub async fn codex_create_instance(
             copy_source_instance_id,
             init_mode,
             launch_mode,
+            app_speed,
         })?;
 
     let initialized = is_profile_initialized(&instance.user_data_dir);
@@ -450,15 +456,19 @@ pub async fn codex_update_instance(
     bind_account_id: Option<Option<String>>,
     follow_local_account: Option<bool>,
     launch_mode: Option<InstanceLaunchMode>,
+    app_speed: Option<CodexAppSpeed>,
 ) -> Result<CodexInstanceProfileView, String> {
     if instance_id == DEFAULT_INSTANCE_ID {
         let default_dir = modules::codex_instance::get_default_codex_home()?;
-        let updated = modules::codex_instance::update_default_settings(
+        let mut updated = modules::codex_instance::update_default_settings(
             bind_account_id,
             extra_args,
             follow_local_account,
             launch_mode,
         )?;
+        if let Some(speed) = app_speed {
+            updated = modules::codex_instance::update_default_app_speed(speed)?;
+        }
         let running = updated
             .last_pid
             .map(modules::process::is_pid_running)
@@ -498,6 +508,7 @@ pub async fn codex_update_instance(
             extra_args,
             bind_account_id,
             launch_mode,
+            app_speed,
         })?;
 
     let running = instance
@@ -526,10 +537,15 @@ pub async fn codex_start_instance(instance_id: String) -> Result<CodexInstancePr
         let default_dir = modules::codex_instance::get_default_codex_home()?;
         let default_settings = modules::codex_instance::load_default_settings()?;
         let default_bind_account_id = resolve_default_account_id(&default_settings);
-        if let Some(pid) = modules::process::resolve_codex_pid(default_settings.last_pid, None) {
-            modules::process::close_pid(pid, 20)?;
-            let _ = modules::codex_instance::update_default_pid(None)?;
+        if default_settings.launch_mode != InstanceLaunchMode::Cli {
+            modules::process::ensure_codex_launch_path_configured()?;
         }
+        modules::process::close_codex_default(20)?;
+        let _ = modules::codex_instance::update_default_pid(None)?;
+        modules::codex_speed::write_app_speed_for_dir(
+            &default_dir,
+            default_settings.app_speed.clone(),
+        )?;
         if let Some(ref account_id) = default_bind_account_id {
             inject_bound_account_to_profile(&default_dir, account_id).await?;
         }
@@ -547,7 +563,6 @@ pub async fn codex_start_instance(instance_id: String) -> Result<CodexInstancePr
             ));
         }
 
-        modules::process::ensure_codex_launch_path_configured()?;
         let extra_args = modules::process::parse_extra_args(&default_settings.extra_args);
         let pid = modules::process::start_codex_default(&extra_args)?;
         let updated = modules::codex_instance::update_default_pid(Some(pid))?;
@@ -580,6 +595,10 @@ pub async fn codex_start_instance(instance_id: String) -> Result<CodexInstancePr
     if let Some(ref account_id) = instance.bind_account_id {
         inject_bound_account_to_profile(Path::new(&instance.user_data_dir), account_id).await?;
     }
+    modules::codex_speed::write_app_speed_for_dir(
+        Path::new(&instance.user_data_dir),
+        instance.app_speed.clone(),
+    )?;
 
     if instance.launch_mode == InstanceLaunchMode::Cli {
         let context = resolve_instance_launch_context(&instance.id)?;
@@ -610,10 +629,7 @@ pub async fn codex_start_instance(instance_id: String) -> Result<CodexInstancePr
 pub async fn codex_stop_instance(instance_id: String) -> Result<CodexInstanceProfileView, String> {
     if instance_id == DEFAULT_INSTANCE_ID {
         let default_dir = modules::codex_instance::get_default_codex_home()?;
-        let default_settings = modules::codex_instance::load_default_settings()?;
-        if let Some(pid) = modules::process::resolve_codex_pid(default_settings.last_pid, None) {
-            modules::process::close_pid(pid, 20)?;
-        }
+        modules::process::close_codex_default(20)?;
         let updated = modules::codex_instance::update_default_pid(None)?;
         let default_bind_account_id = resolve_default_account_id(&updated);
         return Ok(default_instance_view(

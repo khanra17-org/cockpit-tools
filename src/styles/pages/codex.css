@@ -1482,9 +1482,19 @@
 /* 卡片底部 */
 .codex-account-card .codex-card-bottom {
   margin-top: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 8px;
+}
+
+.codex-account-card .codex-card-bottom > .codex-speed-select {
+  justify-self: end;
 }
 
 .codex-account-card .card-footer {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -1493,8 +1503,13 @@
 }
 
 .codex-account-card .card-date {
-  display: block;
-  margin-bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 11px;
   color: var(--text-secondary);
 }

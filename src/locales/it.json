@@ -365,7 +365,8 @@
       "instance": "Istanza",
       "email": "Account",
       "quota": "Stato quota",
-      "actions": "Azioni"
+      "actions": "Azioni",
+      "speed": "Velocità"
     },
     "empty": {
       "title": "Nessuna istanza",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "La finestra di contesto deve essere un numero intero maggiore di 0.",
           "autoCompactInvalid": "Il limite di compattazione automatica deve essere un numero intero maggiore di 0."
         }
-      }
+      },
+      "appSpeed": "Velocità",
+      "appSpeedDesc": "Scrive la velocità scelta prima di avviare Codex ufficiale"
     },
     "quota": {
       "unbound": "Account non collegato",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "Tutte le istanze sono già in esecuzione",
       "noneRunning": "Nessuna istanza in esecuzione trovata",
       "syncThreadsNeedTwo": "Sono necessarie almeno due istanze per sincronizzare i thread",
-      "launchPrepared": "Il comando di avvio è pronto"
+      "launchPrepared": "Il comando di avvio è pronto",
+      "speedUpdated": "Velocità aggiornata"
     },
     "runningDialog": {
       "title": "L'istanza è già in esecuzione",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "Percorso app specificata",
       "codexSpecifiedAppPathDesc": "Percorso dell'app da riavviare insieme al cambio Codex.",
       "codexSpecifiedAppPathPlaceholder": "Ad esempio /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "Cancella"
+      "codexSpecifiedAppPathClear": "Cancella",
+      "codexAppSpeed": "Velocità Codex",
+      "codexAppSpeedDesc": "Salva la velocità di avvio ufficiale di Codex e la scrive prima di ogni avvio da questa app.",
+      "codexAppSpeedStandard": "Normale",
+      "codexAppSpeedFast": "Rapida",
+      "codexAppSpeedLaunch": "Riavvia Codex",
+      "codexAppSpeedSaveFailed": "Impossibile salvare la velocità di Codex: {{error}}",
+      "codexAppSpeedLaunchFailed": "Impossibile riavviare Codex: {{error}}"
     },
     "network": {
       "apiTitle": "API della cabina di pilotaggio antigravità",
@@ -2422,6 +2433,15 @@
       "noStats": "Nessuna statistica",
       "refreshHint": "Fai clic su aggiorna per sincronizzare le statistiche di questa chiave API.",
       "dailyStats": "Statistiche giornaliere"
+    },
+    "speed": {
+      "title": "Velocità",
+      "standard": "Normale",
+      "standardDesc": "Velocità predefinita, uso normale",
+      "fast": "Rapida",
+      "fastDesc": "Velocità 1,5x, uso maggiore",
+      "saveSuccess": "Velocità aggiornata",
+      "saveFailed": "Impossibile salvare la velocità: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "La finestra di contesto deve essere un numero intero maggiore di 0.",
           "autoCompactInvalid": "Il limite di compattazione automatica deve essere un numero intero maggiore di 0."
         }
+      },
+      "appSpeed": {
+        "title": "Velocità Codex",
+        "desc": "Salvata come velocità di avvio; scritta prima di avviare Codex.",
+        "standard": "Normale",
+        "fast": "Rapida",
+        "launch": "Riavvia",
+        "loadFailed": "Impossibile caricare la velocità di Codex: {{error}}",
+        "saveSuccess": "Velocità di avvio di Codex salvata.",
+        "saveFailed": "Impossibile salvare la velocità di Codex: {{error}}",
+        "launchSuccess": "Codex riavviato con la velocità salvata.",
+        "launchFailed": "Impossibile riavviare Codex: {{error}}"
       }
     },
     "githubCopilot": {

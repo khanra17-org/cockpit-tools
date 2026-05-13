@@ -365,7 +365,8 @@
       "instance": "實例",
       "email": "帳號",
       "quota": "額度狀態",
-      "actions": "操作"
+      "actions": "操作",
+      "speed": "速度"
     },
     "empty": {
       "title": "暫無實例",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "上下文視窗必須是大於 0 的整數",
           "autoCompactInvalid": "自動壓縮閾值必須是大於 0 的整數"
         }
-      }
+      },
+      "appSpeed": "速度",
+      "appSpeedDesc": "啟動官方 Codex 前寫入對應速度"
     },
     "quota": {
       "unbound": "未綁定帳號",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "所有實例均已在運行中",
       "noneRunning": "未找到正在運行的實例",
       "syncThreadsNeedTwo": "至少需要兩個實例才能同步執行緒",
-      "launchPrepared": "啟動指令已準備"
+      "launchPrepared": "啟動指令已準備",
+      "speedUpdated": "速度已更新"
     },
     "runningDialog": {
       "title": "實例已在運行",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "指定應用啟動路徑",
       "codexSpecifiedAppPathDesc": "填寫需聯動重啟的應用路徑",
       "codexSpecifiedAppPathPlaceholder": "例如 /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "清空"
+      "codexSpecifiedAppPathClear": "清空",
+      "codexAppSpeed": "Codex 速度",
+      "codexAppSpeedDesc": "儲存為官方 Codex 啟動速度；每次從本應用啟動 Codex 前都會寫入。",
+      "codexAppSpeedStandard": "標準",
+      "codexAppSpeedFast": "快速",
+      "codexAppSpeedLaunch": "重新啟動 Codex",
+      "codexAppSpeedSaveFailed": "儲存 Codex 速度失敗：{{error}}",
+      "codexAppSpeedLaunchFailed": "重新啟動 Codex 失敗：{{error}}"
     },
     "network": {
       "apiTitle": "反重力駕駛艙 API",
@@ -2422,6 +2433,15 @@
       "noStats": "暫無統計",
       "refreshHint": "點擊重新整理後會同步目前 API key 的統計。",
       "dailyStats": "每日統計"
+    },
+    "speed": {
+      "title": "速度",
+      "standard": "標準",
+      "standardDesc": "預設速度，常規用量",
+      "fast": "快速",
+      "fastDesc": "1.5 倍速，用量增加",
+      "saveSuccess": "速度已更新",
+      "saveFailed": "儲存速度失敗：{{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "上下文視窗必須是大於 0 的整數",
           "autoCompactInvalid": "自動壓縮閾值必須是大於 0 的整數"
         }
+      },
+      "appSpeed": {
+        "title": "Codex 速度",
+        "desc": "儲存為啟動速度；從本應用啟動 Codex 前會寫入。",
+        "standard": "標準",
+        "fast": "快速",
+        "launch": "重啟",
+        "loadFailed": "載入 Codex 速度失敗：{{error}}",
+        "saveSuccess": "Codex 啟動速度已儲存",
+        "saveFailed": "儲存 Codex 速度失敗：{{error}}",
+        "launchSuccess": "Codex 已按目前速度重新啟動",
+        "launchFailed": "重新啟動 Codex 失敗：{{error}}"
       }
     },
     "githubCopilot": {

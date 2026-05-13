@@ -51,6 +51,8 @@ import {
   openCodexInstanceConfigToml,
   saveCodexInstanceQuickConfig,
 } from "../services/codexInstanceService";
+import { CodexSpeedSelect } from "./codex/CodexSpeedSelect";
+import type { CodexAppSpeed } from "../types/codex";
 
 type MessageState = { text: string; tone?: "error" };
 type AccountLike = { id: string; email: string; tags?: string[] | null };
@@ -320,6 +322,8 @@ export function InstancesManager<TAccount extends AccountLike>({
   const [formInitMode, setFormInitMode] = useState<InstanceInitMode>("copy");
   const [formLaunchMode, setFormLaunchMode] =
     useState<InstanceLaunchMode>("app");
+  const [formAppSpeed, setFormAppSpeed] =
+    useState<CodexAppSpeed>("standard");
   const [formBindAccountId, setFormBindAccountId] = useState<string>("");
   const [formCodexQuickConfig, setFormCodexQuickConfig] =
     useState<CodexQuickConfig | null>(null);
@@ -589,6 +593,7 @@ export function InstancesManager<TAccount extends AccountLike>({
     setFormExtraArgs("");
     setFormInitMode("copy");
     setFormLaunchMode(isGeminiApp ? "cli" : "app");
+    setFormAppSpeed("standard");
     setFormBindAccountId("");
     setFormCodexQuickConfig(null);
     setFormCodexQuickConfigPresetId("default");
@@ -640,6 +645,7 @@ export function InstancesManager<TAccount extends AccountLike>({
     setFormExtraArgs(instance.extraArgs || "");
     setFormInitMode("copy");
     setFormLaunchMode(resolveInstanceLaunchMode(instance));
+    setFormAppSpeed(instance.appSpeed ?? "standard");
     setFormBindAccountId(instance.bindAccountId || "");
     setFormCodexQuickConfig(null);
     setFormCodexQuickConfigPresetId("default");
@@ -767,11 +773,13 @@ export function InstancesManager<TAccount extends AccountLike>({
           bindAccountId?: string | null;
           followLocalAccount?: boolean;
           launchMode?: InstanceLaunchMode;
+          appSpeed?: CodexAppSpeed;
         } = {
           instanceId: editing.id,
           workingDir: nextWorkingDir,
           extraArgs: formExtraArgs,
           launchMode: nextLaunchMode,
+          appSpeed: isCodexApp ? formAppSpeed : undefined,
         };
         if (!isEditingDefault) {
           updatePayload.name = formName.trim();
@@ -805,6 +813,7 @@ export function InstancesManager<TAccount extends AccountLike>({
           extraArgs: formExtraArgs,
           initMode: formInitMode,
           launchMode: nextLaunchMode,
+          appSpeed: isCodexApp ? formAppSpeed : undefined,
           bindAccountId: isCreateEmpty ? null : formBindAccountId,
           copySourceInstanceId: formCopySourceInstanceId || defaultInstanceId,
         });
@@ -2171,6 +2180,26 @@ export function InstancesManager<TAccount extends AccountLike>({
     }
   };
 
+  const handleInlineSpeedChange = async (
+    instance: InstanceProfile,
+    speed: CodexAppSpeed,
+  ) => {
+    if (!isCodexApp) return;
+    if ((instance.appSpeed ?? "standard") === speed) return;
+    setActionLoading(instance.id);
+    try {
+      await updateInstance({
+        instanceId: instance.id,
+        appSpeed: speed,
+      });
+      setMessage({ text: t("instances.messages.speedUpdated", "速度已更新") });
+    } catch (e) {
+      setMessage({ text: String(e), tone: "error" });
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   return (
     <>
       {fileCorruptedError && (
@@ -2308,13 +2337,16 @@ export function InstancesManager<TAccount extends AccountLike>({
         </div>
       ) : (
         <div
-          className={`instances-list${isGeminiApp ? " instances-list-no-pid" : ""}`}
+          className={`instances-list${isGeminiApp ? " instances-list-no-pid" : ""}${
+            isCodexApp ? " instances-list-codex" : ""
+          }`}
         >
           <div className="instances-list-header">
             <div></div>
             <div>{t("instances.columns.instance", "实例")}</div>
             <div></div>
             <div>{t("instances.columns.email", "账号")}</div>
+            {isCodexApp && <div>{t("instances.columns.speed", "速度")}</div>}
             <div>PID</div>
             <div>{t("instances.columns.actions", "操作")}</div>
           </div>
@@ -2436,6 +2468,21 @@ export function InstancesManager<TAccount extends AccountLike>({
                     />
                   )}
                 </div>
+
+                {isCodexApp && (
+                  <div className="instance-speed">
+                    <CodexSpeedSelect
+                      value={instance.appSpeed ?? "standard"}
+                      onChange={(speed) =>
+                        void handleInlineSpeedChange(instance, speed)
+                      }
+                      busy={isInstanceBusy}
+                      compact
+                      preferredPlacement="top"
+                      ariaLabel={t("codex.speed.title", "速度")}
+                    />
+                  </div>
+                )}
 
                 <div className="instance-pid">
                   {instance.running ? (
@@ -2856,6 +2903,24 @@ export function InstancesManager<TAccount extends AccountLike>({
                       <span>{t("instances.form.launchModeCli", "CLI")}</span>
                     </label>
                   </div>
+                </div>
+              )}
+
+              {isCodexApp && (
+                <div className="form-group">
+                  <label>{t("instances.form.appSpeed", "速度")}</label>
+                  <CodexSpeedSelect
+                    value={formAppSpeed}
+                    onChange={setFormAppSpeed}
+                    preferredPlacement="bottom"
+                    ariaLabel={t("codex.speed.title", "速度")}
+                  />
+                  <p className="form-hint">
+                    {t(
+                      "instances.form.appSpeedDesc",
+                      "启动官方 Codex 前写入对应速度",
+                    )}
+                  </p>
                 </div>
               )}
 

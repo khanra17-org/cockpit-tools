@@ -365,7 +365,8 @@
       "instance": "인스턴스",
       "email": "계정",
       "quota": "쿼터 상태",
-      "actions": "작업"
+      "actions": "작업",
+      "speed": "속도"
     },
     "empty": {
       "title": "인스턴스가 없습니다",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "컨텍스트 창은 0보다 큰 정수여야 합니다.",
           "autoCompactInvalid": "자동 압축 한도는 0보다 큰 정수여야 합니다."
         }
-      }
+      },
+      "appSpeed": "속도",
+      "appSpeedDesc": "공식 Codex 시작 전에 선택한 속도를 기록합니다"
     },
     "quota": {
       "unbound": "연결된 계정 없음",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "모든 인스턴스가 이미 실행 중입니다",
       "noneRunning": "실행 중인 인스턴스를 찾을 수 없습니다",
       "syncThreadsNeedTwo": "스레드를 동기화하려면 인스턴스가 두 개 이상 필요합니다",
-      "launchPrepared": "실행 명령이 준비되었습니다"
+      "launchPrepared": "실행 명령이 준비되었습니다",
+      "speedUpdated": "속도가 업데이트되었습니다"
     },
     "runningDialog": {
       "title": "인스턴스가 이미 실행 중입니다",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "지정 앱 경로",
       "codexSpecifiedAppPathDesc": "Codex 전환 시 함께 재시작할 앱 경로",
       "codexSpecifiedAppPathPlaceholder": "예: /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "지우기"
+      "codexSpecifiedAppPathClear": "지우기",
+      "codexAppSpeed": "Codex 속도",
+      "codexAppSpeedDesc": "공식 Codex 시작 속도로 저장하고, 이 앱에서 Codex를 시작하기 전에 기록합니다.",
+      "codexAppSpeedStandard": "표준",
+      "codexAppSpeedFast": "빠름",
+      "codexAppSpeedLaunch": "Codex 재시작",
+      "codexAppSpeedSaveFailed": "Codex 속도를 저장하지 못했습니다: {{error}}",
+      "codexAppSpeedLaunchFailed": "Codex를 재시작하지 못했습니다: {{error}}"
     },
     "network": {
       "apiTitle": "반중력 조종석 API",
@@ -2422,6 +2433,15 @@
       "noStats": "아직 통계 없음",
       "refreshHint": "새로고침을 누르면 이 API 키의 통계를 동기화합니다.",
       "dailyStats": "일별 통계"
+    },
+    "speed": {
+      "title": "속도",
+      "standard": "표준",
+      "standardDesc": "기본 속도, 일반 사용량",
+      "fast": "빠름",
+      "fastDesc": "1.5배 속도, 사용량 증가",
+      "saveSuccess": "속도가 업데이트되었습니다",
+      "saveFailed": "속도 저장 실패: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "컨텍스트 창은 0보다 큰 정수여야 합니다.",
           "autoCompactInvalid": "자동 압축 한도는 0보다 큰 정수여야 합니다."
         }
+      },
+      "appSpeed": {
+        "title": "Codex 속도",
+        "desc": "시작 속도로 저장하며, 이 앱에서 Codex 시작 전에 기록합니다.",
+        "standard": "표준",
+        "fast": "빠름",
+        "launch": "재시작",
+        "loadFailed": "Codex 속도를 불러오지 못했습니다: {{error}}",
+        "saveSuccess": "Codex 시작 속도가 저장되었습니다.",
+        "saveFailed": "Codex 속도를 저장하지 못했습니다: {{error}}",
+        "launchSuccess": "저장된 속도로 Codex를 재시작했습니다.",
+        "launchFailed": "Codex를 재시작하지 못했습니다: {{error}}"
       }
     },
     "githubCopilot": {

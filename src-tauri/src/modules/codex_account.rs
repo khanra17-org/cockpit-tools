@@ -1,6 +1,6 @@
 use crate::models::codex::{
-    CodexAccount, CodexAccountIndex, CodexAccountSummary, CodexApiProviderMode, CodexAuthFile,
-    CodexAuthMode, CodexAuthTokens, CodexJwtPayload, CodexQuickConfig, CodexTokens,
+    CodexAccount, CodexAccountIndex, CodexAccountSummary, CodexApiProviderMode, CodexAppSpeed,
+    CodexAuthFile, CodexAuthMode, CodexAuthTokens, CodexJwtPayload, CodexQuickConfig, CodexTokens,
 };
 use crate::modules::{account, codex_oauth, logger};
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
@@ -24,6 +24,8 @@ static CODEX_AUTO_SWITCH_IN_PROGRESS: AtomicBool = AtomicBool::new(false);
 const CODEX_QUOTA_ALERT_COOLDOWN_SECONDS: i64 = 300;
 const ACCOUNT_CHECK_URL: &str = "https://chatgpt.com/backend-api/wham/accounts/check";
 const API_KEY_LOGIN_PLAN_TYPE: &str = "API_KEY";
+const COCKPIT_API_LOGIN_PLAN_TYPE: &str = "Cockpit Api";
+const COCKPIT_API_DEFAULT_ACCOUNT_NAME: &str = "Codex API";
 const API_KEY_EMAIL_PREFIX: &str = "api-key";
 const API_KEY_AUTH_MODE: &str = "apikey";
 const CODEX_CONFIG_FILE_NAME: &str = "config.toml";
@@ -33,6 +35,8 @@ const CODEX_CONFIG_MODEL_PROVIDERS_KEY: &str = "model_providers";
 const CODEX_CONFIG_MODEL_CONTEXT_WINDOW_KEY: &str = "model_context_window";
 const CODEX_CONFIG_MODEL_AUTO_COMPACT_TOKEN_LIMIT_KEY: &str = "model_auto_compact_token_limit";
 const CODEX_DEFAULT_OPENAI_BASE_URL: &str = "https://api.openai.com/v1";
+const CODEX_COCKPIT_API_BASE_URL: &str = "https://chongcodex.cn/v1";
+const CODEX_COCKPIT_API_PROVIDER_ID: &str = "cockpit_api";
 const CODEX_OPENAI_PROVIDER_ID: &str = "openai";
 const CODEX_RUNTIME_MODEL_PROVIDER_ID: &str = "codex_local_access";
 const CODEX_DEFAULT_RUNTIME_PROVIDER_NAME: &str = "OpenAI Official";
@@ -83,6 +87,30 @@ fn normalize_api_base_url(raw: Option<&str>) -> Option<String> {
         return None;
     }
     Some(trimmed.trim_end_matches('/').to_string())
+}
+
+fn normalize_api_base_url_for_match(raw: Option<&str>) -> Option<String> {
+    let parsed = reqwest::Url::parse(raw?.trim()).ok()?;
+    if !matches!(parsed.scheme(), "http" | "https") {
+        return None;
+    }
+    let host = parsed.host_str()?;
+    let port = parsed
+        .port()
+        .map(|value| format!(":{}", value))
+        .unwrap_or_default();
+    let path = parsed.path().trim_end_matches('/');
+    Some(format!("{}://{}{}{}", parsed.scheme(), host, port, path).to_ascii_lowercase())
+}
+
+fn is_cockpit_api_base_url(raw: Option<&str>) -> bool {
+    let Some(actual) = normalize_api_base_url_for_match(raw) else {
+        return false;
+    };
+    let Some(expected) = normalize_api_base_url_for_match(Some(CODEX_COCKPIT_API_BASE_URL)) else {
+        return false;
+    };
+    actual == expected
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -283,6 +311,18 @@ fn apply_api_key_fields(
     api_key: &str,
     provider_config: ApiProviderConfig,
 ) {
+    let is_cockpit_api = provider_config
+        .provider_id
+        .as_deref()
+        .map(|value| value.eq_ignore_ascii_case(CODEX_COCKPIT_API_PROVIDER_ID))
+        .unwrap_or(false)
+        || is_cockpit_api_base_url(provider_config.base_url.as_deref());
+    let plan_type = if is_cockpit_api {
+        COCKPIT_API_LOGIN_PLAN_TYPE
+    } else {
+        API_KEY_LOGIN_PLAN_TYPE
+    };
+
     account.auth_mode = CodexAuthMode::Apikey;
     account.openai_api_key = Some(api_key.to_string());
     account.api_base_url = provider_config.base_url;
@@ -290,7 +330,10 @@ fn apply_api_key_fields(
     account.api_provider_id = provider_config.provider_id;
     account.api_provider_name = provider_config.provider_name;
     account.email = build_api_key_email(api_key);
-    account.plan_type = Some(API_KEY_LOGIN_PLAN_TYPE.to_string());
+    if is_cockpit_api && normalize_optional_ref(account.account_name.as_deref()).is_none() {
+        account.account_name = Some(COCKPIT_API_DEFAULT_ACCOUNT_NAME.to_string());
+    }
+    account.plan_type = Some(plan_type.to_string());
     account.tokens = CodexTokens {
         id_token: String::new(),
         access_token: String::new(),
@@ -4964,6 +5007,19 @@ pub fn update_account_note(account_id: &str, note: String) -> Result<CodexAccoun
         load_account(account_id).ok_or_else(|| format!("账号不存在: {}", account_id))?;
 
     account.account_note = normalize_optional_value(Some(note));
+    save_account(&account)?;
+
+    Ok(account)
+}
+
+pub fn update_account_app_speed(
+    account_id: &str,
+    speed: CodexAppSpeed,
+) -> Result<CodexAccount, String> {
+    let mut account =
+        load_account(account_id).ok_or_else(|| format!("账号不存在: {}", account_id))?;
+
+    account.app_speed = speed;
     save_account(&account)?;
 
     Ok(account)

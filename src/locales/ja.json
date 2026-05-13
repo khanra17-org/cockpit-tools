@@ -365,7 +365,8 @@
       "instance": "インスタンス",
       "email": "アカウント",
       "quota": "クォータ状況",
-      "actions": "操作"
+      "actions": "操作",
+      "speed": "速度"
     },
     "empty": {
       "title": "インスタンスがありません",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "コンテキスト ウィンドウは 0 より大きい整数でなければなりません。",
           "autoCompactInvalid": "自動圧縮制限は 0 より大きい整数である必要があります。"
         }
-      }
+      },
+      "appSpeed": "速度",
+      "appSpeedDesc": "公式 Codex の起動前に選択した速度を書き込みます"
     },
     "quota": {
       "unbound": "紐付けアカウントなし",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "すべてのインスタンスが既に実行中です",
       "noneRunning": "実行中のインスタンスが見つかりません",
       "syncThreadsNeedTwo": "スレッドを同期するには少なくとも2つのインスタンスが必要です",
-      "launchPrepared": "起動コマンドの準備ができました"
+      "launchPrepared": "起動コマンドの準備ができました",
+      "speedUpdated": "速度を更新しました"
     },
     "runningDialog": {
       "title": "インスタンスは既に実行中です",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "指定アプリの起動パス",
       "codexSpecifiedAppPathDesc": "Codex切り替え時に連動再起動するアプリのパス",
       "codexSpecifiedAppPathPlaceholder": "例: /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "クリア"
+      "codexSpecifiedAppPathClear": "クリア",
+      "codexAppSpeed": "Codex 速度",
+      "codexAppSpeedDesc": "公式 Codex の起動速度として保存し、このアプリから起動する前に書き込みます。",
+      "codexAppSpeedStandard": "標準",
+      "codexAppSpeedFast": "高速",
+      "codexAppSpeedLaunch": "Codex を再起動",
+      "codexAppSpeedSaveFailed": "Codex 速度の保存に失敗しました: {{error}}",
+      "codexAppSpeedLaunchFailed": "Codex の再起動に失敗しました: {{error}}"
     },
     "network": {
       "apiTitle": "反重力コックピット API",
@@ -2422,6 +2433,15 @@
       "noStats": "統計はまだありません",
       "refreshHint": "更新をクリックすると、この API キーの統計を同期します。",
       "dailyStats": "日別統計"
+    },
+    "speed": {
+      "title": "速度",
+      "standard": "標準",
+      "standardDesc": "既定の速度、通常の使用量",
+      "fast": "高速",
+      "fastDesc": "1.5倍速、使用量が増加",
+      "saveSuccess": "速度を更新しました",
+      "saveFailed": "速度の保存に失敗しました: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "コンテキスト ウィンドウは 0 より大きい整数でなければなりません。",
           "autoCompactInvalid": "自動圧縮制限は 0 より大きい整数である必要があります。"
         }
+      },
+      "appSpeed": {
+        "title": "Codex 速度",
+        "desc": "起動速度として保存し、このアプリからの起動前に書き込みます。",
+        "standard": "標準",
+        "fast": "高速",
+        "launch": "再起動",
+        "loadFailed": "Codex 速度の読み込みに失敗しました: {{error}}",
+        "saveSuccess": "Codex の起動速度を保存しました。",
+        "saveFailed": "Codex 速度の保存に失敗しました: {{error}}",
+        "launchSuccess": "保存済み速度で Codex を再起動しました。",
+        "launchFailed": "Codex の再起動に失敗しました: {{error}}"
       }
     },
     "githubCopilot": {

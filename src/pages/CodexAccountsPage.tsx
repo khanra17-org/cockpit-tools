@@ -113,6 +113,7 @@ import { CodexInstancesContent } from "./CodexInstancesPage";
 import { CodexSessionManager } from "../components/codex/CodexSessionManager";
 import { CodexWakeupContent } from "../components/codex/CodexWakeupContent";
 import { CodexModelProviderManager } from "../components/codex/CodexModelProviderManager";
+import { CodexSpeedSelect } from "../components/codex/CodexSpeedSelect";
 import { QuickSettingsPopover } from "../components/QuickSettingsPopover";
 import { useProviderAccountsPage } from "../hooks/useProviderAccountsPage";
 import {
@@ -123,7 +124,7 @@ import {
   SingleSelectFilterDropdown,
   type SingleSelectFilterOption,
 } from "../components/SingleSelectFilterDropdown";
-import type { CodexAccount } from "../types/codex";
+import type { CodexAccount, CodexAppSpeed } from "../types/codex";
 import type {
   CodexLocalAccessRoutingStrategy,
   CodexLocalAccessState,
@@ -143,6 +144,7 @@ import {
   CODEX_API_PROVIDER_CUSTOM_ID,
   CODEX_API_PROVIDER_PRESETS,
   COCKPIT_API_PROVIDER_ID,
+  findCodexApiProviderPresetByBaseUrl,
   findCodexApiProviderPresetById,
   resolveCodexApiProviderPresetId,
 } from "../utils/codexProviderPresets";
@@ -298,6 +300,14 @@ function formatCockpitApiInteger(value: number): string {
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(
     Math.max(0, value),
   );
+}
+
+function formatCockpitApiTokenCount(value: number): string {
+  const normalized = Math.max(0, value);
+  return new Intl.NumberFormat("en", {
+    notation: normalized >= 1000 ? "compact" : "standard",
+    maximumFractionDigits: normalized >= 1000 ? 1 : 0,
+  }).format(normalized);
 }
 
 function getCockpitApiUsageRecord(
@@ -643,6 +653,9 @@ export function CodexAccountsPage() {
   >(null);
   const [editingAccountNoteValue, setEditingAccountNoteValue] = useState("");
   const [savingAccountNote, setSavingAccountNote] = useState(false);
+  const [savingAppSpeedId, setSavingAppSpeedId] = useState<string | null>(null);
+  const [apiServiceAppSpeed, setApiServiceAppSpeed] =
+    useState<CodexAppSpeed>("standard");
   const {
     message: accountNoteError,
     scrollKey: accountNoteErrorScrollKey,
@@ -1463,6 +1476,7 @@ export function CodexAccountsPage() {
     hydrateAccountProfilesIfNeeded,
     updateAccountName,
     updateApiKeyCredentials,
+    updateAccountAppSpeed,
   } = store;
 
   const editingAccountNoteAccount = useMemo(
@@ -1486,6 +1500,85 @@ export function CodexAccountsPage() {
     setEditingAccountNoteValue("");
     setAccountNoteError(null);
   }, [savingAccountNote, setAccountNoteError]);
+
+  const loadApiServiceAppSpeed = useCallback(async () => {
+    try {
+      const config = await codexService.getCodexApiServiceAppSpeedConfig();
+      setApiServiceAppSpeed(config.speed);
+    } catch (error) {
+      console.warn("加载 Codex API 服务速度失败:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadApiServiceAppSpeed();
+  }, [loadApiServiceAppSpeed]);
+
+  const handleAccountAppSpeedChange = useCallback(
+    async (account: CodexAccount, speed: CodexAppSpeed) => {
+      if (savingAppSpeedId) return;
+      setSavingAppSpeedId(account.id);
+      try {
+        await updateAccountAppSpeed(account.id, speed);
+        setMessage({
+          text: t("codex.speed.saveSuccess", "速度已更新"),
+        });
+      } catch (error) {
+        setMessage({
+          text: t("codex.speed.saveFailed", {
+            defaultValue: "保存速度失败：{{error}}",
+            error: String(error),
+          }),
+          tone: "error",
+        });
+      } finally {
+        setSavingAppSpeedId(null);
+      }
+    },
+    [savingAppSpeedId, setMessage, t, updateAccountAppSpeed],
+  );
+
+  const handleApiServiceAppSpeedChange = useCallback(
+    async (speed: CodexAppSpeed) => {
+      if (savingAppSpeedId) return;
+      const previousSpeed = apiServiceAppSpeed;
+      setApiServiceAppSpeed(speed);
+      setSavingAppSpeedId(CODEX_API_SERVICE_BIND_ID);
+      try {
+        const saved = await codexService.saveCodexApiServiceAppSpeed(speed);
+        setApiServiceAppSpeed(saved.speed);
+        setMessage({
+          text: t("codex.speed.saveSuccess", "速度已更新"),
+        });
+      } catch (error) {
+        setApiServiceAppSpeed(previousSpeed);
+        setMessage({
+          text: t("codex.speed.saveFailed", {
+            defaultValue: "保存速度失败：{{error}}",
+            error: String(error),
+          }),
+          tone: "error",
+        });
+      } finally {
+        setSavingAppSpeedId(null);
+      }
+    },
+    [apiServiceAppSpeed, savingAppSpeedId, setMessage, t],
+  );
+
+  const renderAccountSpeedSelect = useCallback(
+    (account: CodexAccount, compact = false) => (
+      <CodexSpeedSelect
+        value={account.app_speed ?? "standard"}
+        onChange={(speed) => handleAccountAppSpeedChange(account, speed)}
+        busy={savingAppSpeedId === account.id}
+        compact={compact}
+        preferredPlacement="top"
+        ariaLabel={t("codex.speed.title", "速度")}
+      />
+    ),
+    [handleAccountAppSpeedChange, savingAppSpeedId, t],
+  );
 
   const handleSubmitAccountNote = useCallback(async () => {
     if (!editingAccountNoteId || savingAccountNote) return;
@@ -1762,10 +1855,19 @@ export function CodexAccountsPage() {
       apiProviderName?: string;
     } => {
       const normalizedBaseUrl = normalizeHttpBaseUrl(apiBaseUrl);
-      if (
-        providerPresetId === OPENAI_OFFICIAL_PRESET_ID ||
-        !normalizedBaseUrl
-      ) {
+      if (!normalizedBaseUrl) {
+        return { apiProviderMode: "openai_builtin" };
+      }
+      const matchedPresetByBaseUrl =
+        findCodexApiProviderPresetByBaseUrl(normalizedBaseUrl);
+      if (matchedPresetByBaseUrl?.id === COCKPIT_API_PROVIDER_ID) {
+        return {
+          apiProviderMode: "custom",
+          apiProviderId: matchedPresetByBaseUrl.id,
+          apiProviderName: matchedPresetByBaseUrl.name,
+        };
+      }
+      if (providerPresetId === OPENAI_OFFICIAL_PRESET_ID) {
         return { apiProviderMode: "openai_builtin" };
       }
 
@@ -4489,6 +4591,12 @@ export function CodexAccountsPage() {
         return b.created_at - a.created_at;
       }
 
+      const cockpitApiPriority =
+        Number(!isCodexNewApiAccount(a)) - Number(!isCodexNewApiAccount(b));
+      if (cockpitApiPriority !== 0) {
+        return cockpitApiPriority;
+      }
+
       const currentFirstDiff = compareCurrentAccountFirst(
         a.id,
         b.id,
@@ -4880,6 +4988,7 @@ export function CodexAccountsPage() {
               </span>
             )}
           </div>
+          {renderAccountSpeedSelect(account, true)}
           <button
             className={`codex-compact-note-btn ${account.account_note?.trim() ? "has-note" : ""}`}
             onClick={() => openAccountNoteModal(account)}
@@ -5202,6 +5311,7 @@ export function CodexAccountsPage() {
           )}
           <div className="codex-card-bottom">
             <span className="card-date">{formatDate(account.created_at)}</span>
+            {renderAccountSpeedSelect(account)}
             <div className="card-footer">
               <div className="card-actions">
                 <button
@@ -5709,6 +5819,13 @@ export function CodexAccountsPage() {
               <span className="card-date">
                 {t("codex.localAccess.footerHint", "监听本机与局域网")}
               </span>
+              <CodexSpeedSelect
+                value={apiServiceAppSpeed}
+                onChange={handleApiServiceAppSpeedChange}
+                busy={savingAppSpeedId === CODEX_API_SERVICE_BIND_ID}
+                preferredPlacement="top"
+                ariaLabel={t("codex.speed.title", "速度")}
+              />
               <div className="card-footer codex-local-access-footer">
                 <div className="card-actions">
                   <button
@@ -6022,6 +6139,7 @@ export function CodexAccountsPage() {
                     {t("codex.current", "当前")}
                   </span>
                 )}
+                {renderAccountSpeedSelect(account, true)}
               </div>
               {(meta.accountContextText ||
                 isInLocalAccess ||
@@ -6469,6 +6587,7 @@ export function CodexAccountsPage() {
     const last30Count = readCockpitApiNumber(requests, "last_30_days");
     const totalTokens = readCockpitApiNumber(tokens, "total");
     const totalQuotaDisplay = readCockpitApiString(total, "quota_display");
+    const panelDisplayName = resolvePresentation(account).displayName;
     const hasStats = Boolean(stats);
     const usedPercentText = `${formatCockpitApiInteger(usedPercent)}%`;
     const summaryItems = [
@@ -6487,7 +6606,7 @@ export function CodexAccountsPage() {
       {
         key: "tokens",
         label: t("codex.cockpitApi.tokens", "Tokens"),
-        value: formatCockpitApiInteger(totalTokens),
+        value: formatCockpitApiTokenCount(totalTokens),
         meta: `${t("codex.cockpitApi.quotaUsed", "消耗")} ${totalQuotaDisplay || "-"}`,
       },
     ];
@@ -6507,7 +6626,7 @@ export function CodexAccountsPage() {
                 {t("codex.cockpitApi.panelTitle", "Cockpit Api 服务面板")}
               </h2>
               <span className="cockpit-api-panel-subtitle">
-                {maskAccountText(account.account_name || account.email)}
+                {maskAccountText(panelDisplayName)}
               </span>
             </div>
             <button
@@ -6633,7 +6752,8 @@ export function CodexAccountsPage() {
                             </div>
                             <div className="cockpit-api-usage-values">
                               <span>
-                                Tokens {formatCockpitApiInteger(modelTokens)}
+                                {t("codex.cockpitApi.tokens", "Tokens")}{" "}
+                                {formatCockpitApiTokenCount(modelTokens)}
                               </span>
                               <strong>{quotaDisplay || "-"}</strong>
                             </div>
@@ -6683,7 +6803,8 @@ export function CodexAccountsPage() {
                             </div>
                             <div className="cockpit-api-usage-values">
                               <span>
-                                Tokens {formatCockpitApiInteger(dayTokens)}
+                                {t("codex.cockpitApi.tokens", "Tokens")}{" "}
+                                {formatCockpitApiTokenCount(dayTokens)}
                               </span>
                               <strong>{quotaDisplay || "-"}</strong>
                             </div>

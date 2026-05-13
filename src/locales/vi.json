@@ -365,7 +365,8 @@
       "instance": "Phiên bản",
       "email": "Tài khoản",
       "quota": "Trạng thái hạn ngạch",
-      "actions": "Hành động"
+      "actions": "Hành động",
+      "speed": "Tốc độ"
     },
     "empty": {
       "title": "Không có phiên bản nào",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "Cửa sổ ngữ cảnh phải là số nguyên lớn hơn 0.",
           "autoCompactInvalid": "Giới hạn tự động thu gọn phải là số nguyên lớn hơn 0."
         }
-      }
+      },
+      "appSpeed": "Tốc độ",
+      "appSpeedDesc": "Ghi tốc độ đã chọn trước khi mở Codex chính thức"
     },
     "quota": {
       "unbound": "Tài khoản chưa liên kết",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "Tất cả các phiên bản đã đang chạy",
       "noneRunning": "Không tìm thấy phiên bản nào đang chạy",
       "syncThreadsNeedTwo": "Cần ít nhất hai phiên bản để đồng bộ luồng",
-      "launchPrepared": "Lệnh khởi chạy đã sẵn sàng"
+      "launchPrepared": "Lệnh khởi chạy đã sẵn sàng",
+      "speedUpdated": "Đã cập nhật tốc độ"
     },
     "runningDialog": {
       "title": "Phiên bản đã đang chạy",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "Đường dẫn ứng dụng chỉ định",
       "codexSpecifiedAppPathDesc": "Đường dẫn ứng dụng được khởi động lại cùng lúc chuyển Codex.",
       "codexSpecifiedAppPathPlaceholder": "Ví dụ /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "Xóa"
+      "codexSpecifiedAppPathClear": "Xóa",
+      "codexAppSpeed": "Tốc độ Codex",
+      "codexAppSpeedDesc": "Lưu tốc độ khởi động chính thức của Codex và ghi trước mỗi lần mở từ ứng dụng này.",
+      "codexAppSpeedStandard": "Chuẩn",
+      "codexAppSpeedFast": "Nhanh",
+      "codexAppSpeedLaunch": "Khởi động lại Codex",
+      "codexAppSpeedSaveFailed": "Không thể lưu tốc độ Codex: {{error}}",
+      "codexAppSpeedLaunchFailed": "Không thể khởi động lại Codex: {{error}}"
     },
     "network": {
       "apiTitle": "API Antigravity Cockpit",
@@ -2422,6 +2433,15 @@
       "noStats": "Chưa có thống kê",
       "refreshHint": "Bấm làm mới để đồng bộ thống kê của API key này.",
       "dailyStats": "Thống kê hằng ngày"
+    },
+    "speed": {
+      "title": "Tốc độ",
+      "standard": "Chuẩn",
+      "standardDesc": "Tốc độ mặc định, mức dùng thường",
+      "fast": "Nhanh",
+      "fastDesc": "Tốc độ 1,5x, dùng nhiều hơn",
+      "saveSuccess": "Đã cập nhật tốc độ",
+      "saveFailed": "Không thể lưu tốc độ: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "Cửa sổ ngữ cảnh phải là số nguyên lớn hơn 0.",
           "autoCompactInvalid": "Giới hạn tự động thu gọn phải là số nguyên lớn hơn 0."
         }
+      },
+      "appSpeed": {
+        "title": "Tốc độ Codex",
+        "desc": "Lưu làm tốc độ khởi động; ghi trước khi mở Codex.",
+        "standard": "Chuẩn",
+        "fast": "Nhanh",
+        "launch": "Khởi động lại",
+        "loadFailed": "Không thể tải tốc độ Codex: {{error}}",
+        "saveSuccess": "Đã lưu tốc độ khởi động Codex.",
+        "saveFailed": "Không thể lưu tốc độ Codex: {{error}}",
+        "launchSuccess": "Codex đã khởi động lại với tốc độ đã lưu.",
+        "launchFailed": "Không thể khởi động lại Codex: {{error}}"
       }
     },
     "githubCopilot": {

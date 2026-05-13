@@ -16,6 +16,7 @@ pub mod codex_oauth;
 pub mod codex_quota;
 pub mod codex_session_manager;
 pub mod codex_session_visibility;
+pub mod codex_speed;
 pub mod codex_thread_sync;
 pub mod codex_wakeup;
 pub mod codex_wakeup_scheduler;

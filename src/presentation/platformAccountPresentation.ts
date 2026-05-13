@@ -633,6 +633,8 @@ export function buildCodexAccountPresentation(
   const displayName =
     isCodexApiKeyAccount(account) && apiKeyDisplayName
       ? apiKeyDisplayName
+      : isCodexNewApiAccount(account)
+        ? "Codex API"
       : account.email;
   const effectiveQuota = getCodexEffectiveQuotaPercentages(account.quota);
   const weeklyBlocksHourlyHint = effectiveQuota.weeklyBlocksHourly

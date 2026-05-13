@@ -411,7 +411,8 @@
       "instance": "المثيل",
       "email": "الحساب",
       "quota": "حالة الحصة",
-      "actions": "إجراءات"
+      "actions": "إجراءات",
+      "speed": "السرعة"
     },
     "empty": {
       "title": "لا توجد مثيلات",
@@ -489,7 +490,9 @@
           "contextWindowInvalid": "يجب أن تكون نافذة السياق عددًا صحيحًا أكبر من 0.",
           "autoCompactInvalid": "يجب أن يكون حد الضغط التلقائي عددًا صحيحًا أكبر من 0."
         }
-      }
+      },
+      "appSpeed": "السرعة",
+      "appSpeedDesc": "يكتب السرعة المختارة قبل تشغيل Codex الرسمي"
     },
     "quota": {
       "unbound": "حساب غير مرتبط",
@@ -510,7 +513,8 @@
       "allAlreadyRunning": "جميع المثيلات قيد التشغيل بالفعل",
       "noneRunning": "لا توجد مثيلات قيد التشغيل حاليًا",
       "syncThreadsNeedTwo": "يلزم وجود مثيلين على الأقل لمزامنة السلاسل",
-      "launchPrepared": "أمر التشغيل جاهز"
+      "launchPrepared": "أمر التشغيل جاهز",
+      "speedUpdated": "تم تحديث السرعة"
     },
     "runningDialog": {
       "title": "المثيل قيد التشغيل",
@@ -787,7 +791,14 @@
       "codexSpecifiedAppPath": "مسار التطبيق المحدد",
       "codexSpecifiedAppPathDesc": "مسار التطبيق الذي سيُعاد تشغيله مع تبديل Codex.",
       "codexSpecifiedAppPathPlaceholder": "مثال /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "مسح"
+      "codexSpecifiedAppPathClear": "مسح",
+      "codexAppSpeed": "سرعة Codex",
+      "codexAppSpeedDesc": "يحفظ سرعة تشغيل Codex الرسمية ويكتبها قبل كل تشغيل من هذا التطبيق.",
+      "codexAppSpeedStandard": "قياسي",
+      "codexAppSpeedFast": "سريع",
+      "codexAppSpeedLaunch": "إعادة تشغيل Codex",
+      "codexAppSpeedSaveFailed": "فشل حفظ سرعة Codex: {{error}}",
+      "codexAppSpeedLaunchFailed": "فشلت إعادة تشغيل Codex: {{error}}"
     },
     "network": {
       "apiTitle": "واجهة برمجة تطبيقات قمرة القيادة المضادة للجاذبية",
@@ -2468,6 +2479,15 @@
       "noStats": "لا توجد إحصاءات بعد",
       "refreshHint": "انقر على التحديث لمزامنة إحصاءات مفتاح API هذا.",
       "dailyStats": "الإحصاءات اليومية"
+    },
+    "speed": {
+      "title": "السرعة",
+      "standard": "قياسي",
+      "standardDesc": "السرعة الافتراضية، استخدام عادي",
+      "fast": "سريع",
+      "fastDesc": "سرعة 1.5x، استخدام أعلى",
+      "saveSuccess": "تم تحديث السرعة",
+      "saveFailed": "فشل حفظ السرعة: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2620,6 +2640,18 @@
           "contextWindowInvalid": "يجب أن تكون نافذة السياق عددًا صحيحًا أكبر من 0.",
           "autoCompactInvalid": "يجب أن يكون حد الضغط التلقائي عددًا صحيحًا أكبر من 0."
         }
+      },
+      "appSpeed": {
+        "title": "سرعة Codex",
+        "desc": "تُحفظ كسرعة تشغيل وتُكتب قبل فتح Codex.",
+        "standard": "قياسي",
+        "fast": "سريع",
+        "launch": "إعادة تشغيل",
+        "loadFailed": "فشل تحميل سرعة Codex: {{error}}",
+        "saveSuccess": "تم حفظ سرعة تشغيل Codex.",
+        "saveFailed": "فشل حفظ سرعة Codex: {{error}}",
+        "launchSuccess": "تمت إعادة تشغيل Codex بالسرعة المحفوظة.",
+        "launchFailed": "فشلت إعادة تشغيل Codex: {{error}}"
       }
     },
     "githubCopilot": {

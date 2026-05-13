@@ -7,6 +7,13 @@ export interface CodexQuickConfig {
   detected_auto_compact_token_limit?: number;
 }
 
+export type CodexAppSpeed = "standard" | "fast";
+
+export interface CodexAppSpeedConfig {
+  speed: CodexAppSpeed;
+  globalStatePath: string;
+}
+
 /** Codex 账号数据 */
 export interface CodexAccount {
   id: string;
@@ -26,6 +33,7 @@ export interface CodexAccount {
   account_name?: string;
   account_structure?: string;
   account_note?: string;
+  app_speed?: CodexAppSpeed;
   tokens: CodexTokens;
   token_generation?: number;
   token_updated_at?: number;
@@ -72,6 +80,31 @@ export interface CodexQuota {
   weekly_window_present?: boolean;
   /** 原始响应数据 */
   raw_data?: unknown;
+}
+
+const COCKPIT_API_BASE_URL = "https://chongcodex.cn/v1";
+
+function normalizeCodexApiBaseUrlForMatch(rawValue?: string | null): string {
+  const trimmed = (rawValue || "").trim();
+  if (!trimmed) return "";
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return "";
+    }
+    return `${parsed.origin}${parsed.pathname}`
+      .replace(/\/+$/, "")
+      .toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+export function isCodexCockpitApiBaseUrl(rawValue?: string | null): boolean {
+  return (
+    normalizeCodexApiBaseUrlForMatch(rawValue) ===
+    normalizeCodexApiBaseUrlForMatch(COCKPIT_API_BASE_URL)
+  );
 }
 
 export interface CodexWorkspace {
@@ -392,6 +425,7 @@ export function isCodexNewApiAccount(account: CodexAccount): boolean {
     isCodexApiKeyAccount(account) &&
     (providerId === "cockpit_api" ||
       providerId === "new_api" ||
+      isCodexCockpitApiBaseUrl(account.api_base_url) ||
       planType === "COCKPIT API" ||
       planType === "NEW_API_EXCLUSIVE")
   );

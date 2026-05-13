@@ -365,7 +365,8 @@
       "instance": "Инстанс",
       "email": "Аккаунт",
       "quota": "Статус квоты",
-      "actions": "Действия"
+      "actions": "Действия",
+      "speed": "Скорость"
     },
     "empty": {
       "title": "Нет инстансов",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "Контекстное окно должно быть целым числом больше 0.",
           "autoCompactInvalid": "Предел автокомпактности должен быть целым числом больше 0."
         }
-      }
+      },
+      "appSpeed": "Скорость",
+      "appSpeedDesc": "Записывает выбранную скорость перед запуском Codex"
     },
     "quota": {
       "unbound": "Аккаунт не привязан",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "Все инстансы уже запущены",
       "noneRunning": "Работающих инстансов не найдено",
       "syncThreadsNeedTwo": "Для синхронизации тредов требуется как минимум два экземпляра",
-      "launchPrepared": "Команда запуска готова"
+      "launchPrepared": "Команда запуска готова",
+      "speedUpdated": "Скорость обновлена"
     },
     "runningDialog": {
       "title": "Инстанс уже запущен",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "Путь к указанному приложению",
       "codexSpecifiedAppPathDesc": "Путь приложения, которое перезапускается вместе с переключением Codex.",
       "codexSpecifiedAppPathPlaceholder": "Например /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "Очистить"
+      "codexSpecifiedAppPathClear": "Очистить",
+      "codexAppSpeed": "Скорость Codex",
+      "codexAppSpeedDesc": "Сохраняет скорость запуска Codex и записывает её перед каждым запуском из этого приложения.",
+      "codexAppSpeedStandard": "Стандарт",
+      "codexAppSpeedFast": "Быстро",
+      "codexAppSpeedLaunch": "Перезапустить Codex",
+      "codexAppSpeedSaveFailed": "Не удалось сохранить скорость Codex: {{error}}",
+      "codexAppSpeedLaunchFailed": "Не удалось перезапустить Codex: {{error}}"
     },
     "network": {
       "apiTitle": "API антигравитационной кабины",
@@ -2422,6 +2433,15 @@
       "noStats": "Статистики пока нет",
       "refreshHint": "Нажмите обновить, чтобы синхронизировать статистику этого API-ключа.",
       "dailyStats": "Статистика по дням"
+    },
+    "speed": {
+      "title": "Скорость",
+      "standard": "Стандарт",
+      "standardDesc": "Скорость по умолчанию, обычный расход",
+      "fast": "Быстрая",
+      "fastDesc": "Скорость 1,5x, расход выше",
+      "saveSuccess": "Скорость обновлена",
+      "saveFailed": "Не удалось сохранить скорость: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "Контекстное окно должно быть целым числом больше 0.",
           "autoCompactInvalid": "Предел автокомпактности должен быть целым числом больше 0."
         }
+      },
+      "appSpeed": {
+        "title": "Скорость Codex",
+        "desc": "Сохранено как скорость запуска; записывается перед стартом Codex.",
+        "standard": "Стандарт",
+        "fast": "Быстро",
+        "launch": "Перезапуск",
+        "loadFailed": "Не удалось загрузить скорость Codex: {{error}}",
+        "saveSuccess": "Скорость запуска Codex сохранена.",
+        "saveFailed": "Не удалось сохранить скорость Codex: {{error}}",
+        "launchSuccess": "Codex перезапущен с сохраненной скоростью.",
+        "launchFailed": "Не удалось перезапустить Codex: {{error}}"
       }
     },
     "githubCopilot": {

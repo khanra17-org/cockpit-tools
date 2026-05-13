@@ -2689,6 +2689,12 @@ pub fn ensure_codex_launch_path_configured() -> Result<(), String> {
 
     #[cfg(not(target_os = "windows"))]
     {
+        if resolve_codex_launch_path().is_ok() {
+            return Ok(());
+        }
+        if detect_and_save_app_path("codex", true).is_some() {
+            return Ok(());
+        }
         resolve_codex_launch_path().map(|_| ())
     }
 }
@@ -7043,6 +7049,41 @@ pub fn start_codex_default(extra_args: &[String]) -> Result<u32, String> {
         let _ = extra_args;
         Err("Codex 启动仅支持 macOS 和 Windows".to_string())
     }
+}
+
+/// 关闭 Codex 默认实例。默认实例没有 CODEX_HOME 环境变量时按默认 ~/.codex 处理。
+pub fn close_codex_default(timeout_secs: u64) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        let default_home = crate::modules::codex_account::get_codex_home()
+            .to_string_lossy()
+            .to_string();
+        return close_codex_instances(&[default_home], timeout_secs);
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        let mut pids: Vec<u32> = collect_codex_process_entries()
+            .into_iter()
+            .map(|(pid, _)| pid)
+            .collect();
+        pids.sort();
+        pids.dedup();
+        return close_pids(&pids, timeout_secs);
+    }
+
+    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+    {
+        let _ = timeout_secs;
+        Err("Codex 启动仅支持 macOS 和 Windows".to_string())
+    }
+}
+
+/// 重启 Codex 默认实例，让官方 App 重新读取磁盘上的全局状态。
+pub fn restart_codex_default(extra_args: &[String], timeout_secs: u64) -> Result<u32, String> {
+    ensure_codex_launch_path_configured()?;
+    close_codex_default(timeout_secs)?;
+    start_codex_default(extra_args)
 }
 
 /// 关闭受管 Codex 实例（按 CODEX_HOME 匹配，包含默认实例目录）

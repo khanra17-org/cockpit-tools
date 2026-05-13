@@ -47,6 +47,28 @@ pub struct CodexQuickConfig {
     pub detected_auto_compact_token_limit: Option<i64>,
 }
 
+/// Codex 官方 App 推理速度
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum CodexAppSpeed {
+    Standard,
+    Fast,
+}
+
+impl Default for CodexAppSpeed {
+    fn default() -> Self {
+        Self::Standard
+    }
+}
+
+/// Codex 官方 App 推理速度配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CodexAppSpeedConfig {
+    pub speed: CodexAppSpeed,
+    pub global_state_path: String,
+}
+
 /// Codex 账号数据结构
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CodexAccount {
@@ -78,6 +100,8 @@ pub struct CodexAccount {
     pub account_structure: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub account_note: Option<String>,
+    #[serde(default)]
+    pub app_speed: CodexAppSpeed,
     pub tokens: CodexTokens,
     #[serde(default)]
     pub token_generation: u64,
@@ -268,6 +292,7 @@ impl CodexAccount {
             account_name: None,
             account_structure: None,
             account_note: None,
+            app_speed: CodexAppSpeed::Standard,
             tokens,
             token_generation: 0,
             token_updated_at: Some(now),

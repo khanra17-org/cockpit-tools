@@ -423,7 +423,8 @@
       "instance": "Instansi",
       "email": "Akun",
       "quota": "Kuota",
-      "actions": "Tindakan"
+      "actions": "Tindakan",
+      "speed": "Kecepatan"
     },
     "empty": {
       "title": "Belum ada instansi",
@@ -501,7 +502,9 @@
           "contextWindowInvalid": "Jendela konteks harus berupa bilangan bulat yang lebih besar dari 0.",
           "autoCompactInvalid": "Batas pemadatan otomatis harus berupa bilangan bulat yang lebih besar dari 0."
         }
-      }
+      },
+      "appSpeed": "Kecepatan",
+      "appSpeedDesc": "Menulis kecepatan pilihan sebelum menjalankan Codex resmi"
     },
     "quota": {
       "unbound": "Tidak ada akun tertaut",
@@ -522,7 +525,8 @@
       "allAlreadyRunning": "Semua instansi sudah berjalan",
       "noneRunning": "Tidak ditemukan instansi yang sedang berjalan",
       "syncThreadsNeedTwo": "Diperlukan setidaknya dua instansi untuk menyinkronkan thread",
-      "launchPrepared": "Perintah peluncuran siap"
+      "launchPrepared": "Perintah peluncuran siap",
+      "speedUpdated": "Kecepatan diperbarui"
     },
     "runningDialog": {
       "title": "Instansi sudah berjalan",
@@ -787,7 +791,14 @@
       "codexSpecifiedAppPath": "Path aplikasi tertentu",
       "codexSpecifiedAppPathDesc": "Path aplikasi yang ikut dimulai ulang saat ganti Codex.",
       "codexSpecifiedAppPathPlaceholder": "Contoh /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "Kosongkan"
+      "codexSpecifiedAppPathClear": "Kosongkan",
+      "codexAppSpeed": "Kecepatan Codex",
+      "codexAppSpeedDesc": "Menyimpan kecepatan mulai resmi Codex dan menulisnya sebelum tiap peluncuran dari app ini.",
+      "codexAppSpeedStandard": "Standar",
+      "codexAppSpeedFast": "Cepat",
+      "codexAppSpeedLaunch": "Mulai ulang Codex",
+      "codexAppSpeedSaveFailed": "Gagal menyimpan kecepatan Codex: {{error}}",
+      "codexAppSpeedLaunchFailed": "Gagal memulai ulang Codex: {{error}}"
     },
     "network": {
       "apiTitle": "API Antigravity Cockpit",
@@ -2468,6 +2479,15 @@
       "noStats": "Belum ada statistik",
       "refreshHint": "Klik segarkan untuk menyinkronkan statistik kunci API ini.",
       "dailyStats": "Statistik harian"
+    },
+    "speed": {
+      "title": "Kecepatan",
+      "standard": "Standar",
+      "standardDesc": "Kecepatan bawaan, pemakaian normal",
+      "fast": "Cepat",
+      "fastDesc": "Kecepatan 1,5x, pemakaian lebih tinggi",
+      "saveSuccess": "Kecepatan diperbarui",
+      "saveFailed": "Gagal menyimpan kecepatan: {{error}}"
     }
   },
   "codebuddy": {
@@ -2720,6 +2740,18 @@
           "contextWindowInvalid": "Jendela konteks harus berupa bilangan bulat yang lebih besar dari 0.",
           "autoCompactInvalid": "Batas pemadatan otomatis harus berupa bilangan bulat yang lebih besar dari 0."
         }
+      },
+      "appSpeed": {
+        "title": "Kecepatan Codex",
+        "desc": "Disimpan sebagai kecepatan mulai; ditulis sebelum Codex dibuka.",
+        "standard": "Standar",
+        "fast": "Cepat",
+        "launch": "Mulai ulang",
+        "loadFailed": "Gagal memuat kecepatan Codex: {{error}}",
+        "saveSuccess": "Kecepatan mulai Codex disimpan.",
+        "saveFailed": "Gagal menyimpan kecepatan Codex: {{error}}",
+        "launchSuccess": "Codex dimulai ulang dengan kecepatan tersimpan.",
+        "launchFailed": "Gagal memulai ulang Codex: {{error}}"
       }
     },
     "githubCopilot": {

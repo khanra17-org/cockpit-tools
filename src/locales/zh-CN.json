@@ -423,7 +423,8 @@
       "instance": "实例",
       "email": "账号",
       "quota": "配额状态",
-      "actions": "操作"
+      "actions": "操作",
+      "speed": "速度"
     },
     "empty": {
       "title": "还没有实例",
@@ -501,7 +502,9 @@
       },
       "nameRequired": "请输入实例名称",
       "pathRequired": "请选择实例目录",
-      "bindRequired": "请选择要绑定的账号"
+      "bindRequired": "请选择要绑定的账号",
+      "appSpeed": "速度",
+      "appSpeedDesc": "启动官方 Codex 前写入对应速度"
     },
     "quota": {
       "unbound": "未绑定账号",
@@ -522,7 +525,8 @@
       "closedAll": "已关闭所有实例",
       "allAlreadyRunning": "所有实例已在运行",
       "noneRunning": "当前没有运行中的实例",
-      "syncThreadsNeedTwo": "至少需要两个实例才能同步线程"
+      "syncThreadsNeedTwo": "至少需要两个实例才能同步线程",
+      "speedUpdated": "速度已更新"
     },
     "runningDialog": {
       "title": "实例已在运行",
@@ -885,7 +889,14 @@
       "qoderAutoRefreshDesc": "后台自动更新频率",
       "qoderPathSelect": "选择",
       "workbuddyAutoRefresh": "WorkBuddy 自动刷新配额",
-      "workbuddyAutoRefreshDesc": "后台自动更新频率"
+      "workbuddyAutoRefreshDesc": "后台自动更新频率",
+      "codexAppSpeed": "Codex 速度",
+      "codexAppSpeedDesc": "保存为官方 Codex 启动速度；每次从本应用启动 Codex 前都会写入。",
+      "codexAppSpeedStandard": "标准",
+      "codexAppSpeedFast": "快速",
+      "codexAppSpeedLaunch": "重启 Codex",
+      "codexAppSpeedSaveFailed": "保存 Codex 速度失败：{{error}}",
+      "codexAppSpeedLaunchFailed": "重启 Codex 失败：{{error}}"
     },
     "network": {
       "apiTitle": "反重力驾驶舱 API",
@@ -2016,7 +2027,7 @@
       "total": "总计",
       "today": "今日",
       "periods": "周期",
-      "tokens": "令牌",
+      "tokens": "token",
       "quotaUsed": "消耗",
       "modelStats": "模型统计",
       "noStats": "暂无统计",
@@ -2468,6 +2479,15 @@
     },
     "groups": {
       "addToGroup": "添加至分组"
+    },
+    "speed": {
+      "title": "速度",
+      "standard": "标准",
+      "standardDesc": "默认速度，常规用量",
+      "fast": "快速",
+      "fastDesc": "1.5 倍速，用量增加",
+      "saveSuccess": "速度已更新",
+      "saveFailed": "保存速度失败：{{error}}"
     }
   },
   "codebuddy": {
@@ -2720,6 +2740,18 @@
           "contextWindowInvalid": "上下文窗口必须是大于 0 的整数",
           "autoCompactInvalid": "自动压缩阈值必须是大于 0 的整数"
         }
+      },
+      "appSpeed": {
+        "title": "Codex 速度",
+        "desc": "保存为启动速度；从本应用启动 Codex 前会写入。",
+        "standard": "标准",
+        "fast": "快速",
+        "launch": "重启",
+        "loadFailed": "加载 Codex 速度失败：{{error}}",
+        "saveSuccess": "Codex 启动速度已保存",
+        "saveFailed": "保存 Codex 速度失败：{{error}}",
+        "launchSuccess": "Codex 已按当前速度重启",
+        "launchFailed": "重启 Codex 失败：{{error}}"
       }
     },
     "githubCopilot": {

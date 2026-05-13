@@ -365,7 +365,8 @@
       "instance": "Instancja",
       "email": "Konto",
       "quota": "Status limitu",
-      "actions": "Akcje"
+      "actions": "Akcje",
+      "speed": "Szybkość"
     },
     "empty": {
       "title": "Brak instancji",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "Okno kontekstowe musi być liczbą całkowitą większą niż 0.",
           "autoCompactInvalid": "Limit automatycznego kompaktowania musi być liczbą całkowitą większą niż 0."
         }
-      }
+      },
+      "appSpeed": "Szybkość",
+      "appSpeedDesc": "Zapisuje wybraną szybkość przed uruchomieniem oficjalnego Codex"
     },
     "quota": {
       "unbound": "Konto niepowiązane",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "Wszystkie instancje są już uruchomione",
       "noneRunning": "Nie znaleziono uruchomionych instancji",
       "syncThreadsNeedTwo": "Do synchronizacji wątków wymagane są co najmniej dwie instancje",
-      "launchPrepared": "Polecenie uruchomienia jest gotowe"
+      "launchPrepared": "Polecenie uruchomienia jest gotowe",
+      "speedUpdated": "Szybkość zaktualizowana"
     },
     "runningDialog": {
       "title": "Instancja jest już uruchomiona",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "Ścieżka wskazanej aplikacji",
       "codexSpecifiedAppPathDesc": "Ścieżka aplikacji restartowanej razem z przełączeniem Codex.",
       "codexSpecifiedAppPathPlaceholder": "Np. /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "Wyczyść"
+      "codexSpecifiedAppPathClear": "Wyczyść",
+      "codexAppSpeed": "Szybkość Codex",
+      "codexAppSpeedDesc": "Zapisuje oficjalną szybkość startu Codex i ustawia ją przed każdym uruchomieniem z tej aplikacji.",
+      "codexAppSpeedStandard": "Standardowa",
+      "codexAppSpeedFast": "Szybka",
+      "codexAppSpeedLaunch": "Uruchom ponownie Codex",
+      "codexAppSpeedSaveFailed": "Nie udało się zapisać szybkości Codex: {{error}}",
+      "codexAppSpeedLaunchFailed": "Nie udało się zrestartować Codex: {{error}}"
     },
     "network": {
       "apiTitle": "API kokpitu antygrawitacyjnego",
@@ -2422,6 +2433,15 @@
       "noStats": "Brak statystyk",
       "refreshHint": "Kliknij odśwież, aby zsynchronizować statystyki tego klucza API.",
       "dailyStats": "Statystyki dzienne"
+    },
+    "speed": {
+      "title": "Szybkość",
+      "standard": "Zwykła",
+      "standardDesc": "Domyślna szybkość, zwykłe użycie",
+      "fast": "Szybka",
+      "fastDesc": "Szybkość 1,5x, większe użycie",
+      "saveSuccess": "Szybkość zaktualizowana",
+      "saveFailed": "Nie udało się zapisać szybkości: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "Okno kontekstowe musi być liczbą całkowitą większą niż 0.",
           "autoCompactInvalid": "Limit automatycznego kompaktowania musi być liczbą całkowitą większą niż 0."
         }
+      },
+      "appSpeed": {
+        "title": "Szybkość Codex",
+        "desc": "Zapisana jako szybkość startu; ustawiana przed startem Codex.",
+        "standard": "Standardowa",
+        "fast": "Szybka",
+        "launch": "Restart",
+        "loadFailed": "Nie udało się wczytać szybkości Codex: {{error}}",
+        "saveSuccess": "Szybkość startu Codex zapisana.",
+        "saveFailed": "Nie udało się zapisać szybkości Codex: {{error}}",
+        "launchSuccess": "Codex zrestartowany z zapisaną szybkością.",
+        "launchFailed": "Nie udało się zrestartować Codex: {{error}}"
       }
     },
     "githubCopilot": {

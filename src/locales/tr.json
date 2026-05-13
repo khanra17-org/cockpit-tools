@@ -365,7 +365,8 @@
       "instance": "Oturum",
       "email": "Hesap",
       "quota": "Kota durumu",
-      "actions": "İşlemler"
+      "actions": "İşlemler",
+      "speed": "Hız"
     },
     "empty": {
       "title": "Oturum bulunamadı",
@@ -443,7 +444,9 @@
           "contextWindowInvalid": "Bağlam penceresi 0'dan büyük bir tamsayı olmalıdır.",
           "autoCompactInvalid": "Otomatik sıkıştırma sınırı 0'dan büyük bir tam sayı olmalıdır."
         }
-      }
+      },
+      "appSpeed": "Hız",
+      "appSpeedDesc": "Resmi Codex başlatılmadan önce seçilen hızı yazar"
     },
     "quota": {
       "unbound": "Hesap bağlı değil",
@@ -464,7 +467,8 @@
       "allAlreadyRunning": "Tüm oturumlar zaten çalışıyor",
       "noneRunning": "Çalışan oturum bulunamadı",
       "syncThreadsNeedTwo": "İş parçacıklarını eşitlemek için en az iki örnek gerekir",
-      "launchPrepared": "Başlatma komutu hazır"
+      "launchPrepared": "Başlatma komutu hazır",
+      "speedUpdated": "Hız güncellendi"
     },
     "runningDialog": {
       "title": "Oturum zaten çalışıyor",
@@ -741,7 +745,14 @@
       "codexSpecifiedAppPath": "Belirtilen uygulama yolu",
       "codexSpecifiedAppPathDesc": "Codex değişimiyle birlikte yeniden başlatılacak uygulamanın yolu.",
       "codexSpecifiedAppPathPlaceholder": "Örneğin /Applications/Host.app",
-      "codexSpecifiedAppPathClear": "Temizle"
+      "codexSpecifiedAppPathClear": "Temizle",
+      "codexAppSpeed": "Codex Hızı",
+      "codexAppSpeedDesc": "Resmi Codex başlangıç hızını kaydeder ve bu uygulamadan her başlatmadan önce yazar.",
+      "codexAppSpeedStandard": "Standart",
+      "codexAppSpeedFast": "Hızlı",
+      "codexAppSpeedLaunch": "Codex'i yeniden başlat",
+      "codexAppSpeedSaveFailed": "Codex hızı kaydedilemedi: {{error}}",
+      "codexAppSpeedLaunchFailed": "Codex yeniden başlatılamadı: {{error}}"
     },
     "network": {
       "apiTitle": "Yerçekimine Karşı Kokpit API'si",
@@ -2422,6 +2433,15 @@
       "noStats": "Henüz istatistik yok",
       "refreshHint": "Bu API anahtarının istatistiklerini eşitlemek için yenileye tıklayın.",
       "dailyStats": "Günlük istatistikler"
+    },
+    "speed": {
+      "title": "Hız",
+      "standard": "Standart",
+      "standardDesc": "Varsayılan hız, normal kullanım",
+      "fast": "Hızlı",
+      "fastDesc": "1,5x hız, daha yüksek kullanım",
+      "saveSuccess": "Hız güncellendi",
+      "saveFailed": "Hız kaydedilemedi: {{error}}"
     }
   },
   "githubCopilot": {
@@ -2574,6 +2594,18 @@
           "contextWindowInvalid": "Bağlam penceresi 0'dan büyük bir tamsayı olmalıdır.",
           "autoCompactInvalid": "Otomatik sıkıştırma sınırı 0'dan büyük bir tam sayı olmalıdır."
         }
+      },
+      "appSpeed": {
+        "title": "Codex Hızı",
+        "desc": "Başlangıç hızı olarak kaydedilir; Codex açılmadan önce yazılır.",
+        "standard": "Standart",
+        "fast": "Hızlı",
+        "launch": "Yeniden başlat",
+        "loadFailed": "Codex hızı yüklenemedi: {{error}}",
+        "saveSuccess": "Codex başlangıç hızı kaydedildi.",
+        "saveFailed": "Codex hızı kaydedilemedi: {{error}}",
+        "launchSuccess": "Codex kaydedilen hızla yeniden başlatıldı.",
+        "launchFailed": "Codex yeniden başlatılamadı: {{error}}"
       }
     },
     "githubCopilot": {
