@@ -10,7 +10,7 @@
 ## [0.24.10] - 2026-05-31
 
 ### 新增
-- **Codex API 服务测试现使用内置流式对话游乐场**：API 服务测试操作会打开独立对话弹框，通过本地服务发起真实 `/v1/chat/completions` 请求，并将 assistant 输出流式回显到弹框中，不再依赖 Codex CLI 执行。
+- **Codex API 服务测试现使用内置流式对话框**：API 服务测试操作会打开独立对话弹框，通过本地服务发起真实 `/v1/chat/completions` 请求，并将 assistant 输出流式回显到弹框中，不再依赖 Codex CLI 执行。
 - **Codex API 服务卡片现可快速查看账号池健康**：账号卡片与快速配置面板会汇总可用、异常和冷却账号，并与额度池统计分开展示。
 - **Codex 多实例会话记录新增手动与自动同步设置面板**：Codex 实例页新增记录同步设置弹框，保留手动全量同步，并可在所有 Codex 实例停止后自动合并本地会话记录。
 - **Codex macOS/Windows 多实例启动现适配最新版 Codex App 运行方式**：macOS 与 Windows 上的受管 Codex 实例会同时写入 `CODEX_ELECTRON_USER_DATA_PATH` 与 `--user-data-dir`，让每个 `CODEX_HOME` 使用稳定且隔离的 Electron App 数据目录。
@@ -26,6 +26,8 @@
 - **添加账号弹框不再因点击遮罩而关闭**：各平台添加账号弹框仅能通过明确的关闭/返回操作或 Esc 关闭，避免误触中断填写。
 - **Codex API 服务账号行更靠前展示 Token 用量**：账号级统计会在请求结果详情旁展示紧凑 Token 用量，旧本地访问账号表格也将统计列前置到配额列之前。
 - **实例工具栏操作改为紧凑图标按钮**：新建、全部启动、全部关闭、刷新与 Codex 同步设置操作统一为带无障碍标签的图标按钮。
+- **Codex 默认实例在切号和启用 API 服务后的重启速度更快**：当 profile 已由上游流程准备完成时，Cockpit 会跳过重复的绑定账号注入与启动前空闲会话同步，并在 Windows 上复用已缓存的 Store AppUserModelId 检测结果，优先使用基于 PID 的快速关闭/启动探测并记录阶段耗时。
+- **`npm run tauri` 现会在启动 Tauri 前准备 Windows 构建工具链**：包装脚本仍会先执行版本同步；在 Windows 上会加载 Visual Studio Build Tools 环境和 Go 二进制路径，再调用本地 Tauri CLI；当工具链入口不可用时会回退到当前 shell 环境。
 
 ### 修复
 - **Tauri 启动不再因 notification 插件配置失败**：应用配置不再向 `plugins.notification` 传入无效对象，避免应用初始化阶段 panic。
@@ -34,6 +36,10 @@
 - **Codex API 服务网关探测不再重复拼接 `/v1` 路径**：fallback 健康检查会保留已包含 `/v1` 的 Base URL，避免本地 API 服务诊断误报 `endpoint not supported`。感谢 @wjh4sg。
 - **Windows Antigravity 2.0 本地数据目录与进程识别现兼容 `Antigravity.exe` 安装**：本地导入、默认实例注入、切号、启动与 PID 匹配会优先使用 `%APPDATA%\Antigravity` 和 `Programs\Antigravity` 布局，并继续回退兼容 `Antigravity IDE`。感谢 @li6535202。
 - **Antigravity 安装版本检测现覆盖常见 Linux 安装目录**：Linux 检测会纳入 Antigravity 与 Antigravity IDE 在 `/usr/share` 和 `/opt` 下的安装路径。感谢 @vadbes46。
+- **Windows Codex 多实例共享存储不再依赖符号链接权限**：共享目录现使用目录联接，共享文件会复制到实例 profile，并且同步时可识别已有的 reparse-point 目录链接。
+- **Windows Codex 共享目录联接创建更可靠**：Cockpit 现在会优先通过 PowerShell `New-Item -ItemType Junction` 创建目录联接，失败后再回退到带引号的 `mklink /J` 命令；创建失败时会同时报告两条命令的结果以及源路径和目标路径。
+- **Windows Codex 默认实例检测现更可靠地匹配当前 App 数据目录结构**：默认 App 用户数据路径会识别 `%APPDATA%\Codex\web\Codex`，主进程匹配时会过滤 helper/resource Codex 进程，并避免把 Store 入口复用的既有实例误判为新启动进程。
+- **Codex 受管进程关闭现会确认目标 PID 已实际退出**：优雅关闭和强制关闭流程会复查原始受管 PID 集合；若仍有进程存活，会返回明确的手动关闭错误，不再静默报告成功。
 
 ---
 ## [0.24.9] - 2026-05-26
