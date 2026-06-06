@@ -118,7 +118,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          npx tauri build --ci --config '{"bundle":{"createUpdaterArtifacts":false}}' ${{ matrix.args }} 2>&1 | tee "build-${{ matrix.label }}.log"
+          npx tauri build --ci --config src-tauri/tauri.ci.conf.json ${{ matrix.args }} 2>&1 | tee "build-${{ matrix.label }}.log"
 
       - name: Build app (signed)
         if: github.event_name != 'pull_request'
