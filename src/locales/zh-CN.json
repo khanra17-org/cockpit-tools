@@ -3739,6 +3739,10 @@
       "label": "更新于 {{relative}}前"
     },
     "quota": {
+      "gemini5h": "5h",
+      "geminiWeekly": "Weekly",
+      "claude5h": "5h",
+      "claudeWeekly": "Weekly",
       "pro": "Pro",
       "flash": "Flash",
       "left": "{{value}}% 剩余",

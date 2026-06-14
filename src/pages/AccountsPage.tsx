@@ -2213,11 +2213,73 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
   const resolveGroupLabel = (groupKey: string) =>
     groupKey === untaggedKey ? t('accounts.untagged', '未分组') : groupKey
 
+  const renderCustomQuotaSection = (account: Account, isList: boolean = false) => {
+    const quotaDisplayItems = getQuotaDisplayItems(account);
+    const hasModels = account.quota?.models && account.quota.models.length > 0;
+    
+    if (!hasModels) {
+      return (
+        <div className="quota-empty" style={{ gridColumn: '1 / -1', textAlign: 'center' }}>
+          {t('overview.noQuotaData')}
+        </div>
+      );
+    }
+
+    const claude5h = quotaDisplayItems.find(item => item.key === 'claude:5h');
+    const claudeWeekly = quotaDisplayItems.find(item => item.key === 'claude:weekly');
+    const gemini5h = quotaDisplayItems.find(item => item.key === 'gemini:5h');
+    const geminiWeekly = quotaDisplayItems.find(item => item.key === 'gemini:weekly');
+
+    const renderBar = (label: string, item: any) => {
+      const percentage = item ? item.percentage : 100;
+      const resetTime = item ? item.resetTime : '';
+      const resetLabel = resetTime ? formatResetTimeDisplay(resetTime, t) : '';
+      
+      return (
+        <div className={isList ? "quota-item" : "quota-compact-item"}>
+          <div className={isList ? "quota-header" : "quota-compact-header"}>
+            <span className={isList ? "quota-name" : "model-label"}>{label}</span>
+            <span className={`${isList ? "quota-value" : "model-pct"} ${getQuotaClass(percentage)}`}>
+              {percentage}%
+            </span>
+          </div>
+          <div className={isList ? "quota-progress-track" : "quota-compact-bar-track"}>
+            <div
+              className={`${isList ? "quota-progress-bar" : "quota-compact-bar"} ${getQuotaClass(percentage)}`}
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
+          {(isList || resetLabel) && (
+            <div className={isList ? "quota-footer" : undefined}>
+              <span className={isList ? "quota-reset" : "quota-compact-reset"}>
+                {resetLabel || '\u00A0'}
+              </span>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    return (
+      <>
+        <div className="quota-column">
+          <div className="quota-column-title">Claude</div>
+          {renderBar("5h", claude5h)}
+          {renderBar(t('gemini.quota.geminiWeekly', 'Weekly'), claudeWeekly)}
+        </div>
+        <div className="quota-column">
+          <div className="quota-column-title">Gemini</div>
+          {renderBar("5h", gemini5h)}
+          {renderBar(t('gemini.quota.geminiWeekly', 'Weekly'), geminiWeekly)}
+        </div>
+      </>
+    );
+  };
+
   const renderGridCards = (items: Account[], groupKey?: string) =>
     items.map((account) => {
       const isCurrent = currentAccount?.id === account.id
       const tierBadge = getAntigravityTierBadge(account.quota)
-      const quotaDisplayItems = getQuotaDisplayItems(account)
       const availableCreditsDisplay = getAvailableAICreditsDisplay(account)
       const isDisabled = account.disabled
       const isForbidden = Boolean(account.quota?.is_forbidden)
@@ -2240,7 +2302,8 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
       const verificationReason = account.disabled_reason || verificationStatusMap[account.id]
       const hasVerificationIssue = verificationReason === 'verification_required' || verificationReason === 'tos_violation'
 
-      if (quotaDisplayItems.length === 0) {
+      const hasModels = account.quota?.models && account.quota.models.length > 0
+      if (!hasModels) {
         console.log('[AccountsPage] 账号无配额数据:', {
           email: account.email,
           isCurrent,
@@ -2320,33 +2383,7 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
                     {t('common.shared.quota.queryFailed', '配额查询失败')}
                   </div>
                 )}
-                {quotaDisplayItems.map((item) => {
-                  const resetLabel = formatResetTimeDisplay(item.resetTime, t)
-                  return (
-                    <div key={item.key} className="quota-compact-item">
-                      <div className="quota-compact-header">
-                        <span className="model-label">{item.label}</span>
-                        <span
-                          className={`model-pct ${getQuotaClass(item.percentage)}`}
-                        >
-                          {item.percentage}%
-                        </span>
-                      </div>
-                      <div className="quota-compact-bar-track">
-                        <div
-                          className={`quota-compact-bar ${getQuotaClass(item.percentage)}`}
-                          style={{ width: `${item.percentage}%` }}
-                        />
-                      </div>
-                      {resetLabel && (
-                        <span className="quota-compact-reset">{resetLabel}</span>
-                      )}
-                    </div>
-                  )
-                })}
-                {quotaDisplayItems.length === 0 && (
-                  <div className="quota-empty">{t('overview.noQuotaData')}</div>
-                )}
+                {renderCustomQuotaSection(account, false)}
               </>
             )}
             <div className="quota-credits-field">
@@ -2875,7 +2912,6 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
     items.map((account) => {
       const isCurrent = currentAccount?.id === account.id
       const tierBadge = getAntigravityTierBadge(account.quota)
-      const quotaDisplayItems = getQuotaDisplayItems(account)
       const availableCreditsDisplay = getAvailableAICreditsDisplay(account)
       const isForbidden = Boolean(account.quota?.is_forbidden)
       const quotaError = account.quota_error
@@ -2964,34 +3000,7 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
                       {t('common.shared.quota.queryFailed', '配额查询失败')}
                     </div>
                   )}
-                  {quotaDisplayItems.map((item) => (
-                    <div className="quota-item" key={item.key}>
-                      <div className="quota-header">
-                        <span className="quota-name">{item.label}</span>
-                        <span
-                          className={`quota-value ${getQuotaClass(item.percentage)}`}
-                        >
-                          {item.percentage}%
-                        </span>
-                      </div>
-                      <div className="quota-progress-track">
-                        <div
-                          className={`quota-progress-bar ${getQuotaClass(item.percentage)}`}
-                          style={{ width: `${item.percentage}%` }}
-                        />
-                      </div>
-                      <div className="quota-footer">
-                        <span className="quota-reset">
-                          {formatResetTimeDisplay(item.resetTime, t)}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  {quotaDisplayItems.length === 0 && (
-                    <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>
-                      {t('overview.noQuotaData')}
-                    </span>
-                  )}
+                  {renderCustomQuotaSection(account, true)}
                 </>
               )}
               <div className="quota-credits-field">

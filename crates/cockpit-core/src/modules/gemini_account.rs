@@ -26,7 +26,7 @@ const GOOGLE_USERINFO_ENDPOINT: &str = "https://www.googleapis.com/oauth2/v2/use
 const CODE_ASSIST_LOAD_ENDPOINT: &str =
     "https://cloudcode-pa.googleapis.com/v1internal:loadCodeAssist";
 const CODE_ASSIST_RETRIEVE_QUOTA_ENDPOINT: &str =
-    "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota";
+    "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuotaSummary";
 
 lazy_static::lazy_static! {
     static ref GEMINI_ACCOUNT_INDEX_LOCK: Mutex<()> = Mutex::new(());
@@ -1459,7 +1459,7 @@ async fn retrieve_user_quota(access_token: &str, project_id: &str) -> Result<Val
         access_token,
         CODE_ASSIST_RETRIEVE_QUOTA_ENDPOINT,
         &payload,
-        "retrieveUserQuota",
+        "retrieveUserQuotaSummary",
     )
     .await
 }
@@ -1713,34 +1713,39 @@ pub(crate) fn extract_account_model_remaining(account: &GeminiAccount) -> Vec<(S
     let Some(raw_usage) = account.gemini_usage_raw.as_ref() else {
         return Vec::new();
     };
-    let Some(buckets) = raw_usage.get("buckets").and_then(|v| v.as_array()) else {
+    let Some(groups) = raw_usage.get("groups").and_then(|v| v.as_array()) else {
         return Vec::new();
     };
 
-    for bucket in buckets {
-        let model_id = normalize_non_empty(bucket.get("modelId").and_then(|v| v.as_str()));
-        let remaining_fraction = bucket
-            .get("remainingFraction")
-            .and_then(|v| v.as_f64())
-            .or_else(|| {
-                bucket
-                    .get("remainingFraction")
-                    .and_then(|v| v.as_str()?.parse::<f64>().ok())
-            });
-
-        let (Some(model_id), Some(remaining_fraction)) = (model_id, remaining_fraction) else {
+    for group in groups {
+        let Some(buckets) = group.get("buckets").and_then(|v| v.as_array()) else {
             continue;
         };
+        for bucket in buckets {
+            let model_id = normalize_non_empty(bucket.get("bucketId").and_then(|v| v.as_str()));
+            let remaining_fraction = bucket
+                .get("remainingFraction")
+                .and_then(|v| v.as_f64())
+                .or_else(|| {
+                    bucket
+                        .get("remainingFraction")
+                        .and_then(|v| v.as_str()?.parse::<f64>().ok())
+                });
 
-        let percent_left = (remaining_fraction * 100.0).round().clamp(0.0, 100.0) as i32;
-        model_remaining
-            .entry(model_id)
-            .and_modify(|value| {
-                if percent_left < *value {
-                    *value = percent_left;
-                }
-            })
-            .or_insert(percent_left);
+            let (Some(model_id), Some(remaining_fraction)) = (model_id, remaining_fraction) else {
+                continue;
+            };
+
+            let percent_left = (remaining_fraction * 100.0).round().clamp(0.0, 100.0) as i32;
+            model_remaining
+                .entry(model_id)
+                .and_modify(|value| {
+                    if percent_left < *value {
+                        *value = percent_left;
+                    }
+                })
+                .or_insert(percent_left);
+        }
     }
 
     let mut values: Vec<(String, i32)> = model_remaining.into_iter().collect();

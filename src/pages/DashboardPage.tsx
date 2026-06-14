@@ -1498,7 +1498,12 @@ export function DashboardPage({
 
     const getScore = (account: GeminiAccount) => {
       const tiers = getGeminiTierQuotaSummary(account);
-      const remainingValues = [tiers.pro.remainingPercent, tiers.flash.remainingPercent].filter(
+      const remainingValues = [
+        tiers.gemini5h.remainingPercent,
+        tiers.geminiWeekly.remainingPercent,
+        tiers.claude5h.remainingPercent,
+        tiers.claudeWeekly.remainingPercent,
+      ].filter(
         (value): value is number => typeof value === 'number' && Number.isFinite(value),
       );
       const totalUsed = remainingValues.length > 0

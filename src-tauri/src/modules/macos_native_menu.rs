@@ -2131,31 +2131,36 @@ mod imp {
         let Some(raw_usage) = account.gemini_usage_raw.as_ref() else {
             return Vec::new();
         };
-        let Some(buckets) = raw_usage.get("buckets").and_then(|value| value.as_array()) else {
+        let Some(groups) = raw_usage.get("groups").and_then(|value| value.as_array()) else {
             return Vec::new();
         };
 
         let mut values = Vec::new();
-        for bucket in buckets {
-            let model_id = bucket
-                .get("modelId")
-                .and_then(|value| value.as_str())
-                .map(str::trim)
-                .filter(|value| !value.is_empty())
-                .map(str::to_string);
-            let remaining = bucket
-                .get("remainingFraction")
-                .and_then(parse_json_number)
-                .map(|value| clamp_percent(value * 100.0));
-            let reset_at = bucket.get("resetTime").and_then(parse_timestamp_like);
-            let (Some(model_id), Some(remaining_percent)) = (model_id, remaining) else {
+        for group in groups {
+            let Some(buckets) = group.get("buckets").and_then(|value| value.as_array()) else {
                 continue;
             };
-            values.push(GeminiBucketRemaining {
-                model_id,
-                remaining_percent,
-                reset_at,
-            });
+            for bucket in buckets {
+                let model_id = bucket
+                    .get("bucketId")
+                    .and_then(|value| value.as_str())
+                    .map(str::trim)
+                    .filter(|value| !value.is_empty())
+                    .map(str::to_string);
+                let remaining = bucket
+                    .get("remainingFraction")
+                    .and_then(parse_json_number)
+                    .map(|value| clamp_percent(value * 100.0));
+                let reset_at = bucket.get("resetTime").and_then(parse_timestamp_like);
+                let (Some(model_id), Some(remaining_percent)) = (model_id, remaining) else {
+                    continue;
+                };
+                values.push(GeminiBucketRemaining {
+                    model_id,
+                    remaining_percent,
+                    reset_at,
+                });
+            }
         }
 
         values.sort_by(|left, right| left.model_id.cmp(&right.model_id));
@@ -3526,39 +3531,27 @@ mod imp {
             .map(|account| {
                 let buckets = collect_gemini_bucket_remaining(&account);
                 let mut rows = Vec::new();
-                if let Some(pro_bucket) =
-                    pick_lowest_gemini_bucket(&buckets, |model_id| model_id.contains("pro"))
-                {
-                    let value = translate_or(
-                        lang,
-                        "gemini.quota.left",
-                        "{{value}}% left",
-                        &[("value", &pro_bucket.remaining_percent.to_string())],
-                    );
-                    rows.push(make_progress_row(
-                        translate_or(lang, "gemini.quota.pro", "Pro", &[]),
-                        value,
-                        pro_bucket.remaining_percent,
-                        format_reset_subtext(lang, pro_bucket.reset_at),
-                        cursor_usage_tone((100 - pro_bucket.remaining_percent).clamp(0, 100)),
-                    ));
-                }
-                if let Some(flash_bucket) =
-                    pick_lowest_gemini_bucket(&buckets, |model_id| model_id.contains("flash"))
-                {
-                    let value = translate_or(
-                        lang,
-                        "gemini.quota.left",
-                        "{{value}}% left",
-                        &[("value", &flash_bucket.remaining_percent.to_string())],
-                    );
-                    rows.push(make_progress_row(
-                        translate_or(lang, "gemini.quota.flash", "Flash", &[]),
-                        value,
-                        flash_bucket.remaining_percent,
-                        format_reset_subtext(lang, flash_bucket.reset_at),
-                        cursor_usage_tone((100 - flash_bucket.remaining_percent).clamp(0, 100)),
-                    ));
+                for (bucket_id, label_key, default_label) in [
+                    ("gemini-5h", "gemini.quota.gemini5h", "Gemini 5h"),
+                    ("gemini-weekly", "gemini.quota.geminiweekly", "Gemini Weekly"),
+                    ("3p-5h", "gemini.quota.3p5h", "Claude 5h"),
+                    ("3p-weekly", "gemini.quota.3pweekly", "Claude Weekly"),
+                ] {
+                    if let Some(bucket) = buckets.iter().find(|b| b.model_id == bucket_id) {
+                        let value = translate_or(
+                            lang,
+                            "gemini.quota.left",
+                            "{{value}}% left",
+                            &[("value", &bucket.remaining_percent.to_string())],
+                        );
+                        rows.push(make_progress_row(
+                            translate_or(lang, label_key, default_label, &[]),
+                            value,
+                            bucket.remaining_percent,
+                            format_reset_subtext(lang, bucket.reset_at),
+                            cursor_usage_tone((100 - bucket.remaining_percent).clamp(0, 100)),
+                        ));
+                    }
                 }
                 AccountCard {
                     id: account.id,

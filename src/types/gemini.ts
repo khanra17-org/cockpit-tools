@@ -70,8 +70,8 @@ export interface GeminiUsage {
 }
 
 export interface GeminiTierQuotaSummary {
-  key: "pro" | "flash";
-  label: "Pro" | "Flash";
+  key: string;
+  label: string;
   remainingPercent: number | null;
   resetAt: number | null;
 }
@@ -90,12 +90,6 @@ function toNumber(value: unknown): number | null {
     if (Number.isFinite(parsed)) return parsed;
   }
   return null;
-}
-
-function toInteger(value: unknown): number | null {
-  const parsed = toNumber(value);
-  if (parsed == null || !Number.isFinite(parsed)) return null;
-  return Math.max(0, Math.round(parsed));
 }
 
 function clampPercent(value: number): number {
@@ -170,66 +164,34 @@ export function getGeminiPlanBadgeClass(
 
 export function getGeminiUsage(account: GeminiAccount): GeminiUsage {
   const raw = toObject(account.gemini_usage_raw);
-  const bucketsRaw = raw?.buckets;
-  const buckets = Array.isArray(bucketsRaw) ? bucketsRaw : [];
+  const groupsRaw = raw?.groups;
+  const groups = Array.isArray(groupsRaw) ? groupsRaw : [];
 
   const parsedBuckets: GeminiUsageBucket[] = [];
-  const bucketIndexByModelId = new Map<string, number>();
 
-  buckets.forEach((item) => {
-    const bucket = toObject(item);
-    if (!bucket) return;
+  groups.forEach((groupRaw) => {
+    const group = toObject(groupRaw);
+    if (!group) return;
 
-    const modelId =
-      typeof bucket.modelId === "string" ? bucket.modelId.trim() : "";
-    const remainingFraction = toNumber(bucket.remainingFraction);
-    if (!modelId || remainingFraction == null) return;
+    const bucketsRaw = group.buckets;
+    const buckets = Array.isArray(bucketsRaw) ? bucketsRaw : [];
+    buckets.forEach((item) => {
+      const bucket = toObject(item);
+      if (!bucket) return;
 
-    const remainingAmount = toInteger(bucket.remainingAmount);
-    const limit =
-      remainingAmount != null && remainingFraction > 0
-        ? Math.max(
-            remainingAmount,
-            Math.round(remainingAmount / remainingFraction),
-          )
-        : null;
+      const bucketId =
+        typeof bucket.bucketId === "string" ? bucket.bucketId.trim() : "";
+      const remainingFraction = toNumber(bucket.remainingFraction);
+      if (!bucketId || remainingFraction == null) return;
 
-    const nextBucket: GeminiUsageBucket = {
-      modelId,
-      remainingPercent: clampPercent(remainingFraction * 100),
-      resetAt: parseResetAt(bucket.resetTime),
-      remainingAmount,
-      limit,
-    };
-
-    const existingIndex = bucketIndexByModelId.get(modelId);
-    if (existingIndex == null) {
-      bucketIndexByModelId.set(modelId, parsedBuckets.length);
-      parsedBuckets.push(nextBucket);
-      return;
-    }
-
-    const current = parsedBuckets[existingIndex];
-    if (nextBucket.remainingPercent < current.remainingPercent) {
-      parsedBuckets[existingIndex] = nextBucket;
-      return;
-    }
-
-    if (
-      nextBucket.remainingPercent === current.remainingPercent &&
-      current.resetAt != null &&
-      (nextBucket.resetAt == null || nextBucket.resetAt > current.resetAt)
-    ) {
-      return;
-    }
-
-    if (
-      nextBucket.remainingPercent === current.remainingPercent &&
-      (current.resetAt == null ||
-        (nextBucket.resetAt != null && nextBucket.resetAt < current.resetAt))
-    ) {
-      parsedBuckets[existingIndex] = nextBucket;
-    }
+      parsedBuckets.push({
+        modelId: bucketId,
+        remainingPercent: clampPercent(remainingFraction * 100),
+        resetAt: parseResetAt(bucket.resetTime),
+        remainingAmount: null,
+        limit: null,
+      });
+    });
   });
 
   const lowestRemaining = parsedBuckets.length
@@ -261,53 +223,45 @@ export function getGeminiUsage(account: GeminiAccount): GeminiUsage {
   };
 }
 
-function pickLowestRemainingBucket(
-  buckets: GeminiUsageBucket[],
-  matcher: (modelId: string) => boolean,
-): GeminiUsageBucket | null {
-  const matched = buckets.filter((bucket) =>
-    matcher(bucket.modelId.toLowerCase()),
-  );
-  if (matched.length === 0) return null;
-
-  return matched.reduce((prev, curr) => {
-    if (curr.remainingPercent < prev.remainingPercent) {
-      return curr;
-    }
-    if (curr.remainingPercent > prev.remainingPercent) {
-      return prev;
-    }
-
-    if (prev.resetAt == null) return curr;
-    if (curr.resetAt == null) return prev;
-    return curr.resetAt < prev.resetAt ? curr : prev;
-  });
-}
-
 export function getGeminiTierQuotaSummary(account: GeminiAccount): {
-  pro: GeminiTierQuotaSummary;
-  flash: GeminiTierQuotaSummary;
+  gemini5h: GeminiTierQuotaSummary;
+  geminiWeekly: GeminiTierQuotaSummary;
+  claude5h: GeminiTierQuotaSummary;
+  claudeWeekly: GeminiTierQuotaSummary;
 } {
   const usage = getGeminiUsage(account);
-  const proBucket = pickLowestRemainingBucket(usage.buckets, (modelId) =>
-    modelId.includes("pro"),
-  );
-  const flashBucket = pickLowestRemainingBucket(usage.buckets, (modelId) =>
-    modelId.includes("flash"),
-  );
+  const findBucket = (bucketId: string) =>
+    usage.buckets.find((b) => b.modelId === bucketId);
+
+  const gemini5h = findBucket("gemini-5h");
+  const geminiWeekly = findBucket("gemini-weekly");
+  const claude5h = findBucket("3p-5h");
+  const claudeWeekly = findBucket("3p-weekly");
 
   return {
-    pro: {
-      key: "pro",
-      label: "Pro",
-      remainingPercent: proBucket?.remainingPercent ?? null,
-      resetAt: proBucket?.resetAt ?? null,
+    gemini5h: {
+      key: "gemini5h",
+      label: "Five Hour Limit",
+      remainingPercent: gemini5h?.remainingPercent ?? null,
+      resetAt: gemini5h?.resetAt ?? null,
     },
-    flash: {
-      key: "flash",
-      label: "Flash",
-      remainingPercent: flashBucket?.remainingPercent ?? null,
-      resetAt: flashBucket?.resetAt ?? null,
+    geminiWeekly: {
+      key: "geminiWeekly",
+      label: "Weekly Limit",
+      remainingPercent: geminiWeekly?.remainingPercent ?? null,
+      resetAt: geminiWeekly?.resetAt ?? null,
+    },
+    claude5h: {
+      key: "claude5h",
+      label: "Five Hour Limit",
+      remainingPercent: claude5h?.remainingPercent ?? null,
+      resetAt: claude5h?.resetAt ?? null,
+    },
+    claudeWeekly: {
+      key: "claudeWeekly",
+      label: "Weekly Limit",
+      remainingPercent: claudeWeekly?.remainingPercent ?? null,
+      resetAt: claudeWeekly?.resetAt ?? null,
     },
   };
 }

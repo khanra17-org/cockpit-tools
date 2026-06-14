@@ -19,8 +19,6 @@ import type { ZedAccount } from "../types/zed";
 import {
   formatResetTimeDisplay,
   getAntigravityTierBadge,
-  getDisplayModels,
-  getModelShortName,
   getQuotaClass as getAntigravityQuotaClass,
   matchModelName,
 } from "../utils/account";
@@ -113,8 +111,7 @@ import {
   getZedPlanBadge,
   getZedUsage,
 } from "../types/zed";
-import type { DisplayGroup, GroupSettings } from "../services/groupService";
-import { calculateGroupQuota } from "../services/groupService";
+import type { DisplayGroup } from "../services/groupService";
 
 type Translate = {
   (key: string): string;
@@ -438,34 +435,6 @@ export function buildCreditMetrics(
   };
 }
 
-function getAgAccountQuotas(account: Account): Record<string, number> {
-  const quotas: Record<string, number> = {};
-  if (!account.quota?.models) {
-    return quotas;
-  }
-  for (const model of account.quota.models) {
-    quotas[model.name] = model.percentage;
-  }
-  return quotas;
-}
-
-function buildAgDisplayGroupSettings(groups: DisplayGroup[]): GroupSettings {
-  const settings: GroupSettings = {
-    groupMappings: {},
-    groupNames: {},
-    groupOrder: groups.map((group) => group.id),
-    updatedAt: 0,
-    updatedBy: "desktop",
-  };
-
-  for (const group of groups) {
-    settings.groupNames[group.id] = group.name;
-    for (const modelId of group.models) {
-      settings.groupMappings[modelId] = group.id;
-    }
-  }
-  return settings;
-}
 
 export function getAntigravityGroupResetTimestamp(
   account: Account,
@@ -497,42 +466,126 @@ export function getAntigravityGroupResetTimestamp(
 
 export function getAntigravityQuotaDisplayItems(
   account: Account,
-  displayGroups: DisplayGroup[],
+  _displayGroups: DisplayGroup[],
 ): AgQuotaDisplayItem[] {
-  if (displayGroups.length > 0) {
-    const quotas = getAgAccountQuotas(account);
-    const settings = buildAgDisplayGroupSettings(displayGroups);
-    const groupedItems: AgQuotaDisplayItem[] = [];
+  const models = account.quota?.models || [];
+  const result: AgQuotaDisplayItem[] = [];
 
-    for (const group of displayGroups) {
-      const percentage = calculateGroupQuota(group.id, quotas, settings);
-      if (percentage === null) continue;
-
-      const resetTimestamp = getAntigravityGroupResetTimestamp(account, group);
-      groupedItems.push({
-        key: `group:${group.id}`,
-        label: group.name,
-        percentage,
-        resetTime: resetTimestamp ? new Date(resetTimestamp).toISOString() : "",
-      });
-    }
-
-    if (groupedItems.length > 0) {
-      return groupedItems;
-    }
+  // Claude 5h
+  // Claude 5h
+  let claude5h = models.find(m => m.name === '3p-5h' || m.name === 'claude:5h');
+  if (!claude5h) {
+    claude5h = models.find(m => {
+      const name = m.name.toLowerCase();
+      return name.includes('claude') && (name.includes('high') || !name.includes('low'));
+    });
+  }
+  if (!claude5h) {
+    claude5h = models.find(m => m.name.toLowerCase().includes('claude'));
   }
 
-  const rawDisplayModels = getDisplayModels(account.quota);
-  if (rawDisplayModels.length === 0) {
-    return [];
+  // Claude Weekly
+  let claudeWeekly = models.find(m => m.name === '3p-weekly' || m.name === 'claude:weekly');
+  if (!claudeWeekly) {
+    claudeWeekly = models.find(m => {
+      const name = m.name.toLowerCase();
+      return name.includes('claude') && name.includes('low');
+    });
   }
 
-  return rawDisplayModels.map((model) => ({
-    key: model.name,
-    label: getModelShortName(model.name),
-    percentage: model.percentage,
-    resetTime: model.reset_time,
-  }));
+  // Gemini 5h
+  let gemini5h = models.find(m => m.name === 'gemini-5h' || m.name === 'gemini:5h');
+  if (!gemini5h) {
+    gemini5h = models.find(m => {
+      const name = m.name.toLowerCase();
+      return name.includes('gemini') && name.includes('pro') && name.includes('high');
+    });
+  }
+  if (!gemini5h) {
+    gemini5h = models.find(m => {
+      const name = m.name.toLowerCase();
+      return name.includes('gemini') && name.includes('high');
+    });
+  }
+  if (!gemini5h) {
+    gemini5h = models.find(m => {
+      const name = m.name.toLowerCase();
+      return name.includes('gemini') && name.includes('flash');
+    });
+  }
+  if (!gemini5h) {
+    gemini5h = models.find(m => {
+      const name = m.name.toLowerCase();
+      return name.includes('gemini') && !name.includes('low');
+    });
+  }
+
+  // Gemini Weekly
+  let geminiWeekly = models.find(m => m.name === 'gemini-weekly' || m.name === 'gemini:weekly');
+  if (!geminiWeekly) {
+    geminiWeekly = models.find(m => {
+      const name = m.name.toLowerCase();
+      return name.includes('gemini') && name.includes('pro') && name.includes('low');
+    });
+  }
+  if (!geminiWeekly) {
+    geminiWeekly = models.find(m => {
+      const name = m.name.toLowerCase();
+      return name.includes('gemini') && name.includes('low');
+    });
+  }
+
+  if (claude5h) {
+    result.push({
+      key: 'claude:5h',
+      label: 'Claude (5h)',
+      percentage: claude5h.percentage,
+      resetTime: claude5h.reset_time,
+    });
+  }
+  if (claudeWeekly) {
+    result.push({
+      key: 'claude:weekly',
+      label: 'Claude (Weekly)',
+      percentage: claudeWeekly.percentage,
+      resetTime: claudeWeekly.reset_time,
+    });
+  }
+  if (gemini5h) {
+    let percentage = gemini5h.percentage;
+    let resetTime = gemini5h.reset_time;
+
+    if (resetTime) {
+      const resetTs = new Date(resetTime).getTime();
+      if (!isNaN(resetTs)) {
+        const diffHours = (resetTs - Date.now()) / (1000 * 60 * 60);
+        // If the reset time is > 5 hours in the future (e.g. weekly reset),
+        // it means the weekly limit is active and capping the 5h limit.
+        // We override the 5h display remaining to 100% and clear the reset time.
+        if (diffHours > 5) {
+          percentage = 100;
+          resetTime = '';
+        }
+      }
+    }
+
+    result.push({
+      key: 'gemini:5h',
+      label: 'Gemini (5h)',
+      percentage,
+      resetTime,
+    });
+  }
+  if (geminiWeekly) {
+    result.push({
+      key: 'gemini:weekly',
+      label: 'Gemini (Weekly)',
+      percentage: geminiWeekly.percentage,
+      resetTime: geminiWeekly.reset_time,
+    });
+  }
+
+  return result;
 }
 
 export function buildAntigravityAccountPresentation(
@@ -1487,7 +1540,12 @@ export function buildGeminiAccountPresentation(
   const planLabel = getGeminiPlanDisplayName(account);
   const quotaItems: UnifiedQuotaMetric[] = [];
 
-  [tierSummary.pro, tierSummary.flash].forEach((tier) => {
+  [
+    tierSummary.gemini5h,
+    tierSummary.geminiWeekly,
+    tierSummary.claude5h,
+    tierSummary.claudeWeekly,
+  ].forEach((tier) => {
     const remaining =
       tier.remainingPercent == null
         ? null

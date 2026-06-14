@@ -108,7 +108,7 @@ interface GeminiLaunchModalState {
 }
 
 interface GeminiQuotaRowDisplay {
-  key: "pro" | "flash";
+  key: string;
   label: string;
   remainingPercent: number;
   remainingText: string;
@@ -425,7 +425,7 @@ export function GeminiAccountsPage() {
   );
 
   const resolveQuotaRows = useCallback(
-    (account: GeminiAccount): GeminiQuotaRowDisplay[] => {
+    (account: GeminiAccount) => {
       const tierSummary = getGeminiTierQuotaSummary(account);
       const buildTierRow = (
         tier: GeminiTierQuotaSummary,
@@ -451,7 +451,12 @@ export function GeminiAccountsPage() {
         };
       };
 
-      return [buildTierRow(tierSummary.pro), buildTierRow(tierSummary.flash)];
+      return {
+        gemini5h: buildTierRow(tierSummary.gemini5h),
+        geminiWeekly: buildTierRow(tierSummary.geminiWeekly),
+        claude5h: buildTierRow(tierSummary.claude5h),
+        claudeWeekly: buildTierRow(tierSummary.claudeWeekly),
+      };
     },
     [formatQuotaResetText, t],
   );
@@ -822,35 +827,47 @@ export function GeminiAccountsPage() {
       );
     }
 
-    const quotaRows = resolveQuotaRows(account);
-    return (
-      <div className="ghcp-quota-section">
-        {quotaRows.map((row) => (
+    const rows = resolveQuotaRows(account);
+
+    const renderRow = (row: GeminiQuotaRowDisplay) => (
+      <div
+        className={`quota-item windsurf-credit-item ${variant === "table" ? "windsurf-table-credit-item" : ""}`}
+        key={`${account.id}-${row.key}`}
+      >
+        <div className="quota-header">
+          <span className="quota-label">{row.label}</span>
+        </div>
+        <div className="quota-bar-track">
           <div
-            className={`quota-item windsurf-credit-item ${variant === "table" ? "windsurf-table-credit-item" : ""}`}
-            key={`${account.id}-${row.key}`}
-          >
-            <div className="quota-header">
-              <span className="quota-label">{row.label}</span>
-            </div>
-            <div className="quota-bar-track">
-              <div
-                className={`quota-bar ${row.quotaClass}`}
-                style={{ width: `${Math.min(row.remainingPercent, 100)}%` }}
-              />
-            </div>
-            <div
-              className={`windsurf-credit-meta-row ${variant === "table" ? "table" : ""}`}
-            >
-              <span className="windsurf-credit-left" title={row.remainingText}>
-                {row.remainingText}
-              </span>
-              <span className="windsurf-credit-used" title={row.resetText}>
-                {row.resetText}
-              </span>
-            </div>
-          </div>
-        ))}
+            className={`quota-bar ${row.quotaClass}`}
+            style={{ width: `${Math.min(row.remainingPercent, 100)}%` }}
+          />
+        </div>
+        <div
+          className={`windsurf-credit-meta-row ${variant === "table" ? "table" : ""}`}
+        >
+          <span className="windsurf-credit-left" title={row.remainingText}>
+            {row.remainingText}
+          </span>
+          <span className="windsurf-credit-used" title={row.resetText}>
+            {row.resetText}
+          </span>
+        </div>
+      </div>
+    );
+
+    return (
+      <div className={`ghcp-quota-section gemini-quota-columns ${variant === "table" ? "table-layout" : ""}`}>
+        <div className="gemini-quota-column">
+          <div className="gemini-quota-column-header">Claude</div>
+          {renderRow(rows.claude5h)}
+          {renderRow(rows.claudeWeekly)}
+        </div>
+        <div className="gemini-quota-column">
+          <div className="gemini-quota-column-header">Gemini</div>
+          {renderRow(rows.gemini5h)}
+          {renderRow(rows.geminiWeekly)}
+        </div>
       </div>
     );
   };
