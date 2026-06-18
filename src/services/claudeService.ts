@@ -189,8 +189,10 @@ export async function importClaudeCliFromLocal(): Promise<ClaudeAccount> {
   return await invoke('import_claude_cli_from_local');
 }
 
-export async function claudeDesktopLoginStart(): Promise<ClaudeDesktopLoginStartResponse> {
-  const raw = await invoke<ClaudeDesktopLoginStartResponseRaw>('claude_desktop_login_start');
+export async function claudeDesktopLoginStart(progressId?: string): Promise<ClaudeDesktopLoginStartResponse> {
+  const raw = await invoke<ClaudeDesktopLoginStartResponseRaw>('claude_desktop_login_start', {
+    progressId: progressId || null,
+  });
   return normalizeClaudeDesktopLoginStartResponse(raw);
 }
 
@@ -244,6 +246,10 @@ export async function refreshClaudeQuota(accountId: string): Promise<ClaudeAccou
 
 export async function refreshAllClaudeQuotas(): Promise<number> {
   return await invoke('refresh_all_claude_quotas');
+}
+
+export async function openClaudeVerificationWindow(accountId: string): Promise<void> {
+  return await invoke('claude_open_verification_window', { accountId });
 }
 
 export async function updateClaudeAccountTags(

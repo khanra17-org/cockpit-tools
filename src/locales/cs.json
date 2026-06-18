@@ -594,6 +594,8 @@
       "closeBehaviorAsk": "Vždy se zeptat",
       "closeBehaviorMinimize": "Minimalizovat do lišty",
       "closeBehaviorQuit": "Ukončit aplikaci",
+      "startupMinimized": "Spustit minimalizované",
+      "startupMinimizedDesc": "Po spuštění aplikace automaticky minimalizuje hlavní okno; obnovíte ho z Docku, hlavního panelu nebo lišty",
       "minimizeBehavior": "Chování při minimalizaci okna (pouze macOS)",
       "minimizeBehaviorDesc": "Vyberte, zda po minimalizaci zůstane okno v Docku a na liště nabídek, nebo pouze na liště nabídek",
       "minimizeBehaviorDockAndTray": "Dock + lišta nabídek (doporučeno)",
@@ -2033,7 +2035,17 @@
       "hourly": "Kvóta 5 hodin",
       "weekly": "Týdenní kvóta",
       "reset": "Reset​",
-      "weeklyBlocksHourly": "Týdenní kvóta je 0, proto není 5hodinová kvóta dostupná"
+      "weeklyBlocksHourly": "Týdenní kvóta je 0, proto není 5hodinová kvóta dostupná",
+      "resetCredits": "Resety {{count}}",
+      "resetCreditsTitle": "Zbývající resety pro 5hodinové okno: {{count}}",
+      "resetCreditConfirm": "Potvrdit?",
+      "resetCreditDialogTitle": "Resetovat využití?",
+      "resetCreditDialogDesc": "Resetujte rychlostní limit a pokračujte bez přerušení. Dostupné resety: {{count}}.",
+      "resetCreditDialogAction": "Resetovat využití",
+      "resetCreditNoCredits": "Žádné dostupné resety",
+      "resetCreditConsumed": "5hodinová kvóta byla resetována",
+      "resetCreditFailed": "Reset selhal: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Reset byl odeslán, ale obnova kvóty selhala: {{error}}"
     },
     "quotaError": {
       "badge": "Chyba kvóty",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Obnova kvóty selhala: {{error}}",
       "notUpdated": "Limit neobnoven",
       "updated": "Aktualizováno",
-      "notUpdatedShort": "Neobnoveno"
+      "notUpdatedShort": "Neobnoveno",
+      "openVerification": "Otevřít ověření",
+      "openingVerification": "Otevírání...",
+      "verificationWindowOpened": "Okno ověření Claude bylo otevřeno. Po ověření znovu obnovte kvótu.",
+      "verificationWindowFailed": "Otevření ověření Claude selhalo: {{error}}"
     },
     "addTabs": {
       "desktop": "Plocha",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Lokální přihlášení Claude importováno: {{name}}",
       "importSuccess": "Přihlášení Claude importováno: {{name}}",
       "switchHint": "Přepnout na oficiální Claude",
-      "planUnknown": "Plán neznámý"
+      "planUnknown": "Plán neznámý",
+      "progress": {
+        "start": "Příprava úlohy přihlášení",
+        "profile": "Vytváří se izolovaný profil",
+        "resolveRuntime": "Hledá se přihlašovací komponenta",
+        "checkCache": "Kontrola místní mezipaměti komponenty",
+        "cached": "Používá se místní mezipaměť komponenty",
+        "downloadStart": "Spouští se stažení komponenty",
+        "downloading": "Stahuje se přihlašovací komponenta",
+        "downloaded": "Přihlašovací komponenta stažena",
+        "verify": "Ověřuje se integrita komponenty",
+        "extract": "Rozbaluje se přihlašovací komponenta",
+        "runtimeReady": "Přihlašovací komponenta připravena",
+        "launch": "Otevírá se přihlašovací okno Claude",
+        "ready": "Přihlašovací okno otevřeno",
+        "default": "Příprava přihlašovací komponenty",
+        "bytesWithTotal": "Staženo {{downloaded}} z {{total}}",
+        "bytesOnly": "Staženo {{downloaded}}",
+        "hint": "Po prvním nastavení se místní mezipaměť použije přímo."
+      }
     },
     "oauth": {
       "title": "Autorizace Claude OAuth",

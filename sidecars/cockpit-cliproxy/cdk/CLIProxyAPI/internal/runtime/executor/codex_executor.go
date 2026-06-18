@@ -453,10 +453,15 @@ func filterCodexReasoningReplayItemsForInput(body []byte, items [][]byte) [][]by
 	}
 
 	hasInputReasoning := codexInputHasValidReasoningEncryptedContent(body)
+	inputItems := input.Array()
 	existingCalls := make(map[string]bool)
-	for _, inputItem := range input.Array() {
+	outputCalls := make(map[string]bool)
+	for _, inputItem := range inputItems {
 		for _, key := range codexReplayToolCallKeys(inputItem) {
 			existingCalls[key] = true
+		}
+		for _, key := range codexReplayToolOutputKeys(inputItem) {
+			outputCalls[key] = true
 		}
 	}
 
@@ -473,6 +478,9 @@ func filterCodexReasoningReplayItemsForInput(body []byte, items [][]byte) [][]by
 			if len(keys) == 0 || codexReplayAnyToolCallKeyExists(existingCalls, keys) {
 				continue
 			}
+			if !codexReplayAnyToolCallKeyExists(outputCalls, keys) {
+				continue
+			}
 			for _, key := range keys {
 				existingCalls[key] = true
 			}
@@ -482,6 +490,58 @@ func filterCodexReasoningReplayItemsForInput(body []byte, items [][]byte) [][]by
 		filtered = append(filtered, item)
 	}
 	return filtered
+}
+
+func filterCodexUnpairedToolCallItems(body []byte) []byte {
+	input := gjson.GetBytes(body, "input")
+	if !input.IsArray() {
+		return body
+	}
+
+	inputItems := input.Array()
+	callKeys := make(map[string]bool)
+	outputKeys := make(map[string]bool)
+	for _, inputItem := range inputItems {
+		for _, key := range codexReplayToolCallKeys(inputItem) {
+			callKeys[key] = true
+		}
+		for _, key := range codexReplayToolOutputKeys(inputItem) {
+			outputKeys[key] = true
+		}
+	}
+	if len(callKeys) == 0 && len(outputKeys) == 0 {
+		return body
+	}
+
+	changed := false
+	items := make([]string, 0, len(inputItems))
+	for _, inputItem := range inputItems {
+		itemType := strings.TrimSpace(inputItem.Get("type").String())
+		switch itemType {
+		case "function_call", "custom_tool_call":
+			keys := codexReplayToolCallKeys(inputItem)
+			if len(keys) == 0 || !codexReplayAnyToolCallKeyExists(outputKeys, keys) {
+				changed = true
+				continue
+			}
+		case "function_call_output", "custom_tool_call_output":
+			keys := codexReplayToolOutputKeys(inputItem)
+			if len(keys) == 0 || !codexReplayAnyToolCallKeyExists(callKeys, keys) {
+				changed = true
+				continue
+			}
+		}
+		items = append(items, inputItem.Raw)
+	}
+	if !changed {
+		return body
+	}
+
+	updated, err := sjson.SetRawBytes(body, "input", []byte("["+strings.Join(items, ",")+"]"))
+	if err != nil {
+		return body
+	}
+	return updated
 }
 
 func insertCodexReasoningReplayItems(body []byte, replayItems [][]byte) ([]byte, bool) {
@@ -566,14 +626,14 @@ func codexAlignReasoningReplayToolCallIDs(inputItems []gjson.Result, replayItems
 			continue
 		}
 
-		callID := strings.TrimSpace(itemResult.Get("call_id").String())
 		outputCallID := ""
-		for _, candidate := range codexReplayComparableCallIDs(callID) {
-			if value := outputCallIDs[candidate]; value != "" {
+		for _, key := range codexReplayToolCallKeys(itemResult) {
+			if value := outputCallIDs[key]; value != "" {
 				outputCallID = value
 				break
 			}
 		}
+		callID := strings.TrimSpace(itemResult.Get("call_id").String())
 		if outputCallID == "" || outputCallID == callID {
 			aligned = append(aligned, replayItem)
 			continue
@@ -592,16 +652,12 @@ func codexAlignReasoningReplayToolCallIDs(inputItems []gjson.Result, replayItems
 func codexReplayOutputCallIDs(inputItems []gjson.Result) map[string]string {
 	outputCallIDs := make(map[string]string)
 	for _, inputItem := range inputItems {
-		itemType := strings.TrimSpace(inputItem.Get("type").String())
-		if itemType != "function_call_output" && itemType != "custom_tool_call_output" {
-			continue
-		}
 		callID := strings.TrimSpace(inputItem.Get("call_id").String())
 		if callID == "" {
 			continue
 		}
-		for _, candidate := range codexReplayComparableCallIDs(callID) {
-			outputCallIDs[candidate] = callID
+		for _, key := range codexReplayToolOutputKeys(inputItem) {
+			outputCallIDs[key] = callID
 		}
 	}
 	return outputCallIDs
@@ -631,6 +687,28 @@ func codexReplayToolCallKeys(item gjson.Result) []string {
 	keys := make([]string, 0, len(callIDs))
 	for _, callID := range callIDs {
 		keys = append(keys, itemType+":"+callID)
+	}
+	return keys
+}
+
+func codexReplayToolOutputKeys(item gjson.Result) []string {
+	itemType := strings.TrimSpace(item.Get("type").String())
+	var callType string
+	switch itemType {
+	case "function_call_output":
+		callType = "function_call"
+	case "custom_tool_call_output":
+		callType = "custom_tool_call"
+	default:
+		return nil
+	}
+	callIDs := codexReplayComparableCallIDs(item.Get("call_id").String())
+	if len(callIDs) == 0 {
+		return nil
+	}
+	keys := make([]string, 0, len(callIDs))
+	for _, callID := range callIDs {
+		keys = append(keys, callType+":"+callID)
 	}
 	return keys
 }
@@ -783,6 +861,9 @@ func (e *CodexExecutor) Execute(ctx context.Context, auth *cliproxyauth.Auth, re
 	}
 	body = sanitizeOpenAIResponsesReasoningEncryptedContent(ctx, "codex executor", body)
 	body, replayScope := applyCodexReasoningReplayCache(ctx, from, req, opts, body)
+	if sourceFormatEqual(from, sdktranslator.FormatClaude) {
+		body = filterCodexUnpairedToolCallItems(body)
+	}
 	reporter.SetTranslatedReasoningEffort(body, to.String())
 
 	url := strings.TrimSuffix(baseURL, "/") + "/responses"
@@ -1058,6 +1139,9 @@ func (e *CodexExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth.Au
 	}
 	body = sanitizeOpenAIResponsesReasoningEncryptedContent(ctx, "codex executor", body)
 	body, replayScope := applyCodexReasoningReplayCache(ctx, from, req, opts, body)
+	if sourceFormatEqual(from, sdktranslator.FormatClaude) {
+		body = filterCodexUnpairedToolCallItems(body)
+	}
 	reporter.SetTranslatedReasoningEffort(body, to.String())
 
 	url := strings.TrimSuffix(baseURL, "/") + "/responses"

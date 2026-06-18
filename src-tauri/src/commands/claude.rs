@@ -339,8 +339,7 @@ fn prepare_claude_cli_launch(
         ClaudeAuthMode::DesktopOAuth | ClaudeAuthMode::DesktopGateway
     ) {
         return Err(
-            "Claude 登录态不能启动 Claude Code CLI，请使用 OAuth / Setup Token 账号。"
-                .to_string(),
+            "Claude 登录态不能启动 Claude Code CLI，请使用 OAuth / Setup Token 账号。".to_string(),
         );
     }
     let normalized_working_dir = normalize_cli_working_dir(working_dir)?;
@@ -561,11 +560,14 @@ pub async fn import_claude_cli_from_local(app: AppHandle) -> Result<ClaudeAccoun
 
 #[tauri::command]
 pub async fn claude_desktop_login_start(
-    _app: AppHandle,
+    app: AppHandle,
+    progress_id: Option<String>,
 ) -> Result<ClaudeDesktopLoginStartResponse, String> {
-    tauri::async_runtime::spawn_blocking(claude_account::start_desktop_login)
-        .await
-        .map_err(|error| format!("启动 Claude 登录任务失败: {}", error))?
+    tauri::async_runtime::spawn_blocking(move || {
+        claude_account::start_desktop_login(Some(app), progress_id)
+    })
+    .await
+    .map_err(|error| format!("启动 Claude 登录任务失败: {}", error))?
 }
 
 #[tauri::command]
@@ -586,6 +588,15 @@ pub async fn claude_desktop_login_complete(
 #[tauri::command]
 pub fn claude_desktop_login_cancel(login_id: Option<String>) -> Result<(), String> {
     claude_account::cancel_desktop_login(login_id.as_deref())
+}
+
+#[tauri::command]
+pub async fn claude_open_verification_window(account_id: String) -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        claude_account::open_desktop_verification_window(&account_id)
+    })
+    .await
+    .map_err(|error| format!("打开 Claude 验证窗口任务失败: {}", error))?
 }
 
 #[tauri::command]

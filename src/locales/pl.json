@@ -597,6 +597,8 @@
       "closeBehaviorAsk": "Zawsze pytaj",
       "closeBehaviorMinimize": "Minimalizuj do zasobnika",
       "closeBehaviorQuit": "Zamknij aplikację",
+      "startupMinimized": "Uruchamiaj zminimalizowane",
+      "startupMinimizedDesc": "Automatycznie minimalizuje główne okno po starcie aplikacji; przywrócisz je z Docka, paska zadań lub zasobnika",
       "minimizeBehavior": "Zachowanie przy minimalizacji okna (tylko macOS)",
       "minimizeBehaviorDesc": "Wybierz, czy po zminimalizowaniu okno ma pozostać w Docku i pasku menu, czy tylko w pasku menu",
       "minimizeBehaviorDockAndTray": "Dock + pasek menu (zalecane)",
@@ -2033,7 +2035,17 @@
       "hourly": "Limit 5 godzin",
       "weekly": "Limit tygodniowy",
       "reset": "Resetuj",
-      "weeklyBlocksHourly": "Limit tygodniowy wynosi 0, więc limit 5-godzinny jest niedostępny"
+      "weeklyBlocksHourly": "Limit tygodniowy wynosi 0, więc limit 5-godzinny jest niedostępny",
+      "resetCredits": "Resety {{count}}",
+      "resetCreditsTitle": "Pozostałe resety okna 5 godzin: {{count}}",
+      "resetCreditConfirm": "Potwierdzić?",
+      "resetCreditDialogTitle": "Zresetować użycie?",
+      "resetCreditDialogDesc": "Zresetuj limit szybkości, aby kontynuować pracę bez przerw. Dostępne resety: {{count}}.",
+      "resetCreditDialogAction": "Resetuj użycie",
+      "resetCreditNoCredits": "Brak dostępnych resetów",
+      "resetCreditConsumed": "Limit 5 godzin zresetowany",
+      "resetCreditFailed": "Reset nieudany: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Reset wysłany, ale odświeżenie limitu nieudane: {{error}}"
     },
     "quotaError": {
       "badge": "Błąd limitu",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Nie odświeżono limitu: {{error}}",
       "notUpdated": "Limit nieodświeżony",
       "updated": "Zaktualizowano",
-      "notUpdatedShort": "Nieodświeżony"
+      "notUpdatedShort": "Nieodświeżony",
+      "openVerification": "Otwórz weryfikację",
+      "openingVerification": "Otwieranie...",
+      "verificationWindowOpened": "Otwarto okno weryfikacji Claude. Po weryfikacji odśwież limit ponownie.",
+      "verificationWindowFailed": "Nie udało się otworzyć weryfikacji Claude: {{error}}"
     },
     "addTabs": {
       "desktop": "Pulpit",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Lokalne logowanie Claude zaimportowane: {{name}}",
       "importSuccess": "Logowanie Claude zaimportowane: {{name}}",
       "switchHint": "Przełącz na oficjalny Claude",
-      "planUnknown": "Plan nieznany"
+      "planUnknown": "Plan nieznany",
+      "progress": {
+        "start": "Przygotowywanie logowania",
+        "profile": "Tworzenie izolowanego profilu",
+        "resolveRuntime": "Szukanie komponentu logowania",
+        "checkCache": "Sprawdzanie lokalnej pamięci komponentu",
+        "cached": "Używanie lokalnej pamięci komponentu",
+        "downloadStart": "Rozpoczynanie pobierania komponentu",
+        "downloading": "Pobieranie komponentu logowania",
+        "downloaded": "Komponent logowania pobrany",
+        "verify": "Sprawdzanie integralności komponentu",
+        "extract": "Rozpakowywanie komponentu logowania",
+        "runtimeReady": "Komponent logowania gotowy",
+        "launch": "Otwieranie okna logowania Claude",
+        "ready": "Okno logowania otwarte",
+        "default": "Przygotowywanie komponentu logowania",
+        "bytesWithTotal": "Pobrano {{downloaded}} z {{total}}",
+        "bytesOnly": "Pobrano {{downloaded}}",
+        "hint": "Po pierwszym przygotowaniu lokalna pamięć zostanie użyta ponownie."
+      }
     },
     "oauth": {
       "title": "Autoryzacja Claude OAuth",

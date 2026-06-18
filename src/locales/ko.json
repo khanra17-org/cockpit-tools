@@ -597,6 +597,8 @@
       "closeBehaviorAsk": "항상 묻기",
       "closeBehaviorMinimize": "트레이로 최소화",
       "closeBehaviorQuit": "애플리케이션 종료",
+      "startupMinimized": "최소화로 시작",
+      "startupMinimizedDesc": "앱 실행이 끝나면 기본 창을 자동으로 최소화하고 Dock, 작업 표시줄 또는 트레이에서 복원할 수 있습니다",
       "minimizeBehavior": "창 최소화 동작 (macOS 전용)",
       "minimizeBehaviorDesc": "창을 최소화할 때 Dock과 메뉴 막대에 모두 유지할지, 메뉴 막대에만 유지할지 선택",
       "minimizeBehaviorDockAndTray": "Dock + 메뉴 막대 (기본값 권장)",
@@ -2033,7 +2035,17 @@
       "hourly": "5시간 쿼터",
       "weekly": "주간 쿼터",
       "reset": "재설정",
-      "weeklyBlocksHourly": "주간 할당량이 0이라 5시간 할당량을 사용할 수 없습니다"
+      "weeklyBlocksHourly": "주간 할당량이 0이라 5시간 할당량을 사용할 수 없습니다",
+      "resetCredits": "재설정 {{count}}",
+      "resetCreditsTitle": "5시간 창에 남은 재설정 횟수: {{count}}",
+      "resetCreditConfirm": "확인?",
+      "resetCreditDialogTitle": "사용량을 재설정할까요?",
+      "resetCreditDialogDesc": "속도 제한을 재설정하면 중단 없이 계속 작업할 수 있습니다. 사용 가능한 재설정: {{count}}회.",
+      "resetCreditDialogAction": "사용량 재설정",
+      "resetCreditNoCredits": "사용 가능한 재설정 횟수가 없습니다",
+      "resetCreditConsumed": "5시간 쿼터가 재설정되었습니다",
+      "resetCreditFailed": "재설정 실패: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "재설정은 제출됐지만 쿼터 새로고침에 실패했습니다: {{error}}"
     },
     "quotaError": {
       "badge": "할당량 오류",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "한도 새로고침 실패: {{error}}",
       "notUpdated": "한도 미갱신",
       "updated": "업데이트됨",
-      "notUpdatedShort": "미갱신"
+      "notUpdatedShort": "미갱신",
+      "openVerification": "인증 창 열기",
+      "openingVerification": "여는 중...",
+      "verificationWindowOpened": "Claude 인증 창을 열었습니다. 인증 후 사용량을 다시 새로고침하세요.",
+      "verificationWindowFailed": "Claude 인증 창 열기 실패: {{error}}"
     },
     "addTabs": {
       "desktop": "데스크",
@@ -4752,7 +4768,26 @@
       "localSuccess": "로컬 Claude 로그인을 가져왔습니다: {{name}}",
       "importSuccess": "Claude 로그인을 가져왔습니다: {{name}}",
       "switchHint": "공식 Claude으로 전환",
-      "planUnknown": "요금제 알 수 없음"
+      "planUnknown": "요금제 알 수 없음",
+      "progress": {
+        "start": "로그인 작업 준비 중",
+        "profile": "격리된 profile 생성 중",
+        "resolveRuntime": "로그인 구성 요소 찾는 중",
+        "checkCache": "로컬 구성 요소 캐시 확인 중",
+        "cached": "로컬 구성 요소 캐시 사용 중",
+        "downloadStart": "구성 요소 다운로드 시작 중",
+        "downloading": "로그인 구성 요소 다운로드 중",
+        "downloaded": "로그인 구성 요소 다운로드 완료",
+        "verify": "구성 요소 무결성 확인 중",
+        "extract": "로그인 구성 요소 압축 해제 중",
+        "runtimeReady": "로그인 구성 요소 준비 완료",
+        "launch": "Claude 로그인 창 여는 중",
+        "ready": "로그인 창이 열렸습니다",
+        "default": "로그인 구성 요소 준비 중",
+        "bytesWithTotal": "{{total}} 중 {{downloaded}} 다운로드됨",
+        "bytesOnly": "{{downloaded}} 다운로드됨",
+        "hint": "첫 준비가 끝나면 로컬 캐시를 바로 재사용합니다."
+      }
     },
     "oauth": {
       "title": "Claude OAuth 승인",

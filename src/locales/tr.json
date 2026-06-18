@@ -597,6 +597,8 @@
       "closeBehaviorAsk": "Her seferinde sor",
       "closeBehaviorMinimize": "Tepsisine küçült",
       "closeBehaviorQuit": "Uygulamadan Çık",
+      "startupMinimized": "Simge durumunda başlat",
+      "startupMinimizedDesc": "Uygulama açıldıktan sonra ana pencereyi otomatik küçültür; Dock, görev çubuğu veya tepsiden geri getirebilirsiniz",
       "minimizeBehavior": "Pencere küçültme davranışı (yalnızca macOS)",
       "minimizeBehaviorDesc": "Pencere küçültüldüğünde Dock ve menü çubuğunda mı, yoksa yalnızca menü çubuğunda mı kalacağını seçin",
       "minimizeBehaviorDockAndTray": "Dock + menü çubuğu (önerilen)",
@@ -2033,7 +2035,17 @@
       "hourly": "5 saatlik kota",
       "weekly": "Haftalık kota",
       "reset": "Sıfırla",
-      "weeklyBlocksHourly": "Haftalık kota 0 olduğu için 5 saatlik kota kullanılamaz"
+      "weeklyBlocksHourly": "Haftalık kota 0 olduğu için 5 saatlik kota kullanılamaz",
+      "resetCredits": "Sıfırlama {{count}}",
+      "resetCreditsTitle": "5 saatlik pencere için kalan sıfırlama: {{count}}",
+      "resetCreditConfirm": "Onayla?",
+      "resetCreditDialogTitle": "Kullanım sıfırlansın mı?",
+      "resetCreditDialogDesc": "Hız sınırını sıfırlayarak kesintisiz çalışmaya devam edin. Kullanılabilir sıfırlama: {{count}}.",
+      "resetCreditDialogAction": "Kullanımı sıfırla",
+      "resetCreditNoCredits": "Kullanılabilir sıfırlama yok",
+      "resetCreditConsumed": "5 saatlik kota sıfırlandı",
+      "resetCreditFailed": "Sıfırlama başarısız: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Sıfırlama gönderildi, ancak kota yenileme başarısız: {{error}}"
     },
     "quotaError": {
       "badge": "Kota hatası",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Kota yenileme başarısız: {{error}}",
       "notUpdated": "Kota yenilenmedi",
       "updated": "Güncellendi",
-      "notUpdatedShort": "Yenilenmedi"
+      "notUpdatedShort": "Yenilenmedi",
+      "openVerification": "Doğrulamayı aç",
+      "openingVerification": "Açılıyor...",
+      "verificationWindowOpened": "Claude doğrulama penceresi açıldı. Doğrulamadan sonra kotayı yeniden yenileyin.",
+      "verificationWindowFailed": "Claude doğrulama penceresi açılamadı: {{error}}"
     },
     "addTabs": {
       "desktop": "Masa",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Yerel Claude oturumu içe aktarıldı: {{name}}",
       "importSuccess": "Claude oturumu içe aktarıldı: {{name}}",
       "switchHint": "Resmi Claude’a geç",
-      "planUnknown": "Plan bilinmiyor"
+      "planUnknown": "Plan bilinmiyor",
+      "progress": {
+        "start": "Oturum açma hazırlanıyor",
+        "profile": "Yalıtılmış profil oluşturuluyor",
+        "resolveRuntime": "Oturum bileşeni aranıyor",
+        "checkCache": "Yerel bileşen önbelleği denetleniyor",
+        "cached": "Yerel bileşen önbelleği kullanılıyor",
+        "downloadStart": "Bileşen indirme başlatılıyor",
+        "downloading": "Oturum bileşeni indiriliyor",
+        "downloaded": "Oturum bileşeni indirildi",
+        "verify": "Bileşen bütünlüğü doğrulanıyor",
+        "extract": "Oturum bileşeni çıkarılıyor",
+        "runtimeReady": "Oturum bileşeni hazır",
+        "launch": "Claude oturum penceresi açılıyor",
+        "ready": "Oturum penceresi açıldı",
+        "default": "Oturum bileşeni hazırlanıyor",
+        "bytesWithTotal": "{{total}} içinden {{downloaded}} indirildi",
+        "bytesOnly": "{{downloaded}} indirildi",
+        "hint": "İlk hazırlıktan sonra yerel önbellek doğrudan yeniden kullanılır."
+      }
     },
     "oauth": {
       "title": "Claude OAuth Yetkilendirme",

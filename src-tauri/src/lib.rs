@@ -70,6 +70,23 @@ fn raise_process_file_descriptor_limit() {
 #[cfg(not(any(target_os = "macos", target_os = "linux")))]
 fn raise_process_file_descriptor_limit() {}
 
+fn apply_startup_minimized(app: &tauri::AppHandle) {
+    let config = modules::config::get_user_config();
+    if !config.startup_minimized {
+        return;
+    }
+
+    let Some(window) = app.get_webview_window("main") else {
+        logger::log_warn("[Window] 启动后自动最小化失败: main window not found");
+        return;
+    };
+
+    match window.minimize() {
+        Ok(()) => logger::log_info("[Window] 启动后已自动最小化主窗口"),
+        Err(err) => logger::log_warn(&format!("[Window] 启动后自动最小化失败: {}", err)),
+    }
+}
+
 #[cfg(target_os = "macos")]
 fn apply_macos_activation_policy(app: &tauri::AppHandle) {
     let config = modules::config::get_user_config();
@@ -336,6 +353,8 @@ pub fn run() {
                 startup_external_import_handled
             ));
 
+            apply_startup_minimized(&app.handle());
+
             Ok(())
         })
         .on_window_event(|window, event| match event {
@@ -420,6 +439,7 @@ pub fn run() {
             commands::claude::claude_desktop_login_start,
             commands::claude::claude_desktop_login_complete,
             commands::claude::claude_desktop_login_cancel,
+            commands::claude::claude_open_verification_window,
             commands::claude::export_claude_accounts,
             commands::claude::refresh_claude_quota,
             commands::claude::refresh_all_claude_quotas,
@@ -568,6 +588,7 @@ pub fn run() {
             commands::codex::get_codex_batch_import_preview,
             commands::codex::confirm_codex_batch_import,
             commands::codex::refresh_codex_quota,
+            commands::codex::consume_codex_reset_credit,
             commands::codex::refresh_codex_subscription_info,
             commands::codex::refresh_all_codex_quotas,
             commands::codex::refresh_current_codex_quota,

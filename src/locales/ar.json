@@ -640,6 +640,8 @@
       "closeBehaviorAsk": "اسأل في كل مرة",
       "closeBehaviorMinimize": "تصغير إلى الدرج",
       "closeBehaviorQuit": "إنهاء التطبيق",
+      "startupMinimized": "بدء التشغيل مصغّرًا",
+      "startupMinimizedDesc": "تصغير النافذة الرئيسية تلقائيًا بعد اكتمال تشغيل التطبيق؛ يمكن استعادتها من Dock أو شريط المهام أو الدرج",
       "minimizeBehavior": "سلوك تصغير النافذة (macOS فقط)",
       "minimizeBehaviorDesc": "اختر ما إذا كانت النافذة عند تصغيرها تبقى في Dock وشريط القوائم، أو في شريط القوائم فقط",
       "minimizeBehaviorDockAndTray": "Dock + شريط القوائم (موصى به)",
@@ -2079,7 +2081,17 @@
       "hourly": "حصة 5 ساعات",
       "weekly": "الحصة الأسبوعية",
       "reset": "إعادة ضبط",
-      "weeklyBlocksHourly": "الحصة الأسبوعية 0، لذا حصة 5 ساعات غير متاحة"
+      "weeklyBlocksHourly": "الحصة الأسبوعية 0، لذا حصة 5 ساعات غير متاحة",
+      "resetCredits": "مرات الضبط {{count}}",
+      "resetCreditsTitle": "مرات متبقية لإعادة ضبط نافذة 5 ساعات: {{count}}",
+      "resetCreditConfirm": "تأكيد؟",
+      "resetCreditDialogTitle": "هل تريد إعادة ضبط استخدامك؟",
+      "resetCreditDialogDesc": "أعد ضبط حد المعدل لتواصل العمل بلا انقطاع. عمليات إعادة الضبط المتاحة: {{count}}.",
+      "resetCreditDialogAction": "إعادة ضبط الاستخدام",
+      "resetCreditNoCredits": "لا توجد مرات إعادة ضبط متاحة",
+      "resetCreditConsumed": "تمت إعادة ضبط حصة 5 ساعات",
+      "resetCreditFailed": "فشلت إعادة الضبط: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "تم إرسال إعادة الضبط، لكن تحديث الحصة فشل: {{error}}"
     },
     "quotaError": {
       "badge": "خطأ في الحصة",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "فشل تحديث الحصة: {{error}}",
       "notUpdated": "لم يتم تحديث الحصة",
       "updated": "تم التحديث",
-      "notUpdatedShort": "غير محدثة"
+      "notUpdatedShort": "غير محدثة",
+      "openVerification": "فتح التحقق",
+      "openingVerification": "جارٍ الفتح...",
+      "verificationWindowOpened": "تم فتح نافذة تحقق Claude. حدّث الحصة مرة أخرى بعد إكمال التحقق.",
+      "verificationWindowFailed": "فشل فتح نافذة تحقق Claude: {{error}}"
     },
     "addTabs": {
       "desktop": "سطح",
@@ -4752,7 +4768,26 @@
       "localSuccess": "تم استيراد تسجيل Claude المحلي: {{name}}",
       "importSuccess": "تم استيراد تسجيل Claude: {{name}}",
       "switchHint": "التبديل إلى Claude الرسمي",
-      "planUnknown": "الخطة غير معروفة"
+      "planUnknown": "الخطة غير معروفة",
+      "progress": {
+        "start": "تحضير مهمة تسجيل الدخول",
+        "profile": "إنشاء ملف تعريف معزول",
+        "resolveRuntime": "البحث عن مكوّن الدخول",
+        "checkCache": "فحص ذاكرة المكوّن المحلية",
+        "cached": "استخدام ذاكرة المكوّن المحلية",
+        "downloadStart": "بدء تنزيل مكوّن الدخول",
+        "downloading": "تنزيل مكوّن الدخول",
+        "downloaded": "اكتمل تنزيل مكوّن الدخول",
+        "verify": "التحقق من سلامة المكوّن",
+        "extract": "فك ضغط مكوّن الدخول",
+        "runtimeReady": "مكوّن الدخول جاهز",
+        "launch": "فتح نافذة دخول Claude",
+        "ready": "تم فتح نافذة الدخول",
+        "default": "تحضير مكوّن الدخول",
+        "bytesWithTotal": "تم تنزيل {{downloaded}} من {{total}}",
+        "bytesOnly": "تم تنزيل {{downloaded}}",
+        "hint": "بعد الإعداد الأول، سيعاد استخدام الذاكرة المحلية مباشرة."
+      }
     },
     "oauth": {
       "title": "تفويض Claude OAuth",

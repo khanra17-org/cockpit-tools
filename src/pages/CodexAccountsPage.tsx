@@ -881,6 +881,17 @@ export function CodexAccountsPage() {
   );
   const [refreshingSubscriptionAccountId, setRefreshingSubscriptionAccountId] =
     useState<string | null>(null);
+  const [resettingResetCreditAccountId, setResettingResetCreditAccountId] =
+    useState<string | null>(null);
+  const [resetCreditConfirmAccountId, setResetCreditConfirmAccountId] =
+    useState<string | null>(null);
+  const [resetCreditConfirmActionLocked, setResetCreditConfirmActionLocked] =
+    useState(false);
+  const {
+    message: resetCreditConfirmError,
+    scrollKey: resetCreditConfirmErrorScrollKey,
+    set: setResetCreditConfirmError,
+  } = useModalErrorState();
   const [removingGroupAccountIds, setRemovingGroupAccountIds] = useState<
     Set<string>
   >(new Set());
@@ -1153,6 +1164,7 @@ export function CodexAccountsPage() {
   } = page;
   const [isAllFilteredSelected, setIsAllFilteredSelected] = useState(false);
 
+  const reauthTargetAccountId = reauthTargetAccount?.id?.trim() ?? "";
   const reauthTargetEmail = reauthTargetAccount?.email?.trim() ?? "";
   const [batchImportOpen, setBatchImportOpen] = useState(false);
   const [batchImportSessionId, setBatchImportSessionId] = useState<
@@ -2141,6 +2153,99 @@ export function CodexAccountsPage() {
     updateAccountAppSpeed,
   } = store;
   const localAccessCollection = localAccessState?.collection ?? null;
+
+  const getResetCreditsAvailable = useCallback((account: CodexAccount) => {
+    const value = account.quota?.reset_credits_available;
+    return typeof value === "number" && Number.isFinite(value) ? value : null;
+  }, []);
+
+  const resetCreditConfirmAccount = useMemo(
+    () =>
+      resetCreditConfirmAccountId
+        ? accounts.find((account) => account.id === resetCreditConfirmAccountId) ??
+          null
+        : null,
+    [accounts, resetCreditConfirmAccountId],
+  );
+
+  const resetCreditConfirmAvailableCount = resetCreditConfirmAccount
+    ? getResetCreditsAvailable(resetCreditConfirmAccount)
+    : null;
+  const isResetCreditConfirmSubmitting = resetCreditConfirmAccount
+    ? resettingResetCreditAccountId === resetCreditConfirmAccount.id
+    : false;
+
+  const openResetCreditConfirmModal = useCallback(
+    (account: CodexAccount) => {
+      const availableCount = getResetCreditsAvailable(account);
+      if (availableCount == null || availableCount <= 0) {
+        return;
+      }
+
+      setResetCreditConfirmError(null);
+      setResetCreditConfirmActionLocked(false);
+      setResetCreditConfirmAccountId(account.id);
+    },
+    [getResetCreditsAvailable, setResetCreditConfirmError],
+  );
+
+  const closeResetCreditConfirmModal = useCallback(() => {
+    if (resettingResetCreditAccountId) return;
+    setResetCreditConfirmAccountId(null);
+    setResetCreditConfirmActionLocked(false);
+    setResetCreditConfirmError(null);
+  }, [resettingResetCreditAccountId, setResetCreditConfirmError]);
+
+  const handleConfirmConsumeResetCredit = useCallback(async () => {
+    const account = resetCreditConfirmAccount;
+    if (!account) return;
+
+    const availableCount = getResetCreditsAvailable(account);
+    if (availableCount == null || availableCount <= 0) {
+      setResetCreditConfirmError(
+        t("codex.quota.resetCreditNoCredits", "没有可用的主动重置次数"),
+      );
+      return;
+    }
+
+    setResetCreditConfirmError(null);
+    setResetCreditConfirmActionLocked(false);
+    setResettingResetCreditAccountId(account.id);
+
+    try {
+      await codexService.consumeCodexResetCredit(account.id);
+      try {
+        await refreshQuota(account.id);
+        setMessage({
+          text: t("codex.quota.resetCreditConsumed", "已重置 5 小时额度"),
+        });
+        setResetCreditConfirmAccountId(null);
+      } catch (error) {
+        setResetCreditConfirmActionLocked(true);
+        setResetCreditConfirmError(
+          t("codex.quota.resetCreditRefreshAfterConsumeFailed", {
+            error: String(error).replace(/^Error:\s*/, ""),
+          }),
+        );
+      }
+    } catch (error) {
+      setResetCreditConfirmError(
+        t("codex.quota.resetCreditFailed", {
+          error: String(error).replace(/^Error:\s*/, ""),
+        }),
+      );
+      return;
+    } finally {
+      setResettingResetCreditAccountId(null);
+    }
+  }, [
+    getResetCreditsAvailable,
+    refreshQuota,
+    resetCreditConfirmAccount,
+    setMessage,
+    setResetCreditConfirmError,
+    t,
+  ]);
 
   const handleRefreshSubscriptionInfo = useCallback(
     async (accountId: string) => {
@@ -3139,7 +3244,10 @@ export function CodexAccountsPage() {
         setAddMessage(t("codex.oauth.exchanging", "正在交换令牌..."));
         oauthCompletingRef.current = true;
         try {
-          await codexService.completeCodexOAuthLogin(loginId);
+          await codexService.completeCodexOAuthLogin(
+            loginId,
+            reauthTargetAccountId || null,
+          );
           await completeOauthSuccess();
         } catch (e) {
           completeOauthError(e, true);
@@ -3188,6 +3296,7 @@ export function CodexAccountsPage() {
   }, [
     completeOauthError,
     completeOauthSuccess,
+    reauthTargetAccountId,
     t,
     setAddStatus,
     setAddMessage,
@@ -3388,7 +3497,10 @@ export function CodexAccountsPage() {
       setAddStatus("loading");
       setAddMessage(t("codex.oauth.exchanging", "正在交换令牌..."));
       tokenExchangeStarted = true;
-      await codexService.completeCodexOAuthLogin(loginId);
+      await codexService.completeCodexOAuthLogin(
+        loginId,
+        reauthTargetAccountId || null,
+      );
       await completeOauthSuccess();
     } catch (e) {
       completeOauthError(e, tokenExchangeStarted);
@@ -3409,7 +3521,10 @@ export function CodexAccountsPage() {
     setAddMessage(t("codex.oauth.exchanging", "正在交换令牌..."));
     oauthCompletingRef.current = true;
     try {
-      await codexService.completeCodexOAuthLogin(loginId);
+      await codexService.completeCodexOAuthLogin(
+        loginId,
+        reauthTargetAccountId || null,
+      );
       await completeOauthSuccess();
     } catch (e) {
       completeOauthError(e, true);
@@ -7629,6 +7744,43 @@ export function CodexAccountsPage() {
     [],
   );
 
+  const renderResetCreditControls = (account: CodexAccount) => {
+    if (isCodexApiKeyAccount(account)) return null;
+
+    const availableCount = getResetCreditsAvailable(account);
+    if (availableCount == null) return null;
+
+    const isResetting = resettingResetCreditAccountId === account.id;
+    const isDisabled = isResetting || availableCount <= 0;
+    const titleText =
+      availableCount <= 0
+        ? t("codex.quota.resetCreditNoCredits", "没有可用的主动重置次数")
+        : t("codex.quota.resetCreditsTitle", {
+            count: availableCount,
+          });
+
+    return (
+      <div className="codex-reset-credit-row inline">
+        <button
+          type="button"
+          className={`codex-reset-credit-pill ${
+            availableCount > 0 ? "is-available" : "is-unavailable"
+          }`}
+          onClick={() => openResetCreditConfirmModal(account)}
+          disabled={isDisabled}
+          title={titleText}
+        >
+          {isResetting ? (
+            <RefreshCw size={13} className="loading-spinner" />
+          ) : (
+            <RotateCw size={13} />
+          )}
+          {t("codex.quota.resetCredits", { count: availableCount })}
+        </button>
+      </div>
+    );
+  };
+
   // ─── Render helpers ──────────────────────────────────────────────────
 
   const renderCompactRows = (
@@ -7848,6 +8000,7 @@ export function CodexAccountsPage() {
       const isSubscriptionRefreshPending =
         refreshingSubscriptionAccountId === account.id ||
         refreshing === account.id;
+      const resetCreditControls = renderResetCreditControls(account);
       return (
         <div
           key={groupKey ? `${groupKey}-${account.id}` : account.id}
@@ -7913,7 +8066,8 @@ export function CodexAccountsPage() {
           </div>
           {(meta.accountContextText ||
             isInLocalAccess ||
-            (!isApiKeyAccount && account.account_note?.trim())) && (
+            (!isApiKeyAccount && account.account_note?.trim()) ||
+            resetCreditControls) && (
             <div className="account-sub-line">
               {meta.accountContextText && (
                 <span
@@ -7929,6 +8083,7 @@ export function CodexAccountsPage() {
                 </span>
               )}
               {!isApiKeyAccount && renderAccountNoteButton(account)}
+              {resetCreditControls}
             </div>
           )}
           {!isApiKeyAccount && (
@@ -9160,6 +9315,7 @@ export function CodexAccountsPage() {
       const isSubscriptionRefreshPending =
         refreshingSubscriptionAccountId === account.id ||
         refreshing === account.id;
+      const resetCreditControls = renderResetCreditControls(account);
       return (
         <tr
           key={groupKey ? `${groupKey}-${account.id}` : account.id}
@@ -9214,7 +9370,8 @@ export function CodexAccountsPage() {
               </div>
               {(meta.accountContextText ||
                 isInLocalAccess ||
-                (!isApiKeyAccount && account.account_note?.trim())) && (
+                (!isApiKeyAccount && account.account_note?.trim()) ||
+                resetCreditControls) && (
                 <div className="account-sub-line codex-account-meta-inline">
                   {meta.accountContextText && (
                     <span
@@ -9230,6 +9387,7 @@ export function CodexAccountsPage() {
                     </span>
                   )}
                   {!isApiKeyAccount && renderAccountNoteButton(account)}
+                  {resetCreditControls}
                 </div>
               )}
               {!isApiKeyAccount && (
@@ -13485,6 +13643,88 @@ export function CodexAccountsPage() {
                     {getCodexLocalAccessRiskNoticeConfirmLabel(
                       localAccessRiskNoticeAction,
                       t,
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {resetCreditConfirmAccount && (
+            <div className="modal-overlay codex-reset-credit-confirm-overlay">
+              <div
+                className="modal codex-reset-credit-confirm-modal"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="codex-reset-credit-confirm-visual">
+                  <button
+                    type="button"
+                    className="modal-close codex-reset-credit-confirm-close"
+                    onClick={closeResetCreditConfirmModal}
+                    aria-label={t("common.close", "关闭")}
+                    disabled={isResetCreditConfirmSubmitting}
+                  >
+                    <X />
+                  </button>
+                  <div className="codex-reset-credit-confirm-icon">
+                    <Terminal size={30} />
+                    <RotateCw
+                      size={18}
+                      className="codex-reset-credit-confirm-icon-badge"
+                    />
+                  </div>
+                </div>
+                <div className="modal-body codex-reset-credit-confirm-body">
+                  <h2>
+                    {t(
+                      "codex.quota.resetCreditDialogTitle",
+                      "要重置你的使用量吗？",
+                    )}
+                  </h2>
+                  <p>
+                    {t("codex.quota.resetCreditDialogDesc", {
+                      count: resetCreditConfirmAvailableCount ?? 0,
+                      defaultValue:
+                        "重置速率限制后，继续不间断地工作。你还有 {{count}} 次重置可用。",
+                    })}
+                  </p>
+                  <div className="codex-reset-credit-confirm-account">
+                    <span>{t("common.shared.columns.email", "账号")}</span>
+                    <strong>
+                      {maskAccountText(
+                        resolvePresentation(resetCreditConfirmAccount)
+                          .displayName,
+                      )}
+                    </strong>
+                  </div>
+                  <ModalErrorMessage
+                    message={resetCreditConfirmError}
+                    scrollKey={resetCreditConfirmErrorScrollKey}
+                    position="bottom"
+                  />
+                </div>
+                <div className="modal-footer codex-reset-credit-confirm-footer">
+                  <button
+                    type="button"
+                    className="btn btn-primary codex-reset-credit-confirm-action"
+                    onClick={() => void handleConfirmConsumeResetCredit()}
+                    disabled={
+                      isResetCreditConfirmSubmitting ||
+                      resetCreditConfirmActionLocked ||
+                      resetCreditConfirmAvailableCount == null ||
+                      resetCreditConfirmAvailableCount <= 0
+                    }
+                  >
+                    {isResetCreditConfirmSubmitting ? (
+                      <>
+                        <RefreshCw size={14} className="loading-spinner" />
+                        {t("common.processing", "处理中...")}
+                      </>
+                    ) : (
+                      t(
+                        "codex.quota.resetCreditDialogAction",
+                        "重置使用次数",
+                      )
                     )}
                   </button>
                 </div>

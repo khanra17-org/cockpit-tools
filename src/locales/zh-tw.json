@@ -594,6 +594,8 @@
       "closeBehaviorAsk": "每次詢問",
       "closeBehaviorMinimize": "最小化到系統列",
       "closeBehaviorQuit": "退出應用程式",
+      "startupMinimized": "啟動後自動最小化",
+      "startupMinimizedDesc": "應用啟動完成後自動最小化主視窗，可從 Dock、工作列或系統列恢復",
       "minimizeBehavior": "視窗最小化行為（僅 macOS）",
       "minimizeBehaviorDesc": "選擇最小化視窗時保留在 Dock 與選單列，或僅保留在選單列",
       "minimizeBehaviorDockAndTray": "Dock + 選單列（建議預設）",
@@ -2144,7 +2146,17 @@
       "hourly": "5 小時配額",
       "weekly": "週配額",
       "reset": "重置",
-      "weeklyBlocksHourly": "週額度為 0，因此 5 小時額度已不可用"
+      "weeklyBlocksHourly": "週額度為 0，因此 5 小時額度已不可用",
+      "resetCredits": "重置 {{count}}",
+      "resetCreditsTitle": "可用於重置目前 5 小時視窗的剩餘次數：{{count}}",
+      "resetCreditConfirm": "確認重置?",
+      "resetCreditDialogTitle": "要重置你的使用量嗎？",
+      "resetCreditDialogDesc": "重置速率限制後，可以繼續不中斷地工作。你還有 {{count}} 次重置可用。",
+      "resetCreditDialogAction": "重置使用次數",
+      "resetCreditNoCredits": "沒有可用的主動重置次數",
+      "resetCreditConsumed": "已重置 5 小時額度",
+      "resetCreditFailed": "重置失敗：{{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "已送出重置，但重新整理配額失敗：{{error}}"
     },
     "quotaError": {
       "badge": "配額異常",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "額度刷新失敗：{{error}}",
       "notUpdated": "額度未重新整理",
       "updated": "已更新",
-      "notUpdatedShort": "未刷新"
+      "notUpdatedShort": "未刷新",
+      "openVerification": "開啟驗證視窗",
+      "openingVerification": "正在開啟...",
+      "verificationWindowOpened": "已開啟 Claude 驗證視窗，完成驗證後請重新整理額度。",
+      "verificationWindowFailed": "開啟 Claude 驗證視窗失敗：{{error}}"
     },
     "addTabs": {
       "desktop": "桌面",
@@ -4752,7 +4768,26 @@
       "localSuccess": "已匯入本機 Claude 登入狀態：{{name}}",
       "importSuccess": "Claude 登入狀態已匯入：{{name}}",
       "switchHint": "切換到官方 Claude",
-      "planUnknown": "訂閱未知"
+      "planUnknown": "訂閱未知",
+      "progress": {
+        "start": "準備登入工作",
+        "profile": "建立隔離 profile",
+        "resolveRuntime": "尋找登入元件",
+        "checkCache": "檢查本機元件快取",
+        "cached": "使用本機元件快取",
+        "downloadStart": "開始下載登入元件",
+        "downloading": "下載登入元件",
+        "downloaded": "登入元件下載完成",
+        "verify": "驗證元件完整性",
+        "extract": "解壓縮登入元件",
+        "runtimeReady": "登入元件已準備",
+        "launch": "啟動 Claude 登入視窗",
+        "ready": "登入視窗已開啟",
+        "default": "準備登入元件",
+        "bytesWithTotal": "已下載 {{downloaded}}，共 {{total}}",
+        "bytesOnly": "已下載 {{downloaded}}",
+        "hint": "首次準備完成後，之後會直接重用本機快取。"
+      }
     },
     "oauth": {
       "title": "Claude OAuth 授權",

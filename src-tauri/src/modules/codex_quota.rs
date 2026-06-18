@@ -1,11 +1,16 @@
 use crate::models::codex::{CodexAccount, CodexQuota, CodexQuotaErrorInfo};
 use crate::modules::{codex_account, logger};
-use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, AUTHORIZATION, REFERER, USER_AGENT};
+use reqwest::header::{
+    HeaderMap, HeaderValue, ACCEPT, AUTHORIZATION, CONTENT_TYPE, REFERER, USER_AGENT,
+};
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 // 使用 wham/usage 端点（Quotio 使用的）
 const USAGE_URL: &str = "https://chatgpt.com/backend-api/wham/usage";
+const RESET_CREDITS_CONSUME_URL: &str =
+    "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits/consume";
 const SUBSCRIPTION_ACCOUNTS_CHECK_URL: &str =
     "https://chatgpt.com/backend-api/accounts/check/v4-2023-04-27";
 const SUBSCRIPTIONS_URL: &str = "https://chatgpt.com/backend-api/subscriptions";
@@ -137,6 +142,12 @@ struct RateLimitInfo {
     secondary_window: Option<WindowInfo>,
 }
 
+/// 主动重置次数
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct ResetCreditsInfo {
+    available_count: Option<i64>,
+}
+
 /// 使用率响应
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct UsageResponse {
@@ -146,6 +157,8 @@ struct UsageResponse {
     rate_limit: Option<RateLimitInfo>,
     #[serde(rename = "code_review_rate_limit")]
     code_review_rate_limit: Option<RateLimitInfo>,
+    #[serde(rename = "rate_limit_reset_credits")]
+    rate_limit_reset_credits: Option<ResetCreditsInfo>,
 }
 
 fn normalize_remaining_percentage(window: &WindowInfo) -> i32 {
@@ -804,6 +817,10 @@ fn parse_quota_from_usage(usage: &UsageResponse, raw_body: &str) -> Result<Codex
         weekly_reset_time,
         weekly_window_minutes,
         weekly_window_present: Some(secondary_window.is_some()),
+        reset_credits_available: usage
+            .rate_limit_reset_credits
+            .as_ref()
+            .and_then(|credits| credits.available_count),
         raw_data,
     })
 }
@@ -958,6 +975,7 @@ async fn fetch_new_api_quota(account: &CodexAccount) -> Result<FetchQuotaResult,
             weekly_reset_time: None,
             weekly_window_minutes: None,
             weekly_window_present: Some(false),
+            reset_credits_available: None,
             raw_data: Some(json!({
                 "provider": "cockpit-api",
                 "object": "codex_cockpit_api_quota",
@@ -977,6 +995,109 @@ async fn fetch_new_api_quota(account: &CodexAccount) -> Result<FetchQuotaResult,
                 .unwrap_or_else(|| COCKPIT_API_PLAN_TYPE.to_string()),
         ),
     })
+}
+
+fn build_codex_api_headers(
+    account: &CodexAccount,
+    account_id: Option<&str>,
+) -> Result<HeaderMap, String> {
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        AUTHORIZATION,
+        HeaderValue::from_str(&format!("Bearer {}", account.tokens.access_token))
+            .map_err(|e| format!("构建 Authorization 头失败: {}", e))?,
+    );
+    headers.insert(ACCEPT, HeaderValue::from_static("application/json"));
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+    headers.insert(REFERER, HeaderValue::from_static(CHATGPT_WEB_REFERER));
+    headers.insert(USER_AGENT, HeaderValue::from_static(CHATGPT_WEB_USER_AGENT));
+
+    if let Some(account_id) = normalize_optional_ref(account_id) {
+        headers.insert(
+            "ChatGPT-Account-Id",
+            HeaderValue::from_str(&account_id)
+                .map_err(|e| format!("构建 ChatGPT-Account-Id 头失败: {}", e))?,
+        );
+    }
+
+    Ok(headers)
+}
+
+async fn post_reset_credit_once(
+    account: &CodexAccount,
+    redeem_request_id: &str,
+) -> Result<(), String> {
+    let account_id = account.account_id.clone().or_else(|| {
+        codex_account::extract_chatgpt_account_id_from_access_token(&account.tokens.access_token)
+    });
+    let headers = build_codex_api_headers(account, account_id.as_deref())?;
+    let response = reqwest::Client::new()
+        .post(RESET_CREDITS_CONSUME_URL)
+        .headers(headers)
+        .json(&json!({ "redeem_request_id": redeem_request_id }))
+        .send()
+        .await
+        .map_err(|e| format!("请求主动重置失败: {}", e))?;
+    let status = response.status();
+    let headers = response.headers().clone();
+    let body = response
+        .text()
+        .await
+        .map_err(|e| format!("读取主动重置响应失败: {}", e))?;
+
+    logger::log_info(&format!(
+        "Codex 主动重置响应: url={}, status={}, request-id={}, x-request-id={}, cf-ray={}, body_len={}",
+        RESET_CREDITS_CONSUME_URL,
+        status,
+        get_header_value(&headers, "request-id"),
+        get_header_value(&headers, "x-request-id"),
+        get_header_value(&headers, "cf-ray"),
+        body.len()
+    ));
+
+    if status.is_success() {
+        return Ok(());
+    }
+
+    let detail_code = extract_detail_code_from_body(&body);
+    let mut error_message = format!("主动重置接口返回错误 {}", status);
+    if let Some(code) = detail_code {
+        error_message.push_str(&format!(" [error_code:{}]", code));
+    }
+    error_message.push_str(&format!(" [body_len:{}]", body.len()));
+    append_http_error_diagnostics(&mut error_message, &headers, &body);
+    Err(error_message)
+}
+
+fn is_unauthorized_error(message: &str) -> bool {
+    message.contains("401") || message.contains(&StatusCode::UNAUTHORIZED.to_string())
+}
+
+pub async fn consume_reset_credit(account_id: &str) -> Result<(), String> {
+    let mut account = codex_account::prepare_account_for_injection(account_id).await?;
+    if account.is_api_key_auth() {
+        return Err("API Key 账号不支持主动重置额度".to_string());
+    }
+
+    if crate::modules::codex_oauth::is_token_expired(&account.tokens.access_token) {
+        refresh_account_tokens(&mut account, "主动重置前 Token 已过期").await?;
+        sync_subscription_expiry_from_current_id_token(&mut account);
+        normalize_subscription_retry_state(&mut account);
+        codex_account::save_account(&account)?;
+    }
+
+    let redeem_request_id = uuid::Uuid::new_v4().to_string();
+    match post_reset_credit_once(&account, &redeem_request_id).await {
+        Ok(()) => Ok(()),
+        Err(error) if is_unauthorized_error(&error) => {
+            refresh_account_tokens(&mut account, "主动重置接口返回 401").await?;
+            sync_subscription_expiry_from_current_id_token(&mut account);
+            normalize_subscription_retry_state(&mut account);
+            codex_account::save_account(&account)?;
+            post_reset_credit_once(&account, &redeem_request_id).await
+        }
+        Err(error) => Err(error),
+    }
 }
 
 /// 从 id_token 中提取订阅标识并同步更新账号和索引

@@ -597,6 +597,8 @@
       "closeBehaviorAsk": "Perguntar sempre",
       "closeBehaviorMinimize": "Minimizar para a bandeja",
       "closeBehaviorQuit": "Sair do aplicativo",
+      "startupMinimized": "Iniciar minimizado",
+      "startupMinimizedDesc": "Minimiza automaticamente a janela principal após iniciar o app; restaure pelo Dock, barra de tarefas ou bandeja",
       "minimizeBehavior": "Comportamento ao minimizar a janela (somente macOS)",
       "minimizeBehaviorDesc": "Escolha se, ao minimizar a janela, ela permanece no Dock e na barra de menus ou somente na barra de menus",
       "minimizeBehaviorDockAndTray": "Dock + barra de menus (recomendado)",
@@ -2033,7 +2035,17 @@
       "hourly": "Cota de 5 horas",
       "weekly": "Cota semanal",
       "reset": "Redefinir",
-      "weeklyBlocksHourly": "A cota semanal é 0, então a cota de 5 horas está indisponível"
+      "weeklyBlocksHourly": "A cota semanal é 0, então a cota de 5 horas está indisponível",
+      "resetCredits": "Redef. {{count}}",
+      "resetCreditsTitle": "Resets restantes para a janela de 5 horas: {{count}}",
+      "resetCreditConfirm": "Confirmar?",
+      "resetCreditDialogTitle": "Redefinir seu uso?",
+      "resetCreditDialogDesc": "Redefina o limite de taxa para continuar trabalhando sem interrupções. Redefinições disponíveis: {{count}}.",
+      "resetCreditDialogAction": "Redefinir uso",
+      "resetCreditNoCredits": "Nenhum reset disponível",
+      "resetCreditConsumed": "Cota de 5 horas redefinida",
+      "resetCreditFailed": "Falha ao redefinir: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Reset enviado, mas a atualização da cota falhou: {{error}}"
     },
     "quotaError": {
       "badge": "Erro de cota",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Falha ao atualizar cota: {{error}}",
       "notUpdated": "Cota não atualizada",
       "updated": "Atualizada",
-      "notUpdatedShort": "Não atualizada"
+      "notUpdatedShort": "Não atualizada",
+      "openVerification": "Abrir verificação",
+      "openingVerification": "Abrindo...",
+      "verificationWindowOpened": "Janela de verificação do Claude aberta. Atualize a cota novamente após verificar.",
+      "verificationWindowFailed": "Falha ao abrir a verificação do Claude: {{error}}"
     },
     "addTabs": {
       "desktop": "Área",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Login local do Claude importado: {{name}}",
       "importSuccess": "Login do Claude importado: {{name}}",
       "switchHint": "Trocar para Claude oficial",
-      "planUnknown": "Plano desconhecido"
+      "planUnknown": "Plano desconhecido",
+      "progress": {
+        "start": "Preparando login",
+        "profile": "Criando perfil isolado",
+        "resolveRuntime": "Localizando componente de login",
+        "checkCache": "Verificando cache local do componente",
+        "cached": "Usando cache local do componente",
+        "downloadStart": "Iniciando download do componente",
+        "downloading": "Baixando componente de login",
+        "downloaded": "Componente de login baixado",
+        "verify": "Verificando integridade do componente",
+        "extract": "Extraindo componente de login",
+        "runtimeReady": "Componente de login pronto",
+        "launch": "Abrindo janela de login do Claude",
+        "ready": "Janela de login aberta",
+        "default": "Preparando componente de login",
+        "bytesWithTotal": "Baixado {{downloaded}} de {{total}}",
+        "bytesOnly": "Baixado {{downloaded}}",
+        "hint": "Após a primeira preparação, o cache local será reutilizado diretamente."
+      }
     },
     "oauth": {
       "title": "Autorização Claude OAuth",

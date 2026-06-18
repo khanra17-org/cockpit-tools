@@ -960,6 +960,8 @@
       "closeBehaviorAsk": "每次询问",
       "closeBehaviorMinimize": "最小化到托盘",
       "closeBehaviorQuit": "退出应用",
+      "startupMinimized": "启动后自动最小化",
+      "startupMinimizedDesc": "应用启动完成后自动最小化主窗口，可从 Dock、任务栏或托盘恢复",
       "minimizeBehavior": "窗口最小化行为（仅 macOS）",
       "minimizeBehaviorDesc": "选择最小化窗口时保留在程序坞和菜单栏，或仅保留在菜单栏",
       "minimizeBehaviorDockAndTray": "程序坞 + 菜单栏（推荐默认）",
@@ -2619,7 +2621,17 @@
       "hourly": "5小时配额",
       "weekly": "周配额",
       "weeklyBlocksHourly": "周额度为 0，5小时额度已不可用",
-      "reset": "重置"
+      "reset": "重置",
+      "resetCredits": "重置 {{count}}",
+      "resetCreditsTitle": "可用于重置当前 5 小时窗口的剩余次数：{{count}}",
+      "resetCreditConfirm": "确认重置?",
+      "resetCreditDialogTitle": "要重置你的使用量吗？",
+      "resetCreditDialogDesc": "重置速率限制后，可以继续不间断地工作。你还有 {{count}} 次重置可用。",
+      "resetCreditDialogAction": "重置使用次数",
+      "resetCreditNoCredits": "没有可用的主动重置次数",
+      "resetCreditConsumed": "已重置 5 小时额度",
+      "resetCreditFailed": "重置失败：{{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "已提交重置，但刷新配额失败：{{error}}"
     },
     "usage": {
       "open": "查看 OpenAI 用量",
@@ -4703,7 +4715,11 @@
       "refreshWithWarning": "额度刷新失败：{{error}}",
       "notUpdated": "额度未刷新",
       "updated": "已更新",
-      "notUpdatedShort": "未刷新"
+      "notUpdatedShort": "未刷新",
+      "openVerification": "打开验证窗口",
+      "openingVerification": "正在打开...",
+      "verificationWindowOpened": "已打开 Claude 验证窗口，完成验证后请重新刷新额度。",
+      "verificationWindowFailed": "打开 Claude 验证窗口失败：{{error}}"
     },
     "addTabs": {
       "desktop": "桌面",
@@ -4761,7 +4777,26 @@
       "localSuccess": "已导入本机 Claude 登录态：{{name}}",
       "importSuccess": "Claude 登录态已导入：{{name}}",
       "switchHint": "切换到官方 Claude",
-      "planUnknown": "订阅未知"
+      "planUnknown": "订阅未知",
+      "progress": {
+        "start": "准备登录任务",
+        "profile": "创建隔离 profile",
+        "resolveRuntime": "查找登录组件",
+        "checkCache": "检查本地组件缓存",
+        "cached": "使用本地组件缓存",
+        "downloadStart": "开始下载登录组件",
+        "downloading": "下载登录组件",
+        "downloaded": "登录组件下载完成",
+        "verify": "校验组件完整性",
+        "extract": "解压登录组件",
+        "runtimeReady": "登录组件已准备",
+        "launch": "启动 Claude 登录窗口",
+        "ready": "登录窗口已打开",
+        "default": "准备登录组件",
+        "bytesWithTotal": "已下载 {{downloaded}}，共 {{total}}",
+        "bytesOnly": "已下载 {{downloaded}}",
+        "hint": "首次准备完成后，后续会直接复用本地缓存。"
+      }
     },
     "oauth": {
       "title": "Claude OAuth 授权",

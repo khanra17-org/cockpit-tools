@@ -116,8 +116,8 @@ pub fn ensure_gateway_for_account(
         stop_runtime(runtime);
     }
 
-    let server = Server::http("127.0.0.1:0")
-        .map_err(|e| format!("启动 Claude 本地网关失败: {}", e))?;
+    let server =
+        Server::http("127.0.0.1:0").map_err(|e| format!("启动 Claude 本地网关失败: {}", e))?;
     let port = server
         .server_addr()
         .to_ip()

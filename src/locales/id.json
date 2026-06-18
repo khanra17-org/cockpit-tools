@@ -646,6 +646,8 @@
       "closeBehaviorAsk": "Tanyakan setiap kali",
       "closeBehaviorMinimize": "Perkecil ke tray",
       "closeBehaviorQuit": "Keluar dari aplikasi",
+      "startupMinimized": "Mulai diperkecil",
+      "startupMinimizedDesc": "Otomatis memperkecil jendela utama setelah aplikasi selesai dibuka; pulihkan dari Dock, taskbar, atau tray",
       "minimizeBehavior": "Perilaku perkecil jendela (khusus macOS)",
       "minimizeBehaviorDesc": "Pilih apakah saat diperkecil jendela tetap di Dock dan menu bar, atau hanya di menu bar",
       "minimizeBehaviorDockAndTray": "Dock + Menu Bar (Direkomendasikan)",
@@ -2193,7 +2195,17 @@
       "hourly": "Kuota 5 jam",
       "weekly": "Kuota mingguan",
       "reset": "Setel ulang",
-      "weeklyBlocksHourly": "Kuota mingguan 0, jadi kuota 5 jam tidak tersedia"
+      "weeklyBlocksHourly": "Kuota mingguan 0, jadi kuota 5 jam tidak tersedia",
+      "resetCredits": "Reset {{count}}",
+      "resetCreditsTitle": "Sisa reset untuk jendela 5 jam: {{count}}",
+      "resetCreditConfirm": "Konfirmasi?",
+      "resetCreditDialogTitle": "Reset penggunaan Anda?",
+      "resetCreditDialogDesc": "Setel ulang batas laju agar Anda bisa terus bekerja tanpa gangguan. Reset tersedia: {{count}}.",
+      "resetCreditDialogAction": "Reset penggunaan",
+      "resetCreditNoCredits": "Tidak ada reset tersedia",
+      "resetCreditConsumed": "Kuota 5 jam disetel ulang",
+      "resetCreditFailed": "Gagal reset: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Reset dikirim, tetapi pembaruan kuota gagal: {{error}}"
     },
     "usage": {
       "open": "Buka penggunaan OpenAI",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Gagal refresh kuota: {{error}}",
       "notUpdated": "Kuota belum diperbarui",
       "updated": "Diperbarui",
-      "notUpdatedShort": "Belum diperbarui"
+      "notUpdatedShort": "Belum diperbarui",
+      "openVerification": "Buka verifikasi",
+      "openingVerification": "Membuka...",
+      "verificationWindowOpened": "Jendela verifikasi Claude sudah dibuka. Segarkan kuota lagi setelah verifikasi.",
+      "verificationWindowFailed": "Gagal membuka jendela verifikasi Claude: {{error}}"
     },
     "addTabs": {
       "desktop": "Claude lokal",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Login Claude lokal diimpor: {{name}}",
       "importSuccess": "Login Claude diimpor: {{name}}",
       "switchHint": "Beralih ke Claude resmi",
-      "planUnknown": "Paket tidak dikenal"
+      "planUnknown": "Paket tidak dikenal",
+      "progress": {
+        "start": "Menyiapkan tugas masuk",
+        "profile": "Membuat profil terisolasi",
+        "resolveRuntime": "Mencari komponen masuk",
+        "checkCache": "Memeriksa cache komponen lokal",
+        "cached": "Menggunakan cache komponen lokal",
+        "downloadStart": "Memulai unduhan komponen",
+        "downloading": "Mengunduh komponen masuk",
+        "downloaded": "Komponen masuk selesai diunduh",
+        "verify": "Memverifikasi integritas komponen",
+        "extract": "Mengekstrak komponen masuk",
+        "runtimeReady": "Komponen masuk siap",
+        "launch": "Membuka jendela masuk Claude",
+        "ready": "Jendela masuk terbuka",
+        "default": "Menyiapkan komponen masuk",
+        "bytesWithTotal": "Terunduh {{downloaded}} dari {{total}}",
+        "bytesOnly": "Terunduh {{downloaded}}",
+        "hint": "Setelah penyiapan pertama, cache lokal akan langsung digunakan ulang."
+      }
     },
     "oauth": {
       "title": "Otorisasi Claude OAuth",

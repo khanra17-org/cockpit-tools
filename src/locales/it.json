@@ -594,6 +594,8 @@
       "closeBehaviorAsk": "Chiedi ogni volta",
       "closeBehaviorMinimize": "Riduci a icona nel vassoio",
       "closeBehaviorQuit": "Esci dall'applicazione",
+      "startupMinimized": "Avvia minimizzato",
+      "startupMinimizedDesc": "Riduce automaticamente a icona la finestra principale dopo l'avvio dell'app; ripristinala da Dock, barra delle applicazioni o vassoio",
       "minimizeBehavior": "Comportamento di minimizzazione della finestra (solo macOS)",
       "minimizeBehaviorDesc": "Scegli se, quando minimizzi la finestra, mantenerla nel Dock e nella barra dei menu oppure solo nella barra dei menu",
       "minimizeBehaviorDockAndTray": "Dock + barra dei menu (consigliato)",
@@ -2033,7 +2035,17 @@
       "hourly": "Quota di 5 ore",
       "weekly": "Quota settimanale",
       "reset": "Reimposta",
-      "weeklyBlocksHourly": "La quota settimanale è 0, quindi la quota di 5 ore non è disponibile"
+      "weeklyBlocksHourly": "La quota settimanale è 0, quindi la quota di 5 ore non è disponibile",
+      "resetCredits": "Reset {{count}}",
+      "resetCreditsTitle": "Reset rimasti per la finestra di 5 ore: {{count}}",
+      "resetCreditConfirm": "Confermare?",
+      "resetCreditDialogTitle": "Reimpostare il tuo utilizzo?",
+      "resetCreditDialogDesc": "Reimposta il limite di frequenza per continuare a lavorare senza interruzioni. Reset disponibili: {{count}}.",
+      "resetCreditDialogAction": "Reimposta utilizzo",
+      "resetCreditNoCredits": "Nessun reset disponibile",
+      "resetCreditConsumed": "Quota di 5 ore reimpostata",
+      "resetCreditFailed": "Reimpostazione non riuscita: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Reset inviato, ma aggiornamento quota non riuscito: {{error}}"
     },
     "quotaError": {
       "badge": "Errore quota",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Aggiornamento quota non riuscito: {{error}}",
       "notUpdated": "Quota non aggiornata",
       "updated": "Aggiornata",
-      "notUpdatedShort": "Non aggiornata"
+      "notUpdatedShort": "Non aggiornata",
+      "openVerification": "Apri verifica",
+      "openingVerification": "Apertura...",
+      "verificationWindowOpened": "Finestra di verifica Claude aperta. Aggiorna di nuovo la quota dopo la verifica.",
+      "verificationWindowFailed": "Impossibile aprire la verifica Claude: {{error}}"
     },
     "addTabs": {
       "desktop": "Scrivania",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Login Claude locale importato: {{name}}",
       "importSuccess": "Login Claude importato: {{name}}",
       "switchHint": "Passa a Claude ufficiale",
-      "planUnknown": "Piano sconosciuto"
+      "planUnknown": "Piano sconosciuto",
+      "progress": {
+        "start": "Preparazione accesso",
+        "profile": "Creazione profilo isolato",
+        "resolveRuntime": "Ricerca componente di accesso",
+        "checkCache": "Controllo cache locale del componente",
+        "cached": "Uso della cache locale del componente",
+        "downloadStart": "Avvio download componente",
+        "downloading": "Download componente di accesso",
+        "downloaded": "Componente di accesso scaricato",
+        "verify": "Verifica integrità componente",
+        "extract": "Estrazione componente di accesso",
+        "runtimeReady": "Componente di accesso pronto",
+        "launch": "Apertura finestra di accesso Claude",
+        "ready": "Finestra di accesso aperta",
+        "default": "Preparazione componente di accesso",
+        "bytesWithTotal": "Scaricati {{downloaded}} di {{total}}",
+        "bytesOnly": "Scaricati {{downloaded}}",
+        "hint": "Dopo la prima preparazione, la cache locale verrà riutilizzata direttamente."
+      }
     },
     "oauth": {
       "title": "Autorizzazione Claude OAuth",

@@ -85,6 +85,8 @@ export interface CodexQuota {
   weekly_window_minutes?: number;
   /** 次窗口是否存在（接口返回） */
   weekly_window_present?: boolean;
+  /** 主动重置次数（rate-limit reset credits） */
+  reset_credits_available?: number;
   /** 原始响应数据 */
   raw_data?: unknown;
 }

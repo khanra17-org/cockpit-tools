@@ -90,11 +90,13 @@ fn inject_bound_account_for_instance_start(
         .ok_or_else(|| format!("绑定账号不存在: {}", bind_id))?;
 
     match account.auth_mode {
-        ClaudeAuthMode::DesktopOAuth => modules::claude_account::restore_desktop_account_to_profile(
-            bind_id,
-            Path::new(user_data_dir),
-            backup_existing,
-        ),
+        ClaudeAuthMode::DesktopOAuth => {
+            modules::claude_account::restore_desktop_account_to_profile(
+                bind_id,
+                Path::new(user_data_dir),
+                backup_existing,
+            )
+        }
         ClaudeAuthMode::DesktopGateway => {
             modules::claude_account::restore_desktop_gateway_account_to_profile(
                 bind_id,
@@ -106,8 +108,9 @@ fn inject_bound_account_for_instance_start(
             "Claude API Key 账号不能写入 Claude 登录态，请选择 Claude 登录账号或取消绑定。"
                 .to_string(),
         ),
-        _ => Err("旧 OAuth 账号已不再支持用于 Claude 实例，请重新添加 Claude 登录账号。"
-            .to_string()),
+        _ => {
+            Err("旧 OAuth 账号已不再支持用于 Claude 实例，请重新添加 Claude 登录账号。".to_string())
+        }
     }
 }
 

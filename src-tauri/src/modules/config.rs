@@ -139,6 +139,9 @@ pub struct UserConfig {
     /// 是否在启动后自动显示悬浮卡片
     #[serde(default = "default_floating_card_show_on_startup")]
     pub floating_card_show_on_startup: bool,
+    /// 是否在启动后自动最小化主窗口
+    #[serde(default = "default_startup_minimized")]
+    pub startup_minimized: bool,
     /// 悬浮卡片是否默认置顶
     #[serde(default = "default_floating_card_always_on_top")]
     pub floating_card_always_on_top: bool,
@@ -591,6 +594,9 @@ fn default_tray_icon_style() -> TrayIconStyle {
 fn default_floating_card_show_on_startup() -> bool {
     false
 }
+fn default_startup_minimized() -> bool {
+    false
+}
 fn default_floating_card_always_on_top() -> bool {
     false
 }
@@ -909,6 +915,7 @@ impl Default for UserConfig {
             hide_dock_icon: default_hide_dock_icon(),
             tray_icon_style: default_tray_icon_style(),
             floating_card_show_on_startup: default_floating_card_show_on_startup(),
+            startup_minimized: default_startup_minimized(),
             floating_card_always_on_top: default_floating_card_always_on_top(),
             app_auto_launch_enabled: default_app_auto_launch_enabled(),
             antigravity_startup_wakeup_enabled: default_antigravity_startup_wakeup_enabled(),
@@ -1349,6 +1356,13 @@ pub fn load_user_config() -> Result<UserConfig, String> {
             obj.insert(
                 "floating_card_show_on_startup".to_string(),
                 json!(default_floating_card_show_on_startup()),
+            );
+        }
+
+        if !obj.contains_key("startup_minimized") {
+            obj.insert(
+                "startup_minimized".to_string(),
+                json!(default_startup_minimized()),
             );
         }
 

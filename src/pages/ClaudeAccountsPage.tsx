@@ -36,6 +36,7 @@ import {
   X,
 } from 'lucide-react';
 import { open as openFileDialog } from '@tauri-apps/plugin-dialog';
+import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { openUrl } from '@tauri-apps/plugin-opener';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
@@ -76,6 +77,7 @@ import type {
   ClaudeDesktopGatewayConnectionMode,
   ClaudeDesktopGatewayModelMapping,
   ClaudeDesktopLoginStartResponse,
+  ClaudeDesktopLoginProgressPayload,
   ClaudeOAuthStartResponse,
 } from '../types/claude';
 import { isMenuVisiblePlatform, type PlatformId } from '../types/platform';
@@ -117,9 +119,97 @@ const CLAUDE_ACCOUNTS_VIEW_MODE_KEY = 'agtools.claude.accounts_view_mode';
 const CLAUDE_API_KEY_USAGE_CACHE_KEY = 'agtools.claude.apiKeyUsage.cache.v1';
 const CLAUDE_CLI_LAST_WORKING_DIR_KEY = 'agtools.claude.cli.last_working_dir';
 const CLAUDE_API_KEY_USAGE_REFRESH_THROTTLE_MS = 10 * 1000;
+const CLAUDE_DESKTOP_LOGIN_PROGRESS_EVENT = 'claude:desktop-login-progress';
 const claudeApiKeyUsageInFlight = new Set<string>();
 const claudeApiKeyUsageAutoRefreshAt: Record<string, number> = {};
 const claudeApiKeyUsageManualRefreshAt: Record<string, number> = {};
+
+function isClaudeCloudflareError(message?: string | null): boolean {
+  const normalized = message?.toLowerCase() ?? '';
+  return (
+    normalized.includes('cloudflare') ||
+    normalized.includes('just a moment') ||
+    normalized.includes('cf-ray') ||
+    normalized.includes('challenge-platform') ||
+    normalized.includes('verify you are human') ||
+    normalized.includes('checking your browser')
+  );
+}
+
+function createClaudeDesktopLoginProgressId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return `claude-login-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function clampProgressPercent(value?: number | null): number {
+  if (typeof value !== 'number' || Number.isNaN(value)) return 0;
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function formatProgressBytes(value?: number | null): string | null {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return null;
+  if (value >= 1024 * 1024) return `${(value / 1024 / 1024).toFixed(1)} MB`;
+  if (value >= 1024) return `${Math.round(value / 1024)} KB`;
+  return `${Math.round(value)} B`;
+}
+
+function getClaudeDesktopLoginProgressLabel(
+  t: TFunction,
+  progress?: ClaudeDesktopLoginProgressPayload | null,
+): string {
+  switch (progress?.phase) {
+    case 'start':
+      return t('claude.desktopOAuth.progress.start', '准备登录任务');
+    case 'profile':
+      return t('claude.desktopOAuth.progress.profile', '创建隔离 profile');
+    case 'resolve-runtime':
+      return t('claude.desktopOAuth.progress.resolveRuntime', '查找登录组件');
+    case 'check-cache':
+      return t('claude.desktopOAuth.progress.checkCache', '检查本地组件缓存');
+    case 'cached':
+      return t('claude.desktopOAuth.progress.cached', '使用本地组件缓存');
+    case 'download-start':
+      return t('claude.desktopOAuth.progress.downloadStart', '开始下载登录组件');
+    case 'downloading':
+      return t('claude.desktopOAuth.progress.downloading', '下载登录组件');
+    case 'downloaded':
+      return t('claude.desktopOAuth.progress.downloaded', '登录组件下载完成');
+    case 'verify':
+      return t('claude.desktopOAuth.progress.verify', '校验组件完整性');
+    case 'extract':
+      return t('claude.desktopOAuth.progress.extract', '解压登录组件');
+    case 'runtime-ready':
+      return t('claude.desktopOAuth.progress.runtimeReady', '登录组件已准备');
+    case 'launch':
+      return t('claude.desktopOAuth.progress.launch', '启动 Claude 登录窗口');
+    case 'ready':
+      return t('claude.desktopOAuth.progress.ready', '登录窗口已打开');
+    default:
+      return t('claude.desktopOAuth.progress.default', '准备登录组件');
+  }
+}
+
+function getClaudeDesktopLoginProgressDetail(
+  t: TFunction,
+  progress?: ClaudeDesktopLoginProgressPayload | null,
+): string {
+  const downloaded = formatProgressBytes(progress?.downloadedBytes);
+  const total = formatProgressBytes(progress?.totalBytes);
+  if (progress?.phase === 'downloading' || progress?.phase === 'downloaded') {
+    if (downloaded && total) {
+      return t('claude.desktopOAuth.progress.bytesWithTotal', '已下载 {{downloaded}}，共 {{total}}', {
+        downloaded,
+        total,
+      });
+    }
+    if (downloaded) {
+      return t('claude.desktopOAuth.progress.bytesOnly', '已下载 {{downloaded}}', { downloaded });
+    }
+  }
+  return t('claude.desktopOAuth.progress.hint', '首次准备完成后，后续会直接复用本地缓存。');
+}
 
 type ViewMode = 'grid' | 'list';
 type AddTab = 'desktop' | 'desktopGateway' | 'oauth' | 'apikey' | 'import';
@@ -651,6 +741,7 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
   const desktopGatewayModelsFetchSignatureRef = useRef('');
   const desktopGatewayModelsFetchRequestRef = useRef(0);
   const [desktopLogin, setDesktopLogin] = useState<ClaudeDesktopLoginStartResponse | null>(null);
+  const [desktopLoginProgress, setDesktopLoginProgress] = useState<ClaudeDesktopLoginProgressPayload | null>(null);
   const [desktopAccountNameInput, setDesktopAccountNameInput] = useState('');
   const [desktopStarting, setDesktopStarting] = useState(false);
   const [desktopCompleting, setDesktopCompleting] = useState(false);
@@ -663,12 +754,15 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
   const [oauthCopied, setOauthCopied] = useState(false);
   const [refreshing, setRefreshing] = useState<string | null>(null);
   const [refreshingAll, setRefreshingAll] = useState(false);
+  const [verifyingAccountId, setVerifyingAccountId] = useState<string | null>(null);
   const [apiKeyUsageMap, setApiKeyUsageMap] = useState<Record<string, ClaudeApiKeyUsageState>>(
     () => readClaudeApiKeyUsageCache(),
   );
   const apiKeyUsageInFlightRef = useRef<Set<string>>(claudeApiKeyUsageInFlight);
   const apiKeyUsageAutoRefreshAtRef = useRef<Record<string, number>>(claudeApiKeyUsageAutoRefreshAt);
   const apiKeyUsageManualRefreshAtRef = useRef<Record<string, number>>(claudeApiKeyUsageManualRefreshAt);
+  const desktopLoginProgressIdRef = useRef<string | null>(null);
+  const desktopLoginProgressUnlistenRef = useRef<UnlistenFn | null>(null);
   const providerApiKeyUsageAutoRefreshPendingRef = useRef(true);
   const previousActiveSubPlatformRef = useRef<ClaudeSubPlatform>(activeSubPlatform);
   const oauthPrepareAttemptedRef = useRef(false);
@@ -720,7 +814,23 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
     [activeSubPlatform],
   );
 
+  const cleanupDesktopLoginProgressListener = useCallback(() => {
+    desktopLoginProgressIdRef.current = null;
+    const unlisten = desktopLoginProgressUnlistenRef.current;
+    desktopLoginProgressUnlistenRef.current = null;
+    if (unlisten) {
+      try {
+        unlisten();
+      } catch {
+        // ignore listener cleanup failures
+      }
+    }
+  }, []);
+
+  useEffect(() => cleanupDesktopLoginProgressListener, [cleanupDesktopLoginProgressListener]);
+
   const resetAddModalState = useCallback((platform: ClaudeSubPlatform = activeSubPlatform) => {
+    cleanupDesktopLoginProgressListener();
     setAddTab(getDefaultAddTab(platform));
     setJsonInput('');
     setApiKeyInput('');
@@ -742,6 +852,7 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
     desktopGatewayModelsFetchSignatureRef.current = '';
     desktopGatewayModelsFetchRequestRef.current += 1;
     setDesktopLogin(null);
+    setDesktopLoginProgress(null);
     setDesktopAccountNameInput('');
     setOauthLogin(null);
     setOauthCallbackInput('');
@@ -749,7 +860,7 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
     setOauthCopied(false);
     oauthPrepareAttemptedRef.current = false;
     setAddModalError(null);
-  }, [activeSubPlatform, getDefaultAddTab, setAddModalError]);
+  }, [activeSubPlatform, cleanupDesktopLoginProgressListener, getDefaultAddTab, setAddModalError]);
 
   const closeAddModal = useCallback(() => {
     if (desktopLogin?.loginId) {
@@ -1246,14 +1357,43 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
   };
 
   const handleStartDesktopLogin = async () => {
+    cleanupDesktopLoginProgressListener();
+    const progressId = createClaudeDesktopLoginProgressId();
+    desktopLoginProgressIdRef.current = progressId;
     setDesktopStarting(true);
     setAddModalError(null);
+    setDesktopLoginProgress({
+      progressId,
+      phase: 'start',
+      percent: 0,
+    });
     try {
-      const login = await claudeService.claudeDesktopLoginStart();
+      desktopLoginProgressUnlistenRef.current = await listen<ClaudeDesktopLoginProgressPayload>(
+        CLAUDE_DESKTOP_LOGIN_PROGRESS_EVENT,
+        (event) => {
+          const payload = event.payload;
+          if (!payload || payload.progressId !== desktopLoginProgressIdRef.current) return;
+          setDesktopLoginProgress((previous) => ({
+            ...payload,
+            percent: payload.percent ?? previous?.percent ?? null,
+            downloadedBytes: payload.downloadedBytes ?? previous?.downloadedBytes ?? null,
+            totalBytes: payload.totalBytes ?? previous?.totalBytes ?? null,
+          }));
+        },
+      );
+      const login = await claudeService.claudeDesktopLoginStart(progressId);
       setDesktopLogin(login);
+      setDesktopLoginProgress((previous) => ({
+        progressId,
+        phase: 'ready',
+        percent: 100,
+        downloadedBytes: previous?.downloadedBytes ?? null,
+        totalBytes: previous?.totalBytes ?? null,
+      }));
     } catch (error) {
       setAddModalError(String(error).replace(/^Error:\s*/, ''));
     } finally {
+      cleanupDesktopLoginProgressListener();
       setDesktopStarting(false);
     }
   };
@@ -2050,6 +2190,29 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
     }
   };
 
+  const handleOpenVerificationWindow = async (accountId: string) => {
+    setVerifyingAccountId(accountId);
+    setMessage(null);
+    try {
+      await claudeService.openClaudeVerificationWindow(accountId);
+      setMessage({
+        text: t(
+          'claude.quota.verificationWindowOpened',
+          '已打开 Claude 验证窗口，完成验证后请重新刷新额度。',
+        ),
+      });
+    } catch (error) {
+      setMessage({
+        text: t('claude.quota.verificationWindowFailed', '打开 Claude 验证窗口失败：{{error}}', {
+          error: String(error).replace(/^Error:\s*/, ''),
+        }),
+        tone: 'error',
+      });
+    } finally {
+      setVerifyingAccountId(null);
+    }
+  };
+
   const handleExport = async (accountIds: string[]) => {
     const exportIds = accountIds.filter((id) => exportableAccountIds.has(id));
     if (exportIds.length === 0) return;
@@ -2307,6 +2470,7 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
     const errorMessage = account.quota_error?.message?.trim();
     const isDesktopAccount = isClaudeDesktopOAuthAccount(account);
     const isApiKey = normalizeClaudeAuthMode(account.auth_mode) === 'api_key';
+    const canOpenVerificationWindow = isDesktopAccount && isClaudeCloudflareError(errorMessage);
 
     if (isApiKey && !isDesktopAccount && items.length === 0 && !errorMessage) {
       return variant === 'table' ? (
@@ -2369,6 +2533,24 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
           <div className={`quota-error-inline ${variant === 'table' ? 'table' : ''}`} title={errorMessage}>
             <CircleAlert size={variant === 'table' ? 12 : 14} />
             <span>{errorMessage}</span>
+            {canOpenVerificationWindow && (
+              <button
+                type="button"
+                className="btn btn-secondary quota-error-action"
+                disabled={verifyingAccountId === account.id}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  void handleOpenVerificationWindow(account.id);
+                }}
+              >
+                <ExternalLink size={12} />
+                <span>
+                  {verifyingAccountId === account.id
+                    ? t('claude.quota.openingVerification', '正在打开...')
+                    : t('claude.quota.openVerification', '打开验证窗口')}
+                </span>
+              </button>
+            )}
           </div>
         )}
       </>
@@ -2991,6 +3173,18 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
                       '首次使用时会下载并校验 Electron 登录组件到本地应用数据目录；安装包不内置，之后复用本地缓存。',
                     )}
                   </p>
+                  {desktopStarting && desktopLoginProgress && (
+                    <div className="claude-desktop-login-progress" role="status" aria-live="polite">
+                      <div className="claude-desktop-login-progress__head">
+                        <strong>{getClaudeDesktopLoginProgressLabel(t, desktopLoginProgress)}</strong>
+                        <span>{clampProgressPercent(desktopLoginProgress.percent)}%</span>
+                      </div>
+                      <div className="claude-desktop-login-progress__bar" aria-hidden="true">
+                        <span style={{ width: `${clampProgressPercent(desktopLoginProgress.percent)}%` }} />
+                      </div>
+                      <p>{getClaudeDesktopLoginProgressDetail(t, desktopLoginProgress)}</p>
+                    </div>
+                  )}
                   <div className="form-group">
                     <label>{t('claude.desktopOAuth.nameLabel', '账号名称')}</label>
                     <input

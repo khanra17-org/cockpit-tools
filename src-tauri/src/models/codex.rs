@@ -176,6 +176,9 @@ pub struct CodexQuota {
     /// 次窗口是否存在（接口返回）
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub weekly_window_present: Option<bool>,
+    /// 主动重置次数（rate-limit reset credits）
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reset_credits_available: Option<i64>,
     /// 原始响应数据
     #[serde(skip_serializing_if = "Option::is_none")]
     pub raw_data: Option<serde_json::Value>,

@@ -762,6 +762,7 @@ dependencies = [
  "rcgen",
  "regex",
  "reqwest 0.12.28",
+ "ring",
  "rsa",
  "rusqlite",
  "rustls",
@@ -792,7 +793,7 @@ dependencies = [
 
 [[package]]
 name = "cockpit-tools"
-version = "0.26.0"
+version = "0.26.1"
 dependencies = [
  "aes",
  "aes-gcm",
@@ -819,6 +820,7 @@ dependencies = [
  "reqwest 0.12.28",
  "reqwest 0.13.2",
  "reqwest_dav",
+ "ring",
  "rsa",
  "rusqlite",
  "rustls",

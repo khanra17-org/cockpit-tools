@@ -23,13 +23,13 @@ use serde_json::{json, Value};
 #[cfg(target_os = "macos")]
 use sha1::Sha1;
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeMap, BTreeSet, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fs::{self, File};
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
-use tauri::Manager;
+use tauri::{AppHandle, Emitter, Manager};
 use url::{form_urlencoded, Url};
 
 const ACCOUNTS_INDEX_FILE: &str = "claude_accounts.json";
@@ -80,11 +80,13 @@ const CLAUDE_DESKTOP_AUTH_HELPER_SCRIPT: &str = "scripts/claude-desktop-auth-hel
 const CLAUDE_DESKTOP_AUTH_STATUS_FILE: &str = "claude_desktop_auth_status.json";
 const CLAUDE_DESKTOP_AUTH_EXPORT_FILE: &str = "claude_desktop_auth_export.json";
 const CLAUDE_DESKTOP_COOKIE_EXPORT_FILE: &str = "claude_desktop_cookie_probe_cookies.json";
+const CLAUDE_DESKTOP_LOGIN_PROGRESS_EVENT: &str = "claude:desktop-login-progress";
 const CLAUDE_DESKTOP_ELECTRON_RUNTIME_DIR: &str = "electron_runtime";
 const CLAUDE_DESKTOP_ELECTRON_VERSION: &str = "42.4.0";
 const CLAUDE_DESKTOP_BUNDLE_ID_MACOS: &str = "com.anthropic.claudefordesktop";
 const CLAUDE_DESKTOP_LOGIN_TIMEOUT_SECONDS: i64 = 30 * 60;
 const CLAUDE_DESKTOP_AUTH_EXPORT_WAIT_SECONDS: u64 = 8;
+const CLAUDE_DESKTOP_HIDDEN_PROBE_COOLDOWN_SECONDS: u64 = 10 * 60;
 const CLAUDE_DESKTOP_REQUIRED_COOKIE_NAMES: &[&str] = &["sessionKey", "lastActiveOrg"];
 const CHROMIUM_EPOCH_OFFSET_MS: i64 = 11_644_473_600_000;
 const CLAUDE_DESKTOP_LOCAL_PROFILE_MAX_FILES: usize = 600;
@@ -123,6 +125,8 @@ static CLAUDE_PENDING_DESKTOP_LOGIN: std::sync::LazyLock<
 > = std::sync::LazyLock::new(|| Mutex::new(None));
 static CLAUDE_DESKTOP_ELECTRON_RUNTIME_LOCK: std::sync::LazyLock<Mutex<()>> =
     std::sync::LazyLock::new(|| Mutex::new(()));
+static CLAUDE_DESKTOP_HIDDEN_PROBE_ATTEMPTS: std::sync::LazyLock<Mutex<HashMap<String, Instant>>> =
+    std::sync::LazyLock::new(|| Mutex::new(HashMap::new()));
 static EMAIL_RE: std::sync::LazyLock<Regex> = std::sync::LazyLock::new(|| {
     Regex::new(r"(?i)[a-z0-9._%+\-]{1,64}@[a-z0-9.\-]{2,253}\.[a-z]{2,24}")
         .expect("valid email regex")
@@ -638,8 +642,8 @@ fn save_desktop_account_with_dedupe(incoming: ClaudeAccount) -> Result<ClaudeAcc
 fn dedupe_desktop_accounts(accounts: Vec<ClaudeAccount>) -> Result<Vec<ClaudeAccount>, String> {
     let current_id =
         crate::modules::provider_current_state::get_current_account_id("claude_desktop_account")
-        .ok()
-        .flatten();
+            .ok()
+            .flatten();
     let mut kept: Vec<ClaudeAccount> = Vec::with_capacity(accounts.len());
     let mut removed_ids = Vec::new();
     let mut rewired_current: Option<String> = None;
@@ -802,8 +806,7 @@ fn get_desktop_profiles_dir() -> Result<PathBuf, String> {
 
 fn get_desktop_gateway_profiles_dir() -> Result<PathBuf, String> {
     let dir = get_data_dir()?.join(CLAUDE_DESKTOP_GATEWAY_PROFILES_DIR);
-    fs::create_dir_all(&dir)
-        .map_err(|e| format!("创建 Claude Gateway profile 目录失败: {}", e))?;
+    fs::create_dir_all(&dir).map_err(|e| format!("创建 Claude Gateway profile 目录失败: {}", e))?;
     Ok(dir)
 }
 
@@ -2021,9 +2024,7 @@ fn save_desktop_gateway(
             .iter()
             .any(|model| !crate::modules::claude_desktop_gateway::is_claude_desktop_model(model))
         {
-            return Err(
-                "直连模式的模型目录必须使用 Claude 可识别的 Claude 模型名".to_string(),
-            );
+            return Err("直连模式的模型目录必须使用 Claude 可识别的 Claude 模型名".to_string());
         }
         desktop_gateway_model_mappings = None;
     }
@@ -2186,10 +2187,7 @@ fn desktop_account_display_name(account_name: Option<&str>) -> String {
     if let Some(name) = normalize_non_empty(account_name) {
         return name;
     }
-    format!(
-        "Claude {}",
-        chrono::Utc::now().format("%Y-%m-%d %H:%M")
-    )
+    format!("Claude {}", chrono::Utc::now().format("%Y-%m-%d %H:%M"))
 }
 
 fn build_desktop_account_id(label: &str) -> String {
@@ -2262,10 +2260,7 @@ fn cookies_db_has_required_desktop_session(cookies_path: &Path) -> Result<bool, 
 
 fn ensure_desktop_profile_logged_in(profile_dir: &Path) -> Result<(), String> {
     if !profile_dir.exists() {
-        return Err(format!(
-            "Claude profile 不存在: {}",
-            profile_dir.display()
-        ));
+        return Err(format!("Claude profile 不存在: {}", profile_dir.display()));
     }
     let mut last_error = None;
     for cookies_path in desktop_cookie_path_candidates(profile_dir) {
@@ -2281,10 +2276,7 @@ fn ensure_desktop_profile_logged_in(profile_dir: &Path) -> Result<(), String> {
     if let Some(error) = last_error {
         return Err(error);
     }
-    Err(
-        "未检测到 Claude 登录态，请在授权窗口或官方 Claude 完成登录后再导入。"
-            .to_string(),
-    )
+    Err("未检测到 Claude 登录态，请在授权窗口或官方 Claude 完成登录后再导入。".to_string())
 }
 
 fn chromium_cookie_expires_utc_to_unix_ms(expires_utc: i64) -> Option<i64> {
@@ -2807,10 +2799,7 @@ fn read_decrypted_desktop_cookie_export(
 ) -> Result<ClaudeDesktopAuthCookieExport, String> {
     let cookies_path = desktop_cookies_path(profile_dir);
     if !cookies_path.exists() {
-        return Err(format!(
-            "Claude Cookies 不存在: {}",
-            cookies_path.display()
-        ));
+        return Err(format!("Claude Cookies 不存在: {}", cookies_path.display()));
     }
     let password = read_claude_safe_storage_password()?;
     let conn = Connection::open_with_flags(&cookies_path, OpenFlags::SQLITE_OPEN_READ_ONLY)
@@ -2961,8 +2950,7 @@ fn wait_for_desktop_auth_export_logged_in(
 ) -> Result<ClaudeDesktopAuthCookieExport, String> {
     let started_at = Instant::now();
     let timeout = Duration::from_secs(CLAUDE_DESKTOP_AUTH_EXPORT_WAIT_SECONDS);
-    let mut last_error =
-        "未检测到 Claude 登录态，请在授权窗口完成登录后再导入。".to_string();
+    let mut last_error = "未检测到 Claude 登录态，请在授权窗口完成登录后再导入。".to_string();
 
     while started_at.elapsed() <= timeout {
         match read_desktop_auth_cookie_export(profile_dir)
@@ -3010,6 +2998,75 @@ fn desktop_web_profile_has_usage_error(profile: &Value) -> bool {
         .and_then(|value| value.as_object())
         .and_then(|errors| errors.get("organizationUsage"))
         .is_some()
+}
+
+fn desktop_error_is_cloudflare_challenge(error: &str) -> bool {
+    let normalized = error.to_ascii_lowercase();
+    normalized.contains("cloudflare")
+        || normalized.contains("just a moment")
+        || normalized.contains("cf-ray")
+        || normalized.contains("challenge-platform")
+        || normalized.contains("verify you are human")
+        || normalized.contains("checking your browser")
+}
+
+fn desktop_web_profile_error_strings(profile: &Value) -> Vec<String> {
+    profile
+        .get("errors")
+        .and_then(|value| value.as_object())
+        .map(|errors| {
+            errors
+                .values()
+                .filter_map(|value| normalize_non_empty(value.as_str()))
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+fn desktop_web_profile_has_cloudflare_challenge(profile: &Value) -> bool {
+    desktop_web_profile_error_strings(profile)
+        .iter()
+        .any(|error| desktop_error_is_cloudflare_challenge(error))
+}
+
+fn desktop_web_profile_needs_hidden_probe(profile: &Value) -> bool {
+    let errors = desktop_web_profile_error_strings(profile);
+    !errors.is_empty()
+        && !errors
+            .iter()
+            .any(|error| desktop_error_is_cloudflare_challenge(error))
+}
+
+fn should_attempt_desktop_hidden_probe(account_id: &str) -> bool {
+    let now = Instant::now();
+    let Ok(mut attempts) = CLAUDE_DESKTOP_HIDDEN_PROBE_ATTEMPTS.lock() else {
+        return true;
+    };
+    if let Some(previous) = attempts.get(account_id) {
+        if now.duration_since(*previous)
+            < Duration::from_secs(CLAUDE_DESKTOP_HIDDEN_PROBE_COOLDOWN_SECONDS)
+        {
+            return false;
+        }
+    }
+    attempts.insert(account_id.to_string(), now);
+    true
+}
+
+async fn probe_desktop_web_profile_hidden_with_cooldown(
+    account_id: &str,
+    profile_dir: &Path,
+) -> Result<Value, String> {
+    if !should_attempt_desktop_hidden_probe(account_id) {
+        return Err(format!(
+            "隐藏 Electron Cookie 刷新过于频繁，{} 秒内不会重复尝试",
+            CLAUDE_DESKTOP_HIDDEN_PROBE_COOLDOWN_SECONDS
+        ));
+    }
+    let profile_dir = profile_dir.to_path_buf();
+    tauri::async_runtime::spawn_blocking(move || probe_desktop_web_profile(&profile_dir))
+        .await
+        .map_err(|error| format!("隐藏 Electron Cookie 刷新任务失败: {}", error))?
 }
 
 fn write_desktop_cookie_probe_file(
@@ -3107,6 +3164,271 @@ fn probe_desktop_web_profile(profile_dir: &Path) -> Result<Value, String> {
     }
 }
 
+fn read_desktop_cookie_export_for_silent_refresh(
+    profile_dir: &Path,
+) -> Result<ClaudeDesktopAuthCookieExport, String> {
+    let mut errors = Vec::new();
+
+    #[cfg(target_os = "macos")]
+    match read_decrypted_desktop_cookie_export(profile_dir) {
+        Ok(export) => return Ok(export),
+        Err(error) => errors.push(format!("解密本地 Cookies 失败: {}", error)),
+    }
+
+    match read_desktop_auth_cookie_export(profile_dir)
+        .and_then(|export| ensure_desktop_auth_export_logged_in(&export).map(|_| export))
+    {
+        Ok(export) => Ok(export),
+        Err(error) => {
+            errors.push(format!("读取已导出 Cookies 失败: {}", error));
+            Err(format!(
+                "无法静默读取 Claude Cookies: {}",
+                errors.join("；")
+            ))
+        }
+    }
+}
+
+fn desktop_cookie_value(cookies: &[ClaudeDesktopAuthCookie], name: &str) -> Option<String> {
+    cookies
+        .iter()
+        .find(|cookie| {
+            cookie.name == name
+                && !cookie.value.is_empty()
+                && is_claude_cookie_domain(&cookie.domain)
+        })
+        .map(|cookie| cookie.value.clone())
+}
+
+fn desktop_cookie_header(cookies: &[ClaudeDesktopAuthCookie]) -> Result<String, String> {
+    let value = cookies
+        .iter()
+        .filter(|cookie| {
+            !cookie.name.is_empty()
+                && !cookie.value.is_empty()
+                && is_claude_cookie_domain(&cookie.domain)
+        })
+        .map(|cookie| format!("{}={}", cookie.name, cookie.value))
+        .collect::<Vec<_>>()
+        .join("; ");
+    if value.is_empty() {
+        Err("Claude Cookies 为空".to_string())
+    } else {
+        Ok(value)
+    }
+}
+
+async fn fetch_claude_web_json_with_cookies(
+    client: &reqwest::Client,
+    url: &str,
+    cookies: &[ClaudeDesktopAuthCookie],
+    extra_headers: HeaderMap,
+) -> Result<Value, String> {
+    let cookie_header = desktop_cookie_header(cookies)?;
+    let mut headers = HeaderMap::new();
+    headers.insert(ACCEPT, HeaderValue::from_static("application/json"));
+    headers.insert(
+        USER_AGENT,
+        HeaderValue::from_static(
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36",
+        ),
+    );
+    headers.insert("origin", HeaderValue::from_static("https://claude.ai"));
+    headers.insert("referer", HeaderValue::from_static("https://claude.ai/"));
+    headers.insert("sec-fetch-site", HeaderValue::from_static("same-origin"));
+    headers.insert("sec-fetch-mode", HeaderValue::from_static("cors"));
+    headers.insert("sec-fetch-dest", HeaderValue::from_static("empty"));
+    headers.insert(
+        "cookie",
+        HeaderValue::from_str(&cookie_header)
+            .map_err(|e| format!("构造 Claude Cookie 请求头失败: {}", e))?,
+    );
+    for (name, value) in extra_headers.iter() {
+        headers.insert(name, value.clone());
+    }
+
+    let response = client
+        .get(url)
+        .headers(headers)
+        .send()
+        .await
+        .map_err(|e| format!("请求失败: {}", e))?;
+    let status = response.status();
+    let body = response
+        .text()
+        .await
+        .map_err(|e| format!("读取响应失败: {}", e))?;
+    if !status.is_success() {
+        let preview: String = body.chars().take(500).collect();
+        return Err(format!("HTTP {} {}", status, preview));
+    }
+    if body.trim().is_empty() {
+        return Ok(Value::Null);
+    }
+    serde_json::from_str(&body).map_err(|e| format!("解析 JSON 失败: {}", e))
+}
+
+async fn fetch_desktop_web_profile_endpoint(
+    client: &reqwest::Client,
+    cookies: &[ClaudeDesktopAuthCookie],
+    endpoints: &mut serde_json::Map<String, Value>,
+    errors: &mut serde_json::Map<String, Value>,
+    key: &str,
+    url: &str,
+    extra_headers: HeaderMap,
+) {
+    match fetch_claude_web_json_with_cookies(client, url, cookies, extra_headers).await {
+        Ok(value) => {
+            endpoints.insert(key.to_string(), value);
+        }
+        Err(error) => {
+            errors.insert(key.to_string(), Value::String(error));
+        }
+    }
+}
+
+async fn fetch_desktop_web_profile_with_cookies(
+    cookies: &[ClaudeDesktopAuthCookie],
+) -> Result<Value, String> {
+    ensure_desktop_auth_export_logged_in(&ClaudeDesktopAuthCookieExport {
+        cookies: cookies.to_vec(),
+        web_profile: None,
+    })?;
+    let last_active_org = desktop_cookie_value(cookies, "lastActiveOrg").unwrap_or_default();
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(15))
+        .redirect(reqwest::redirect::Policy::limited(5))
+        .build()
+        .map_err(|e| format!("创建 Claude Web HTTP 客户端失败: {}", e))?;
+
+    let mut endpoints = serde_json::Map::new();
+    let mut errors = serde_json::Map::new();
+    let mut org_headers = HeaderMap::new();
+    if !last_active_org.is_empty() {
+        org_headers.insert(
+            "x-organization-uuid",
+            HeaderValue::from_str(&last_active_org)
+                .map_err(|e| format!("构造组织请求头失败: {}", e))?,
+        );
+    }
+
+    fetch_desktop_web_profile_endpoint(
+        &client,
+        cookies,
+        &mut endpoints,
+        &mut errors,
+        "accountProfile",
+        "https://claude.ai/api/account_profile",
+        org_headers.clone(),
+    )
+    .await;
+    fetch_desktop_web_profile_endpoint(
+        &client,
+        cookies,
+        &mut endpoints,
+        &mut errors,
+        "account",
+        "https://claude.ai/api/account",
+        org_headers.clone(),
+    )
+    .await;
+
+    if last_active_org.is_empty() {
+        errors.insert(
+            "bootstrapAppStart".to_string(),
+            Value::String("missing lastActiveOrg".to_string()),
+        );
+        errors.insert(
+            "organizationUsage".to_string(),
+            Value::String("missing lastActiveOrg".to_string()),
+        );
+        errors.insert(
+            "subscriptionDetails".to_string(),
+            Value::String("missing lastActiveOrg".to_string()),
+        );
+        errors.insert(
+            "overageSpendLimit".to_string(),
+            Value::String("missing lastActiveOrg".to_string()),
+        );
+    } else {
+        let encoded_org: String =
+            form_urlencoded::byte_serialize(last_active_org.as_bytes()).collect();
+        let bootstrap_url = format!(
+            "https://claude.ai/api/bootstrap/{}/app_start?statsig_hashing_algorithm=djb2&growthbook_format=sdk&include_system_prompts=false",
+            encoded_org
+        );
+        fetch_desktop_web_profile_endpoint(
+            &client,
+            cookies,
+            &mut endpoints,
+            &mut errors,
+            "bootstrapAppStart",
+            &bootstrap_url,
+            org_headers.clone(),
+        )
+        .await;
+
+        let org_base = format!("https://claude.ai/api/organizations/{}", encoded_org);
+        let mut usage_headers = org_headers.clone();
+        usage_headers.insert(
+            "referer",
+            HeaderValue::from_static("https://claude.ai/settings/usage"),
+        );
+        fetch_desktop_web_profile_endpoint(
+            &client,
+            cookies,
+            &mut endpoints,
+            &mut errors,
+            "organizationUsage",
+            &format!("{}/usage", org_base),
+            usage_headers.clone(),
+        )
+        .await;
+        fetch_desktop_web_profile_endpoint(
+            &client,
+            cookies,
+            &mut endpoints,
+            &mut errors,
+            "subscriptionDetails",
+            &format!("{}/subscription_details", org_base),
+            usage_headers.clone(),
+        )
+        .await;
+        fetch_desktop_web_profile_endpoint(
+            &client,
+            cookies,
+            &mut endpoints,
+            &mut errors,
+            "overageSpendLimit",
+            &format!("{}/overage_spend_limit", org_base),
+            usage_headers,
+        )
+        .await;
+    }
+
+    let mut result = serde_json::Map::new();
+    result.insert("version".to_string(), Value::Number(1.into()));
+    result.insert(
+        "fetchContext".to_string(),
+        Value::String("cookie_direct".to_string()),
+    );
+    result.insert(
+        "fetchedAt".to_string(),
+        Value::String(chrono::Utc::now().to_rfc3339()),
+    );
+    result.insert("endpoints".to_string(), Value::Object(endpoints));
+    if !errors.is_empty() {
+        result.insert("errors".to_string(), Value::Object(errors));
+    }
+    Ok(Value::Object(result))
+}
+
+async fn fetch_desktop_web_profile_silent(profile_dir: &Path) -> Result<Value, String> {
+    ensure_desktop_profile_logged_in(profile_dir)?;
+    let export = read_desktop_cookie_export_for_silent_refresh(profile_dir)?;
+    fetch_desktop_web_profile_with_cookies(&export.cookies).await
+}
+
 fn rewrite_desktop_cookies_with_exported_plaintext(
     profile_dir: &Path,
     export: &ClaudeDesktopAuthCookieExport,
@@ -3114,10 +3436,7 @@ fn rewrite_desktop_cookies_with_exported_plaintext(
     ensure_desktop_auth_export_logged_in(&export)?;
     let cookies_path = desktop_cookies_path(profile_dir);
     if !cookies_path.exists() {
-        return Err(format!(
-            "Claude Cookies 不存在: {}",
-            cookies_path.display()
-        ));
+        return Err(format!("Claude Cookies 不存在: {}", cookies_path.display()));
     }
 
     let conn = Connection::open_with_flags(
@@ -3329,13 +3648,9 @@ fn merge_desktop_config_token(
 
 fn restore_desktop_profile_snapshot(snapshot_dir: &Path, target_dir: &Path) -> Result<(), String> {
     if !snapshot_dir.exists() {
-        return Err(format!(
-            "Claude 快照目录不存在: {}",
-            snapshot_dir.display()
-        ));
+        return Err(format!("Claude 快照目录不存在: {}", snapshot_dir.display()));
     }
-    fs::create_dir_all(target_dir)
-        .map_err(|e| format!("创建 Claude profile 目录失败: {}", e))?;
+    fs::create_dir_all(target_dir).map_err(|e| format!("创建 Claude profile 目录失败: {}", e))?;
     for item in CLAUDE_DESKTOP_PROFILE_ITEMS {
         let source = snapshot_dir.join(item);
         if !source.exists() {
@@ -3478,8 +3793,7 @@ fn config_library_contains_gateway_config(config_library_dir: &Path) -> Result<b
             e
         )
     })? {
-        let entry =
-            entry.map_err(|e| format!("读取 Claude configLibrary 项失败: {}", e))?;
+        let entry = entry.map_err(|e| format!("读取 Claude configLibrary 项失败: {}", e))?;
         let path = entry.path();
         if path.file_name().and_then(|value| value.to_str()) == Some("_meta.json")
             || path.extension().and_then(|value| value.to_str()) != Some("json")
@@ -3665,6 +3979,44 @@ struct ElectronRuntimeAsset {
     executable_relative: &'static str,
 }
 
+#[derive(Clone)]
+struct ClaudeDesktopLoginProgressContext {
+    app: AppHandle,
+    progress_id: String,
+}
+
+#[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+struct ClaudeDesktopLoginProgressPayload {
+    progress_id: String,
+    phase: String,
+    percent: Option<f64>,
+    downloaded_bytes: Option<u64>,
+    total_bytes: Option<u64>,
+}
+
+fn emit_desktop_login_progress(
+    context: Option<&ClaudeDesktopLoginProgressContext>,
+    phase: &str,
+    percent: Option<f64>,
+    downloaded_bytes: Option<u64>,
+    total_bytes: Option<u64>,
+) {
+    let Some(context) = context else {
+        return;
+    };
+    let payload = ClaudeDesktopLoginProgressPayload {
+        progress_id: context.progress_id.clone(),
+        phase: phase.to_string(),
+        percent: percent.map(|value| value.clamp(0.0, 100.0)),
+        downloaded_bytes,
+        total_bytes,
+    };
+    let _ = context
+        .app
+        .emit(CLAUDE_DESKTOP_LOGIN_PROGRESS_EVENT, payload);
+}
+
 fn electron_runtime_asset_for_current_platform() -> Result<ElectronRuntimeAsset, String> {
     let arch = std::env::consts::ARCH;
     #[cfg(target_os = "macos")]
@@ -3807,8 +4159,11 @@ fn verify_cached_electron_zip(asset: &ElectronRuntimeAsset, zip_path: &Path) -> 
 fn download_electron_runtime_zip(
     asset: &ElectronRuntimeAsset,
     zip_path: &Path,
+    progress: Option<&ClaudeDesktopLoginProgressContext>,
 ) -> Result<(), String> {
+    emit_desktop_login_progress(progress, "check-cache", Some(10.0), None, None);
     if verify_cached_electron_zip(asset, zip_path) {
+        emit_desktop_login_progress(progress, "cached", Some(82.0), None, None);
         return Ok(());
     }
 
@@ -3818,6 +4173,7 @@ fn download_electron_runtime_zip(
     }
 
     let url = electron_runtime_download_url(asset);
+    emit_desktop_login_progress(progress, "download-start", Some(12.0), Some(0), None);
     logger::log_info(&format!(
         "[Claude Auth] 开始下载 Electron runtime: url={}, target={}",
         url,
@@ -3840,6 +4196,7 @@ fn download_electron_runtime_zip(
             url
         ));
     }
+    let total_bytes = response.content_length();
 
     let temp_path = zip_path.with_extension("zip.part");
     let mut temp_file = File::create(&temp_path)
@@ -3847,6 +4204,8 @@ fn download_electron_runtime_zip(
     let mut hasher = Sha256::new();
     let mut buffer = [0u8; 1024 * 256];
     let mut downloaded: u64 = 0;
+    let mut last_progress_emit = Instant::now();
+    let mut last_progress_bytes = 0u64;
     const MAX_ELECTRON_RUNTIME_DOWNLOAD_BYTES: u64 = 350 * 1024 * 1024;
     loop {
         let read = response
@@ -3864,12 +4223,42 @@ fn download_electron_runtime_zip(
         temp_file
             .write_all(&buffer[..read])
             .map_err(|e| format!("写入 Electron runtime 临时文件失败: {}", e))?;
+        let should_emit = downloaded.saturating_sub(last_progress_bytes) >= 1024 * 1024
+            || last_progress_emit.elapsed() >= Duration::from_millis(500);
+        if should_emit {
+            let percent = total_bytes
+                .filter(|total| *total > 0)
+                .map(|total| 15.0 + ((downloaded as f64 / total as f64).min(1.0) * 50.0));
+            emit_desktop_login_progress(
+                progress,
+                "downloading",
+                percent,
+                Some(downloaded),
+                total_bytes,
+            );
+            last_progress_emit = Instant::now();
+            last_progress_bytes = downloaded;
+        }
     }
+    emit_desktop_login_progress(
+        progress,
+        "downloaded",
+        Some(65.0),
+        Some(downloaded),
+        total_bytes,
+    );
     temp_file
         .sync_all()
         .map_err(|e| format!("同步 Electron runtime 临时文件失败: {}", e))?;
     drop(temp_file);
 
+    emit_desktop_login_progress(
+        progress,
+        "verify",
+        Some(68.0),
+        Some(downloaded),
+        total_bytes,
+    );
     let actual = hex_encode(&hasher.finalize());
     if !actual.eq_ignore_ascii_case(asset.sha256) {
         let _ = fs::remove_file(&temp_path);
@@ -3896,7 +4285,9 @@ fn extract_electron_runtime_zip(
     asset: &ElectronRuntimeAsset,
     zip_path: &Path,
     runtime_dir: &Path,
+    progress: Option<&ClaudeDesktopLoginProgressContext>,
 ) -> Result<(), String> {
+    emit_desktop_login_progress(progress, "extract", Some(74.0), None, None);
     let parent = runtime_dir
         .parent()
         .ok_or_else(|| format!("无法定位 Electron runtime 目录: {}", runtime_dir.display()))?;
@@ -3938,13 +4329,17 @@ fn extract_electron_runtime_zip(
     }
     fs::rename(&staging_dir, runtime_dir)
         .map_err(|e| format!("保存 Electron runtime 解压目录失败: {}", e))?;
+    emit_desktop_login_progress(progress, "runtime-ready", Some(86.0), None, None);
     Ok(())
 }
 
-fn ensure_downloaded_electron_runtime() -> Result<PathBuf, String> {
+fn ensure_downloaded_electron_runtime(
+    progress: Option<&ClaudeDesktopLoginProgressContext>,
+) -> Result<PathBuf, String> {
     let _guard = CLAUDE_DESKTOP_ELECTRON_RUNTIME_LOCK
         .lock()
         .map_err(|_| "Electron runtime 下载锁已损坏".to_string())?;
+    emit_desktop_login_progress(progress, "resolve-runtime", Some(6.0), None, None);
     let asset = electron_runtime_asset_for_current_platform()?;
     let runtime_dir = electron_runtime_root_dir()?.join(asset.platform_key);
     let executable = runtime_dir.join(asset.executable_relative);
@@ -3953,12 +4348,13 @@ fn ensure_downloaded_electron_runtime() -> Result<PathBuf, String> {
             "[Claude Auth] 使用已缓存 Electron runtime: {}",
             executable.display()
         ));
+        emit_desktop_login_progress(progress, "cached", Some(86.0), None, None);
         return Ok(executable);
     }
 
     let zip_path = electron_runtime_zip_path(&asset)?;
-    download_electron_runtime_zip(&asset, &zip_path)?;
-    extract_electron_runtime_zip(&asset, &zip_path, &runtime_dir)?;
+    download_electron_runtime_zip(&asset, &zip_path, progress)?;
+    extract_electron_runtime_zip(&asset, &zip_path, &runtime_dir, progress)?;
     let executable = runtime_dir.join(asset.executable_relative);
     if executable.exists() {
         logger::log_info(&format!(
@@ -3973,12 +4369,16 @@ fn ensure_downloaded_electron_runtime() -> Result<PathBuf, String> {
     ))
 }
 
-fn find_electron_executable_for_desktop_auth() -> Result<PathBuf, String> {
+fn find_electron_executable_for_desktop_auth(
+    progress: Option<&ClaudeDesktopLoginProgressContext>,
+) -> Result<PathBuf, String> {
+    emit_desktop_login_progress(progress, "resolve-runtime", Some(3.0), None, None);
     if let Ok(value) = std::env::var("CLAUDE_DESKTOP_AUTH_ELECTRON") {
         let trimmed = value.trim();
         if !trimmed.is_empty() {
             let path = PathBuf::from(trimmed);
             if path.exists() {
+                emit_desktop_login_progress(progress, "cached", Some(86.0), None, None);
                 return Ok(path);
             }
         }
@@ -4010,15 +4410,13 @@ fn find_electron_executable_for_desktop_auth() -> Result<PathBuf, String> {
 
     for path in candidates {
         if path.exists() {
-            logger::log_info(&format!(
-                "[Claude Auth] 使用 Electron: {}",
-                path.display()
-            ));
+            logger::log_info(&format!("[Claude Auth] 使用 Electron: {}", path.display()));
+            emit_desktop_login_progress(progress, "cached", Some(86.0), None, None);
             return Ok(path);
         }
     }
 
-    match ensure_downloaded_electron_runtime() {
+    match ensure_downloaded_electron_runtime(progress) {
         Ok(path) => return Ok(path),
         Err(error) => {
             let checked_detail = if checked.is_empty() {
@@ -4170,8 +4568,44 @@ fn launch_platform_desktop_auth_helper_with_args(
     mode: &str,
     extra_args: &[(&str, &Path)],
 ) -> Result<u32, String> {
+    launch_platform_desktop_auth_helper_with_args_and_progress(
+        user_data_dir,
+        status_file,
+        export_file,
+        mode,
+        extra_args,
+        None,
+    )
+}
+
+fn launch_platform_desktop_auth_helper_with_progress(
+    user_data_dir: &Path,
+    status_file: &Path,
+    export_file: &Path,
+    mode: &str,
+    progress: Option<&ClaudeDesktopLoginProgressContext>,
+) -> Result<u32, String> {
+    launch_platform_desktop_auth_helper_with_args_and_progress(
+        user_data_dir,
+        status_file,
+        export_file,
+        mode,
+        &[],
+        progress,
+    )
+}
+
+fn launch_platform_desktop_auth_helper_with_args_and_progress(
+    user_data_dir: &Path,
+    status_file: &Path,
+    export_file: &Path,
+    mode: &str,
+    extra_args: &[(&str, &Path)],
+    progress: Option<&ClaudeDesktopLoginProgressContext>,
+) -> Result<u32, String> {
+    emit_desktop_login_progress(progress, "resolve-runtime", Some(2.0), None, None);
     let helper_script = find_desktop_auth_helper_script()?;
-    let electron = find_electron_executable_for_desktop_auth()?;
+    let electron = find_electron_executable_for_desktop_auth(progress)?;
     let helper_script_arg = electron_cli_path_arg(&helper_script);
     let stdout_log = user_data_dir.join("claude_desktop_auth_helper.stdout.log");
     let stderr_log = user_data_dir.join("claude_desktop_auth_helper.stderr.log");
@@ -4211,11 +4645,14 @@ fn launch_platform_desktop_auth_helper_with_args(
     for (name, path) in extra_args {
         command.arg(name).arg(path);
     }
-    command.arg("--url").arg(if mode == "cookie_probe" {
-        "https://claude.ai/settings/usage"
-    } else {
-        "https://claude.ai/"
-    });
+    emit_desktop_login_progress(progress, "launch", Some(92.0), None, None);
+    command
+        .arg("--url")
+        .arg(if mode == "cookie_probe" || mode == "verify" {
+            "https://claude.ai/settings/usage"
+        } else {
+            "https://claude.ai/"
+        });
     #[cfg(target_os = "windows")]
     {
         use std::os::windows::process::CommandExt;
@@ -4253,6 +4690,7 @@ fn launch_platform_desktop_auth_helper_with_args(
         stdout_log.display(),
         stderr_log.display()
     ));
+    emit_desktop_login_progress(progress, "ready", Some(100.0), None, None);
     Ok(child_id)
 }
 
@@ -4428,10 +4866,7 @@ fn quit_claude_desktop_for_profile_write() -> Result<(), String> {
         .stderr(std::process::Stdio::null())
         .output();
     if let Err(error) = graceful {
-        logger::log_warn(&format!(
-            "[Claude] graceful taskkill failed: {}",
-            error
-        ));
+        logger::log_warn(&format!("[Claude] graceful taskkill failed: {}", error));
     }
 
     for _ in 0..20 {
@@ -4442,9 +4877,7 @@ fn quit_claude_desktop_for_profile_write() -> Result<(), String> {
         std::thread::sleep(std::time::Duration::from_millis(250));
     }
 
-    logger::log_warn(
-        "[Claude] claude.exe still running; forcing close before profile write",
-    );
+    logger::log_warn("[Claude] claude.exe still running; forcing close before profile write");
     let force = std::process::Command::new("taskkill")
         .args(["/IM", "claude.exe", "/T", "/F"])
         .creation_flags(CREATE_NO_WINDOW)
@@ -4454,9 +4887,7 @@ fn quit_claude_desktop_for_profile_write() -> Result<(), String> {
         .output()
         .map_err(|e| format!("退出 Claude 失败: {}", e))?;
     if !force.status.success() && is_claude_desktop_running() {
-        return Err(
-            "Claude 仍在运行，无法安全写入登录态。请先退出 Claude 后重试。".to_string(),
-        );
+        return Err("Claude 仍在运行，无法安全写入登录态。请先退出 Claude 后重试。".to_string());
     }
 
     for _ in 0..20 {
@@ -4526,9 +4957,7 @@ fn launch_default_claude_desktop() {
     const CREATE_NO_WINDOW: u32 = 0x08000000;
 
     let Some(app_id) = find_windows_claude_start_app_id() else {
-        logger::log_warn(
-            "[Claude] Windows Start Apps entry not found; Claude was not relaunched",
-        );
+        logger::log_warn("[Claude] Windows Start Apps entry not found; Claude was not relaunched");
         return;
     };
 
@@ -4645,9 +5074,8 @@ fn import_desktop_profile_snapshot(
                 if local_profile_applied || desktop_account_has_real_profile_data(&account) {
                     None
                 } else {
-                    desktop_web_profile_error_message(web_profile).or_else(|| {
-                        Some("Claude 资料接口未返回邮箱、头像或套餐字段。".to_string())
-                    })
+                    desktop_web_profile_error_message(web_profile)
+                        .or_else(|| Some("Claude 资料接口未返回邮箱、头像或套餐字段。".to_string()))
                 };
         }
     } else if profile_error.is_some()
@@ -4726,7 +5154,14 @@ pub fn sync_cli_account_from_config_dir_if_same(
     save_account_and_index(incoming).map(Some)
 }
 
-pub fn start_desktop_login() -> Result<ClaudeDesktopLoginStartResponse, String> {
+pub fn start_desktop_login(
+    app: Option<AppHandle>,
+    progress_id: Option<String>,
+) -> Result<ClaudeDesktopLoginStartResponse, String> {
+    let progress = app
+        .zip(progress_id.and_then(|value| normalize_non_empty(Some(&value))))
+        .map(|(app, progress_id)| ClaudeDesktopLoginProgressContext { app, progress_id });
+    emit_desktop_login_progress(progress.as_ref(), "start", Some(0.0), None, None);
     let _ = cancel_desktop_login(None);
     let login_id = generate_random_url_token(18);
     let user_data_dir = get_desktop_login_root_dir()?.join(&login_id);
@@ -4735,8 +5170,14 @@ pub fn start_desktop_login() -> Result<ClaudeDesktopLoginStartResponse, String> 
     remove_path_if_exists(&user_data_dir)?;
     fs::create_dir_all(&user_data_dir)
         .map_err(|e| format!("创建 Claude 登录 profile 失败: {}", e))?;
-    let helper_pid =
-        launch_platform_desktop_auth_helper(&user_data_dir, &status_file, &export_file, "auth")?;
+    emit_desktop_login_progress(progress.as_ref(), "profile", Some(1.0), None, None);
+    let helper_pid = launch_platform_desktop_auth_helper_with_progress(
+        &user_data_dir,
+        &status_file,
+        &export_file,
+        "auth",
+        progress.as_ref(),
+    )?;
     let pending = PendingClaudeDesktopLoginState {
         login_id,
         user_data_dir,
@@ -4790,6 +5231,35 @@ pub fn cancel_desktop_login(login_id: Option<&str>) -> Result<(), String> {
         let _ = remove_path_if_exists(&state.user_data_dir);
     }
     set_pending_desktop_login(None);
+    Ok(())
+}
+
+pub fn open_desktop_verification_window(account_id: &str) -> Result<(), String> {
+    let account = load_account(account_id).ok_or_else(|| "Claude 账号不存在".to_string())?;
+    if account.auth_mode != ClaudeAuthMode::DesktopOAuth {
+        return Err("只有 Claude 登录账号需要打开验证窗口。".to_string());
+    }
+    let profile_dir = account
+        .desktop_profile_dir
+        .as_deref()
+        .and_then(|value| normalize_non_empty(Some(value)))
+        .map(PathBuf::from)
+        .ok_or_else(|| "Claude 账号缺少 profile 快照".to_string())?;
+    ensure_desktop_profile_logged_in(&profile_dir)?;
+    let status_file = profile_dir.join("claude_desktop_verification_status.json");
+    let export_file = desktop_auth_export_path(&profile_dir);
+    let _ = remove_path_if_exists(&status_file);
+    let helper_pid = launch_platform_desktop_auth_helper_with_args(
+        &profile_dir,
+        &status_file,
+        &export_file,
+        "verify",
+        &[],
+    )?;
+    logger::log_info(&format!(
+        "[Claude Auth] verification helper 已启动: account_id={}, pid={}",
+        account_id, helper_pid
+    ));
     Ok(())
 }
 
@@ -6517,10 +6987,7 @@ fn desktop_web_profile_error_message(profile: &Value) -> Option<String> {
         .values()
         .filter_map(|value| normalize_non_empty(value.as_str()))
         .next()?;
-    if first_error.contains("HTTP 403")
-        || first_error.contains("Just a moment")
-        || first_error.to_ascii_lowercase().contains("cloudflare")
-    {
+    if desktop_error_is_cloudflare_challenge(&first_error) {
         return Some(
             "Claude Web 接口被 Cloudflare 校验拦截，暂时无法读取账号资料、订阅或额度；切号不受影响。"
                 .to_string(),
@@ -6541,10 +7008,7 @@ fn desktop_web_usage_error_message(profile: &Value) -> Option<String> {
     if error.contains("missing lastActiveOrg") {
         return Some("Claude 账号缺少组织信息，暂时无法刷新额度。".to_string());
     }
-    if error.contains("HTTP 403")
-        || error.contains("Just a moment")
-        || error.to_ascii_lowercase().contains("cloudflare")
-    {
+    if desktop_error_is_cloudflare_challenge(&error) {
         return Some(
             "Claude Web usage 接口被 Cloudflare 校验拦截，暂时无法刷新额度；已保留旧缓存。"
                 .to_string(),
@@ -7137,9 +7601,7 @@ pub fn inject_to_claude_config(account_id: &str, config_dir: Option<&Path>) -> R
     }
     if account.auth_mode == ClaudeAuthMode::DesktopOAuth {
         if config_dir.is_some() {
-            return Err(
-                "Claude 登录态不能写入旧配置目录，请使用 Claude 实例。".to_string(),
-            );
+            return Err("Claude 登录态不能写入旧配置目录，请使用 Claude 实例。".to_string());
         }
         let snapshot_dir = account
             .desktop_profile_dir
@@ -7487,7 +7949,51 @@ pub async fn refresh_account_quota(account_id: &str) -> Result<ClaudeAccount, St
             .map(PathBuf::from)
             .ok_or_else(|| "Claude 账号缺少 profile 快照".to_string())?;
         let local_profile_applied = apply_desktop_local_profile(&mut account, &snapshot_dir);
-        match probe_desktop_web_profile(&snapshot_dir) {
+        let web_profile_result = match fetch_desktop_web_profile_silent(&snapshot_dir).await {
+            Ok(web_profile) if desktop_web_profile_has_cloudflare_challenge(&web_profile) => {
+                Ok(web_profile)
+            }
+            Ok(web_profile) if desktop_web_profile_needs_hidden_probe(&web_profile) => {
+                match probe_desktop_web_profile_hidden_with_cooldown(account_id, &snapshot_dir)
+                    .await
+                {
+                    Ok(probed_profile) => {
+                        logger::log_info(&format!(
+                            "[Claude] 静默刷新存在非 CF 错误，已通过隐藏 Electron probe 更新资料: account_id={}",
+                            account_id
+                        ));
+                        Ok(probed_profile)
+                    }
+                    Err(error) => {
+                        logger::log_warn(&format!(
+                            "[Claude] 隐藏 Electron probe 失败，保留静默刷新结果: account_id={}, error={}",
+                            account_id, error
+                        ));
+                        Ok(web_profile)
+                    }
+                }
+            }
+            Ok(web_profile) => Ok(web_profile),
+            Err(error) if desktop_error_is_cloudflare_challenge(&error) => Err(error),
+            Err(error) => {
+                match probe_desktop_web_profile_hidden_with_cooldown(account_id, &snapshot_dir)
+                    .await
+                {
+                    Ok(probed_profile) => {
+                        logger::log_info(&format!(
+                            "[Claude] 静默刷新失败，已通过隐藏 Electron probe 更新资料: account_id={}",
+                            account_id
+                        ));
+                        Ok(probed_profile)
+                    }
+                    Err(fallback_error) => Err(format!(
+                        "{}；隐藏 Electron Cookie 刷新也失败: {}",
+                        error, fallback_error
+                    )),
+                }
+            }
+        };
+        match web_profile_result {
             Ok(web_profile) => {
                 let web_quota_available = desktop_web_usage_to_quota(&web_profile).is_some();
                 let usage_error = desktop_web_usage_error_message(&web_profile);

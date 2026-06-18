@@ -1955,9 +1955,12 @@ fn append_copilot_snapshot_rows(
     let mut count = 0usize;
 
     for (key, label) in metrics {
-        let Some(snapshot) = get_nested_value(snapshots, &[key]) else {
+        let Some(snapshot) = get_copilot_snapshot(snapshots, key) else {
             continue;
         };
+        if copilot_snapshot_without_displayable_quota(snapshot) {
+            continue;
+        }
         let Some(remaining) = get_nested_value(snapshot, &["percent_remaining"]).and_then(as_f64)
         else {
             continue;
@@ -1978,6 +1981,30 @@ fn append_copilot_snapshot_rows(
     }
 
     count
+}
+
+fn get_copilot_snapshot<'a>(snapshots: &'a Value, key: &str) -> Option<&'a Value> {
+    if matches!(key, "premium_models" | "premium_interactions") {
+        return get_nested_value(snapshots, &["premium_models"])
+            .or_else(|| get_nested_value(snapshots, &["premium_interactions"]));
+    }
+    get_nested_value(snapshots, &[key])
+}
+
+fn copilot_snapshot_without_displayable_quota(snapshot: &Value) -> bool {
+    if get_nested_value(snapshot, &["unlimited"]).and_then(Value::as_bool) == Some(true) {
+        return false;
+    }
+
+    let entitlement = get_nested_value(snapshot, &["entitlement"]).and_then(as_f64);
+    if entitlement.map(|value| value < 0.0).unwrap_or(false) {
+        return false;
+    }
+    if let Some(value) = entitlement {
+        return value <= 0.0;
+    }
+
+    get_nested_value(snapshot, &["has_quota"]).and_then(Value::as_bool) == Some(false)
 }
 
 fn pick_copilot_reset_text(reset_unix: Option<i64>, reset_iso: Option<&str>) -> String {

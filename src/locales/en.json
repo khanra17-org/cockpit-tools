@@ -960,6 +960,8 @@
       "closeBehaviorAsk": "Ask every time",
       "closeBehaviorMinimize": "Minimize to tray",
       "closeBehaviorQuit": "Quit application",
+      "startupMinimized": "Start minimized",
+      "startupMinimizedDesc": "Automatically minimize the main window after the app finishes launching; restore it from the Dock, taskbar, or tray",
       "minimizeBehavior": "Window minimize behavior (macOS only)",
       "minimizeBehaviorDesc": "Choose whether minimizing keeps the window in the Dock and menu bar, or only in the menu bar",
       "minimizeBehaviorDockAndTray": "Dock + Menu Bar (Recommended)",
@@ -2619,7 +2621,17 @@
       "hourly": "5-hour quota",
       "weekly": "Weekly quota",
       "weeklyBlocksHourly": "Weekly quota is 0, so the 5-hour quota is unavailable",
-      "reset": "Reset"
+      "reset": "Reset",
+      "resetCredits": "Resets {{count}}",
+      "resetCreditsTitle": "Resets left for the 5-hour window: {{count}}",
+      "resetCreditConfirm": "Confirm?",
+      "resetCreditDialogTitle": "Reset your usage?",
+      "resetCreditDialogDesc": "Reset the rate limit so you can keep working without interruption. Available resets: {{count}}.",
+      "resetCreditDialogAction": "Reset usage",
+      "resetCreditNoCredits": "No reset credits available",
+      "resetCreditConsumed": "5-hour quota reset",
+      "resetCreditFailed": "Reset failed: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Reset submitted, but quota refresh failed: {{error}}"
     },
     "usage": {
       "open": "Open OpenAI usage",
@@ -4703,7 +4715,11 @@
       "refreshWithWarning": "Quota refresh failed: {{error}}",
       "notUpdated": "Quota not refreshed",
       "updated": "Updated",
-      "notUpdatedShort": "Not refreshed"
+      "notUpdatedShort": "Not refreshed",
+      "openVerification": "Open verification",
+      "openingVerification": "Opening...",
+      "verificationWindowOpened": "Claude verification window opened. Refresh quota again after verification.",
+      "verificationWindowFailed": "Failed to open Claude verification window: {{error}}"
     },
     "addTabs": {
       "desktop": "Claude",
@@ -4761,7 +4777,26 @@
       "localSuccess": "Imported local Claude sign-in: {{name}}",
       "importSuccess": "Claude sign-in imported: {{name}}",
       "switchHint": "Switch to official Claude",
-      "planUnknown": "Plan unknown"
+      "planUnknown": "Plan unknown",
+      "progress": {
+        "start": "Preparing sign-in task",
+        "profile": "Creating isolated profile",
+        "resolveRuntime": "Finding sign-in component",
+        "checkCache": "Checking local component cache",
+        "cached": "Using local component cache",
+        "downloadStart": "Starting component download",
+        "downloading": "Downloading sign-in component",
+        "downloaded": "Sign-in component downloaded",
+        "verify": "Verifying component integrity",
+        "extract": "Extracting sign-in component",
+        "runtimeReady": "Sign-in component ready",
+        "launch": "Opening Claude sign-in window",
+        "ready": "Sign-in window opened",
+        "default": "Preparing sign-in component",
+        "bytesWithTotal": "Downloaded {{downloaded}} of {{total}}",
+        "bytesOnly": "Downloaded {{downloaded}}",
+        "hint": "After the first setup, the local cache is reused directly."
+      }
     },
     "oauth": {
       "title": "Claude OAuth Authorization",

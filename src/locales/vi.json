@@ -597,6 +597,8 @@
       "closeBehaviorAsk": "Hỏi mỗi lần",
       "closeBehaviorMinimize": "Thu nhỏ xuống khay",
       "closeBehaviorQuit": "Thoát ứng dụng",
+      "startupMinimized": "Khởi động thu nhỏ",
+      "startupMinimizedDesc": "Tự động thu nhỏ cửa sổ chính sau khi ứng dụng khởi động; khôi phục từ Dock, thanh tác vụ hoặc khay",
       "minimizeBehavior": "Hành vi thu nhỏ cửa sổ (chỉ macOS)",
       "minimizeBehaviorDesc": "Chọn khi thu nhỏ cửa sổ sẽ giữ trong Dock và thanh menu, hay chỉ giữ trong thanh menu",
       "minimizeBehaviorDockAndTray": "Dock + thanh menu (khuyên dùng)",
@@ -2033,7 +2035,17 @@
       "hourly": "Hạn mức 5 giờ",
       "weekly": "Hạn mức tuần",
       "reset": "Đặt lại",
-      "weeklyBlocksHourly": "Hạn mức tuần là 0 nên hạn mức 5 giờ không khả dụng"
+      "weeklyBlocksHourly": "Hạn mức tuần là 0 nên hạn mức 5 giờ không khả dụng",
+      "resetCredits": "Lượt đặt lại {{count}}",
+      "resetCreditsTitle": "Lượt đặt lại còn lại cho cửa sổ 5 giờ: {{count}}",
+      "resetCreditConfirm": "Xác nhận?",
+      "resetCreditDialogTitle": "Đặt lại mức dùng?",
+      "resetCreditDialogDesc": "Đặt lại giới hạn tốc độ để tiếp tục làm việc không gián đoạn. Lượt đặt lại còn lại: {{count}}.",
+      "resetCreditDialogAction": "Đặt lại mức dùng",
+      "resetCreditNoCredits": "Không còn lượt đặt lại",
+      "resetCreditConsumed": "Đã đặt lại hạn mức 5 giờ",
+      "resetCreditFailed": "Đặt lại thất bại: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Đã gửi đặt lại nhưng làm mới hạn mức thất bại: {{error}}"
     },
     "quotaError": {
       "badge": "Lỗi quota",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Làm mới hạn mức lỗi: {{error}}",
       "notUpdated": "Chưa cập nhật hạn mức",
       "updated": "Đã cập nhật",
-      "notUpdatedShort": "Chưa cập nhật"
+      "notUpdatedShort": "Chưa cập nhật",
+      "openVerification": "Mở xác minh",
+      "openingVerification": "Đang mở...",
+      "verificationWindowOpened": "Đã mở cửa sổ xác minh Claude. Sau khi xác minh, hãy làm mới hạn mức lần nữa.",
+      "verificationWindowFailed": "Không mở được cửa sổ xác minh Claude: {{error}}"
     },
     "addTabs": {
       "desktop": "Màn hình",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Đã nhập đăng nhập Claude cục bộ: {{name}}",
       "importSuccess": "Đã nhập đăng nhập Claude: {{name}}",
       "switchHint": "Chuyển sang Claude chính thức",
-      "planUnknown": "Gói chưa rõ"
+      "planUnknown": "Gói chưa rõ",
+      "progress": {
+        "start": "Đang chuẩn bị đăng nhập",
+        "profile": "Đang tạo profile tách biệt",
+        "resolveRuntime": "Đang tìm thành phần đăng nhập",
+        "checkCache": "Đang kiểm tra bộ nhớ đệm cục bộ",
+        "cached": "Đang dùng bộ nhớ đệm cục bộ",
+        "downloadStart": "Bắt đầu tải thành phần",
+        "downloading": "Đang tải thành phần đăng nhập",
+        "downloaded": "Đã tải thành phần đăng nhập",
+        "verify": "Đang kiểm tra tính toàn vẹn",
+        "extract": "Đang giải nén thành phần đăng nhập",
+        "runtimeReady": "Thành phần đăng nhập đã sẵn sàng",
+        "launch": "Đang mở cửa sổ đăng nhập Claude",
+        "ready": "Cửa sổ đăng nhập đã mở",
+        "default": "Đang chuẩn bị thành phần đăng nhập",
+        "bytesWithTotal": "Đã tải {{downloaded}} trên {{total}}",
+        "bytesOnly": "Đã tải {{downloaded}}",
+        "hint": "Sau lần chuẩn bị đầu tiên, bộ nhớ đệm cục bộ sẽ được dùng lại trực tiếp."
+      }
     },
     "oauth": {
       "title": "Ủy quyền Claude OAuth",

@@ -1550,16 +1550,34 @@ mod imp {
         key: &str,
     ) -> Option<&'a serde_json::Map<String, Value>> {
         let snapshots = quota_snapshots.and_then(|value| value.as_object())?;
-        let primary = snapshots.get(key).and_then(|snapshot| snapshot.as_object());
-        if primary.is_some() {
-            return primary;
-        }
-        if key == "premium_interactions" {
+        if matches!(key, "premium_models" | "premium_interactions") {
             return snapshots
                 .get("premium_models")
+                .or_else(|| snapshots.get("premium_interactions"))
                 .and_then(|snapshot| snapshot.as_object());
         }
-        None
+        snapshots.get(key).and_then(|snapshot| snapshot.as_object())
+    }
+
+    fn snapshot_without_displayable_quota(
+        snapshot: Option<&serde_json::Map<String, Value>>,
+    ) -> bool {
+        let Some(data) = snapshot else {
+            return false;
+        };
+        if data.get("unlimited").and_then(|value| value.as_bool()) == Some(true) {
+            return false;
+        }
+
+        let entitlement = data.get("entitlement").and_then(parse_json_number);
+        if entitlement.map(|value| value < 0.0).unwrap_or(false) {
+            return false;
+        }
+        if let Some(value) = entitlement {
+            return value <= 0.0;
+        }
+
+        data.get("has_quota").and_then(|value| value.as_bool()) == Some(false)
     }
 
     fn entitlement_from_snapshot(snapshot: Option<&serde_json::Map<String, Value>>) -> Option<f64> {
@@ -1570,6 +1588,10 @@ mod imp {
     }
 
     fn remaining_from_snapshot(snapshot: Option<&serde_json::Map<String, Value>>) -> Option<f64> {
+        if snapshot_without_displayable_quota(snapshot) {
+            return None;
+        }
+
         if let Some(remaining) = snapshot
             .and_then(|data| data.get("remaining"))
             .and_then(parse_json_number)
@@ -1614,6 +1636,9 @@ mod imp {
             == Some(true)
         {
             return Some(0);
+        }
+        if snapshot_without_displayable_quota(snapshot) {
+            return None;
         }
 
         let entitlement = snapshot
@@ -3045,11 +3070,7 @@ mod imp {
         lang: &str,
         desktop: bool,
     ) -> (Vec<AccountCard>, Option<String>, Option<String>) {
-        let fallback_title = if desktop {
-            "Claude"
-        } else {
-            "Claude CLI"
-        };
+        let fallback_title = if desktop { "Claude" } else { "Claude CLI" };
         let mut accounts = modules::claude_account::list_accounts()
             .into_iter()
             .filter(|account| is_claude_desktop_account(account) == desktop)
@@ -4348,6 +4369,7 @@ mod imp {
             weekly_reset_time: None,
             weekly_window_minutes: None,
             weekly_window_present: Some(false),
+            reset_credits_available: None,
             raw_data: Some(raw_data),
         });
         account.quota_error = None;

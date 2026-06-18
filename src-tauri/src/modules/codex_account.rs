@@ -1541,6 +1541,9 @@ fn find_existing_account_id(
     let expected_org_id = normalize_optional_ref(organization_id);
     let mut first_email_match: Option<String> = None;
     let mut email_match_count = 0usize;
+    let mut account_id_match_without_org: Option<String> = None;
+    let mut legacy_email_only_candidate: Option<String> = None;
+    let mut legacy_email_only_count = 0usize;
 
     for summary in &index.accounts {
         if !summary.email.eq_ignore_ascii_case(email) {
@@ -1563,10 +1566,34 @@ fn find_existing_account_id(
         if is_exact_match {
             return Some(summary.id.clone());
         }
+
+        if expected_account_id.is_some()
+            && current_account_id == expected_account_id
+            && current_org_id.is_none()
+            && account_id_match_without_org.is_none()
+        {
+            account_id_match_without_org = Some(summary.id.clone());
+        }
+
+        if (expected_account_id.is_some() || expected_org_id.is_some())
+            && current_account_id.is_none()
+            && current_org_id.is_none()
+        {
+            legacy_email_only_count += 1;
+            if legacy_email_only_candidate.is_none() {
+                legacy_email_only_candidate = Some(summary.id.clone());
+            }
+        }
     }
 
     if expected_account_id.is_some() || expected_org_id.is_some() {
-        return None;
+        return account_id_match_without_org.or_else(|| {
+            if legacy_email_only_count == 1 {
+                legacy_email_only_candidate
+            } else {
+                None
+            }
+        });
     }
 
     if email_match_count == 1 {
@@ -2248,6 +2275,13 @@ pub fn upsert_account(tokens: CodexTokens) -> Result<CodexAccount, String> {
     upsert_account_with_hints(tokens, None, None)
 }
 
+pub fn upsert_account_for_reauth(
+    tokens: CodexTokens,
+    target_account_id: &str,
+) -> Result<CodexAccount, String> {
+    upsert_account_with_hints_and_reauth_target(tokens, None, None, Some(target_account_id))
+}
+
 pub fn upsert_api_key_account(
     api_key: String,
     api_base_url: Option<String>,
@@ -2366,9 +2400,43 @@ pub fn upsert_api_key_account(
 }
 
 fn upsert_account_with_hints(
+    tokens: CodexTokens,
+    account_id_hint: Option<String>,
+    organization_id_hint: Option<String>,
+) -> Result<CodexAccount, String> {
+    upsert_account_with_hints_and_reauth_target(tokens, account_id_hint, organization_id_hint, None)
+}
+
+fn resolve_reauth_target_account_id(
+    target_account_id: Option<&str>,
+    email: &str,
+) -> Result<Option<String>, String> {
+    let Some(target_id) = normalize_optional_ref(target_account_id) else {
+        return Ok(None);
+    };
+    let target =
+        load_account(&target_id).ok_or_else(|| format!("重新授权目标账号不存在: {}", target_id))?;
+    if target.is_api_key_auth() {
+        return Err("API Key 账号不能通过 OAuth 重新授权".to_string());
+    }
+    if !target.email.trim().is_empty() && !target.email.eq_ignore_ascii_case(email) {
+        return Err(format!(
+            "重新授权账号邮箱不匹配: 目标账号为 {}，本次授权为 {}",
+            target.email, email
+        ));
+    }
+    Ok(Some(if target.id.trim().is_empty() {
+        target_id
+    } else {
+        target.id
+    }))
+}
+
+fn upsert_account_with_hints_and_reauth_target(
     mut tokens: CodexTokens,
     account_id_hint: Option<String>,
     organization_id_hint: Option<String>,
+    reauth_target_account_id: Option<&str>,
 ) -> Result<CodexAccount, String> {
     let (
         email,
@@ -2392,15 +2460,19 @@ fn upsert_account_with_hints(
     let mut index = load_account_index();
     let generated_id =
         build_account_storage_id(&email, account_id.as_deref(), organization_id.as_deref());
+    let has_reauth_target = normalize_optional_ref(reauth_target_account_id).is_some();
 
-    // 优先按 email + account_id + organization_id 严格匹配已有账号
-    let existing_id = find_existing_account_id(
-        &index,
-        &email,
-        account_id.as_deref(),
-        organization_id.as_deref(),
-    )
-    .unwrap_or_else(|| generated_id.clone());
+    // 明确的重新授权来自某个旧账号卡片，必须优先覆盖该旧账号。
+    let existing_id = resolve_reauth_target_account_id(reauth_target_account_id, &email)?
+        .or_else(|| {
+            find_existing_account_id(
+                &index,
+                &email,
+                account_id.as_deref(),
+                organization_id.as_deref(),
+            )
+        })
+        .unwrap_or_else(|| generated_id.clone());
     let existing = index.accounts.iter().position(|a| a.id == existing_id);
 
     let account = if let Some(pos) = existing {
@@ -2454,6 +2526,27 @@ fn upsert_account_with_hints(
         });
         acc
     };
+
+    if has_reauth_target && generated_id != account.id {
+        let removed_duplicate = index.accounts.iter().any(|item| item.id == generated_id);
+        if removed_duplicate {
+            index.accounts.retain(|item| item.id != generated_id);
+            if index.current_account_id.as_deref() == Some(generated_id.as_str()) {
+                index.current_account_id = Some(account.id.clone());
+            }
+            if let Err(err) = delete_account_file(&generated_id) {
+                logger::log_warn(&format!(
+                    "清理 Codex 重新授权重复账号详情失败: duplicate_id={}, target_id={}, error={}",
+                    generated_id, account.id, err
+                ));
+            } else {
+                logger::log_info(&format!(
+                    "已清理 Codex 重新授权重复账号: duplicate_id={}, target_id={}",
+                    generated_id, account.id
+                ));
+            }
+        }
+    }
 
     // 保存账号详情
     save_account(&account)?;
@@ -6031,8 +6124,9 @@ mod tests {
         read_api_provider_from_config_toml, read_quick_config_from_config_toml,
         resolve_api_provider_config, save_account, save_account_index,
         should_accept_authority_snapshot, sync_account_from_auth_dir,
-        sync_managed_projection_from_auth_dir, upsert_account, upsert_account_from_access_token,
-        upsert_account_from_auth_tokens, validate_api_key_credentials, write_account_bundle_to_dir,
+        sync_managed_projection_from_auth_dir, upsert_account, upsert_account_for_reauth,
+        upsert_account_from_access_token, upsert_account_from_auth_tokens,
+        validate_api_key_credentials, write_account_bundle_to_dir,
         write_api_key_provider_to_config_toml, write_api_provider_to_config_toml,
         write_managed_projection_to_dir, write_quick_config_to_config_toml, ApiProviderConfig,
         CodexAccountIndex, CodexAccountSummary, CodexAuthFile, CodexAuthTokens,
@@ -6752,6 +6846,115 @@ mod tests {
             persisted.tokens.refresh_token.as_deref(),
             Some("rt-existing")
         );
+    }
+
+    #[test]
+    fn upsert_reuses_legacy_email_only_account_when_identity_appears() {
+        let _lock = TEST_ENV_LOCK.lock().unwrap_or_else(|err| err.into_inner());
+        let _env = TestEnvGuard::new("codex-legacy-email-only-dedupe-test");
+        let email = "legacy@example.com";
+        let account_id = "acc-legacy";
+        let organization_id = "org-legacy";
+        let legacy_id = build_account_storage_id(email, None, None);
+        let generated_identity_id =
+            build_account_storage_id(email, Some(account_id), Some(organization_id));
+        assert_ne!(legacy_id, generated_identity_id);
+
+        let mut legacy = CodexAccount::new(
+            legacy_id.clone(),
+            email.to_string(),
+            make_codex_tokens(email, account_id, organization_id, "old", "rt-existing"),
+        );
+        legacy.account_id = None;
+        legacy.organization_id = None;
+        save_account(&legacy).expect("save legacy account");
+
+        let mut index = CodexAccountIndex::new();
+        index.accounts.push(CodexAccountSummary {
+            id: legacy.id.clone(),
+            email: legacy.email.clone(),
+            plan_type: legacy.plan_type.clone(),
+            subscription_active_until: legacy.subscription_active_until.clone(),
+            created_at: legacy.created_at,
+            last_used: legacy.last_used,
+        });
+        save_account_index(&index).expect("save legacy index");
+
+        let imported = upsert_account(make_codex_tokens(
+            email,
+            account_id,
+            organization_id,
+            "new",
+            "rt-new",
+        ))
+        .expect("upsert should reuse legacy account");
+
+        assert_eq!(imported.id, legacy_id);
+        assert_eq!(imported.account_id.as_deref(), Some(account_id));
+        assert_eq!(imported.organization_id.as_deref(), Some(organization_id));
+        let accounts = list_accounts_checked().expect("list accounts");
+        assert_eq!(accounts.len(), 1);
+        assert_eq!(accounts[0].id, legacy_id);
+        let index = load_account_index();
+        assert_eq!(index.accounts.len(), 1);
+        assert_eq!(index.accounts[0].id, legacy_id);
+    }
+
+    #[test]
+    fn reauth_updates_explicit_target_account_even_when_identity_changes() {
+        let _lock = TEST_ENV_LOCK.lock().unwrap_or_else(|err| err.into_inner());
+        let _env = TestEnvGuard::new("codex-explicit-reauth-target-test");
+        let email = "reauth@example.com";
+        let existing = upsert_account(make_codex_tokens(
+            email, "acc-old", "org-old", "old", "rt-old",
+        ))
+        .expect("seed existing account");
+        let generated_new_id = build_account_storage_id(email, Some("acc-new"), Some("org-new"));
+        assert_ne!(existing.id, generated_new_id);
+
+        let reauthed = upsert_account_for_reauth(
+            make_codex_tokens(email, "acc-new", "org-new", "new", "rt-new"),
+            &existing.id,
+        )
+        .expect("reauth should update target account");
+
+        assert_eq!(reauthed.id, existing.id);
+        assert_eq!(reauthed.account_id.as_deref(), Some("acc-new"));
+        assert_eq!(reauthed.organization_id.as_deref(), Some("org-new"));
+        assert_eq!(reauthed.tokens.refresh_token.as_deref(), Some("rt-new"));
+        let accounts = list_accounts_checked().expect("list accounts");
+        assert_eq!(accounts.len(), 1);
+        assert_eq!(accounts[0].id, existing.id);
+    }
+
+    #[test]
+    fn reauth_removes_generated_duplicate_for_target_identity() {
+        let _lock = TEST_ENV_LOCK.lock().unwrap_or_else(|err| err.into_inner());
+        let _env = TestEnvGuard::new("codex-explicit-reauth-dedupe-test");
+        let email = "reauth-duplicate@example.com";
+        let existing = upsert_account(make_codex_tokens(
+            email, "acc-old", "org-old", "old", "rt-old",
+        ))
+        .expect("seed existing account");
+        let duplicate = upsert_account(make_codex_tokens(
+            email, "acc-new", "org-new", "dup", "rt-dup",
+        ))
+        .expect("seed duplicate account");
+        assert_ne!(existing.id, duplicate.id);
+        assert_eq!(list_accounts_checked().expect("list accounts").len(), 2);
+
+        let reauthed = upsert_account_for_reauth(
+            make_codex_tokens(email, "acc-new", "org-new", "new", "rt-new"),
+            &existing.id,
+        )
+        .expect("reauth should update target and remove duplicate");
+
+        assert_eq!(reauthed.id, existing.id);
+        assert_eq!(reauthed.tokens.refresh_token.as_deref(), Some("rt-new"));
+        assert!(load_account(&duplicate.id).is_none());
+        let accounts = list_accounts_checked().expect("list accounts");
+        assert_eq!(accounts.len(), 1);
+        assert_eq!(accounts[0].id, existing.id);
     }
 
     #[test]

@@ -594,6 +594,8 @@
       "closeBehaviorAsk": "Preguntar siempre",
       "closeBehaviorMinimize": "Minimizar a la bandeja",
       "closeBehaviorQuit": "Salir de la aplicación",
+      "startupMinimized": "Iniciar minimizada",
+      "startupMinimizedDesc": "Minimiza automáticamente la ventana principal tras iniciar la app; restáurala desde el Dock, la barra de tareas o la bandeja",
       "minimizeBehavior": "Comportamiento al minimizar la ventana (solo macOS)",
       "minimizeBehaviorDesc": "Elige si al minimizar la ventana permanece en el Dock y la barra de menús, o solo en la barra de menús",
       "minimizeBehaviorDockAndTray": "Dock + barra de menús (recomendado)",
@@ -2033,7 +2035,17 @@
       "hourly": "Cuota de 5 horas",
       "weekly": "Cuota semanal",
       "reset": "Reinicio",
-      "weeklyBlocksHourly": "La cuota semanal es 0, por eso la cuota de 5 horas no está disponible"
+      "weeklyBlocksHourly": "La cuota semanal es 0, por eso la cuota de 5 horas no está disponible",
+      "resetCredits": "Reinicios {{count}}",
+      "resetCreditsTitle": "Reinicios restantes para la ventana de 5 horas: {{count}}",
+      "resetCreditConfirm": "¿Confirmar?",
+      "resetCreditDialogTitle": "¿Restablecer tu uso?",
+      "resetCreditDialogDesc": "Restablece el límite de velocidad para seguir trabajando sin interrupciones. Restablecimientos disponibles: {{count}}.",
+      "resetCreditDialogAction": "Restablecer uso",
+      "resetCreditNoCredits": "No hay reinicios disponibles",
+      "resetCreditConsumed": "Cuota de 5 horas reiniciada",
+      "resetCreditFailed": "Error al reiniciar: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Reinicio enviado, pero falló la actualización de cuota: {{error}}"
     },
     "quotaError": {
       "badge": "Error de cuota",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Error al actualizar cuota: {{error}}",
       "notUpdated": "Cuota sin actualizar",
       "updated": "Actualizada",
-      "notUpdatedShort": "Sin actualizar"
+      "notUpdatedShort": "Sin actualizar",
+      "openVerification": "Abrir verificación",
+      "openingVerification": "Abriendo...",
+      "verificationWindowOpened": "Ventana de verificación de Claude abierta. Actualiza la cuota tras verificar.",
+      "verificationWindowFailed": "No se pudo abrir la verificación de Claude: {{error}}"
     },
     "addTabs": {
       "desktop": "Escritorio",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Sesión local de Claude importada: {{name}}",
       "importSuccess": "Sesión Claude importada: {{name}}",
       "switchHint": "Cambiar a Claude oficial",
-      "planUnknown": "Plan desconocido"
+      "planUnknown": "Plan desconocido",
+      "progress": {
+        "start": "Preparando inicio de sesión",
+        "profile": "Creando perfil aislado",
+        "resolveRuntime": "Buscando componente de inicio",
+        "checkCache": "Comprobando caché local del componente",
+        "cached": "Usando caché local del componente",
+        "downloadStart": "Iniciando descarga del componente",
+        "downloading": "Descargando componente de inicio",
+        "downloaded": "Componente de inicio descargado",
+        "verify": "Verificando integridad del componente",
+        "extract": "Extrayendo componente de inicio",
+        "runtimeReady": "Componente de inicio listo",
+        "launch": "Abriendo ventana de inicio de Claude",
+        "ready": "Ventana de inicio abierta",
+        "default": "Preparando componente de inicio",
+        "bytesWithTotal": "Descargado {{downloaded}} de {{total}}",
+        "bytesOnly": "Descargado {{downloaded}}",
+        "hint": "Después de la primera preparación, se reutilizará la caché local."
+      }
     },
     "oauth": {
       "title": "Autorización OAuth de Claude",

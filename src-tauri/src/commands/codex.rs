@@ -653,6 +653,11 @@ pub async fn refresh_codex_quota(app: AppHandle, account_id: String) -> Result<C
 }
 
 #[tauri::command]
+pub async fn consume_codex_reset_credit(account_id: String) -> Result<(), String> {
+    codex_quota::consume_reset_credit(&account_id).await
+}
+
+#[tauri::command]
 pub async fn refresh_codex_subscription_info(
     app: AppHandle,
     account_id: String,
@@ -697,8 +702,22 @@ pub async fn refresh_all_codex_quotas(app: AppHandle) -> Result<i32, String> {
     Ok(success_count as i32)
 }
 
-async fn save_codex_oauth_tokens(tokens: CodexTokens) -> Result<CodexAccount, String> {
-    let account = codex_account::upsert_account(tokens)?;
+async fn save_codex_oauth_tokens(
+    tokens: CodexTokens,
+    reauth_account_id: Option<&str>,
+) -> Result<CodexAccount, String> {
+    let account = if let Some(account_id) = reauth_account_id.and_then(|value| {
+        let trimmed = value.trim();
+        if trimmed.is_empty() {
+            None
+        } else {
+            Some(trimmed)
+        }
+    }) {
+        codex_account::upsert_account_for_reauth(tokens, account_id)?
+    } else {
+        codex_account::upsert_account(tokens)?
+    };
 
     if let Err(e) = codex_quota::refresh_account_quota(&account.id).await {
         logger::log_error(&format!("刷新配额失败: {}", e));
@@ -729,7 +748,10 @@ pub async fn codex_oauth_login_start(
 
 /// OAuth：浏览器授权完成后按 loginId 完成登录
 #[tauri::command]
-pub async fn codex_oauth_login_completed(login_id: String) -> Result<CodexAccount, String> {
+pub async fn codex_oauth_login_completed(
+    login_id: String,
+    reauth_account_id: Option<String>,
+) -> Result<CodexAccount, String> {
     let started_at_ms = chrono::Utc::now().timestamp_millis();
     logger::log_info(&format!(
         "Codex OAuth completed 命令开始: login_id={}, started_at_ms={}",
@@ -747,7 +769,7 @@ pub async fn codex_oauth_login_completed(login_id: String) -> Result<CodexAccoun
             return Err(e);
         }
     };
-    let account = save_codex_oauth_tokens(tokens).await?;
+    let account = save_codex_oauth_tokens(tokens, reauth_account_id.as_deref()).await?;
     logger::log_info(&format!(
         "Codex OAuth completed 命令成功: login_id={}, duration_ms={}, account_id={}, account_email={}",
         login_id,

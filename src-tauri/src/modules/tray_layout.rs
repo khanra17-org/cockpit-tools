@@ -86,18 +86,16 @@ fn default_tray_platforms() -> Vec<String> {
 }
 
 fn default_platform_groups() -> Vec<TrayLayoutGroup> {
-    vec![
-        TrayLayoutGroup {
-            id: DEFAULT_CODEBUDDY_GROUP_ID.to_string(),
-            name: "CodeBuddy".to_string(),
-            platform_ids: vec![
-                PLATFORM_CODEBUDDY.to_string(),
-                PLATFORM_CODEBUDDY_CN.to_string(),
-                PLATFORM_WORKBUDDY.to_string(),
-            ],
-            default_platform_id: PLATFORM_CODEBUDDY.to_string(),
-        },
-    ]
+    vec![TrayLayoutGroup {
+        id: DEFAULT_CODEBUDDY_GROUP_ID.to_string(),
+        name: "CodeBuddy".to_string(),
+        platform_ids: vec![
+            PLATFORM_CODEBUDDY.to_string(),
+            PLATFORM_CODEBUDDY_CN.to_string(),
+            PLATFORM_WORKBUDDY.to_string(),
+        ],
+        default_platform_id: PLATFORM_CODEBUDDY.to_string(),
+    }]
 }
 
 fn default_ordered_entries() -> Vec<String> {

@@ -105,6 +105,8 @@ pub struct GeneralConfig {
     pub tray_icon_style: String,
     /// 是否在启动时显示悬浮卡片
     pub floating_card_show_on_startup: bool,
+    /// 是否在启动后自动最小化主窗口
+    pub startup_minimized: bool,
     /// 悬浮卡片是否默认置顶
     pub floating_card_always_on_top: bool,
     /// 是否启用应用开机自启动
@@ -1950,6 +1952,7 @@ pub fn save_network_config(
         hide_dock_icon: current.hide_dock_icon,
         tray_icon_style: current.tray_icon_style,
         floating_card_show_on_startup: current.floating_card_show_on_startup,
+        startup_minimized: current.startup_minimized,
         floating_card_always_on_top: current.floating_card_always_on_top,
         app_auto_launch_enabled: current.app_auto_launch_enabled,
         antigravity_startup_wakeup_enabled: current.antigravity_startup_wakeup_enabled,
@@ -2233,6 +2236,7 @@ pub fn get_general_config(app: tauri::AppHandle) -> Result<GeneralConfig, String
         hide_dock_icon: user_config.hide_dock_icon,
         tray_icon_style: user_config.tray_icon_style.as_str().to_string(),
         floating_card_show_on_startup: user_config.floating_card_show_on_startup,
+        startup_minimized: user_config.startup_minimized,
         floating_card_always_on_top: user_config.floating_card_always_on_top,
         app_auto_launch_enabled,
         antigravity_startup_wakeup_enabled: user_config.antigravity_startup_wakeup_enabled,
@@ -2368,6 +2372,7 @@ pub fn save_general_config(
     hide_dock_icon: Option<bool>,
     tray_icon_style: Option<String>,
     floating_card_show_on_startup: Option<bool>,
+    startup_minimized: Option<bool>,
     floating_card_always_on_top: Option<bool>,
     app_auto_launch_enabled: Option<bool>,
     antigravity_startup_wakeup_enabled: Option<bool>,
@@ -2510,6 +2515,7 @@ pub fn save_general_config(
         .unwrap_or(current.tray_icon_style);
     let floating_card_show_on_startup_value =
         floating_card_show_on_startup.unwrap_or(current.floating_card_show_on_startup);
+    let startup_minimized_value = startup_minimized.unwrap_or(current.startup_minimized);
     let floating_card_always_on_top_value =
         floating_card_always_on_top.unwrap_or(current.floating_card_always_on_top);
     let app_auto_launch_enabled_value =
@@ -2598,6 +2604,7 @@ pub fn save_general_config(
         hide_dock_icon: hide_dock_icon_value,
         tray_icon_style: tray_icon_style_value,
         floating_card_show_on_startup: floating_card_show_on_startup_value,
+        startup_minimized: startup_minimized_value,
         floating_card_always_on_top: floating_card_always_on_top_value,
         app_auto_launch_enabled: app_auto_launch_enabled_value,
         antigravity_startup_wakeup_enabled: antigravity_startup_wakeup_enabled_value,

@@ -41,6 +41,9 @@ app.setName('Cockpit Claude Auth');
 app.setPath('userData', userDataDir);
 app.setPath('logs', path.join(userDataDir, 'Logs'));
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
+if (process.platform === 'darwin' && (mode === 'probe' || mode === 'cookie_probe') && app.dock) {
+  app.dock.hide();
+}
 
 function writeJsonAtomic(file, data) {
   const tmp = `${file}.tmp`;
@@ -473,7 +476,7 @@ app.whenReady().then(async () => {
     height: 900,
     minWidth: 920,
     minHeight: 720,
-    title: 'Claude Desktop Login',
+    title: 'Claude Login',
     show: true,
     autoHideMenuBar: true,
     webPreferences: {
@@ -534,7 +537,7 @@ app.whenReady().then(async () => {
       url: win.webContents.isDestroyed() ? null : win.webContents.getURL(),
     }, win.webContents).catch(() => false);
     if (authenticated && !win.isDestroyed()) {
-      win.setTitle('Claude Desktop Login - authenticated');
+      win.setTitle('Claude Login - authenticated');
     }
   }, 1500);
 

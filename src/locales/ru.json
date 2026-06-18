@@ -597,6 +597,8 @@
       "closeBehaviorAsk": "Спрашивать каждый раз",
       "closeBehaviorMinimize": "Свернуть в трей",
       "closeBehaviorQuit": "Закрыть приложение",
+      "startupMinimized": "Запускать свернутым",
+      "startupMinimizedDesc": "Автоматически сворачивает главное окно после запуска приложения; восстановить можно из Dock, панели задач или трея",
       "minimizeBehavior": "Поведение при сворачивании окна (только macOS)",
       "minimizeBehaviorDesc": "Выберите, оставлять ли окно при сворачивании в Dock и строке меню или только в строке меню",
       "minimizeBehaviorDockAndTray": "Dock + строка меню (рекомендуется)",
@@ -2033,7 +2035,17 @@
       "hourly": "Квота 5 часов",
       "weekly": "Недельная квота",
       "reset": "Сброс",
-      "weeklyBlocksHourly": "Недельная квота равна 0, поэтому 5-часовая квота недоступна"
+      "weeklyBlocksHourly": "Недельная квота равна 0, поэтому 5-часовая квота недоступна",
+      "resetCredits": "Сбросы {{count}}",
+      "resetCreditsTitle": "Осталось сбросов для 5-часового окна: {{count}}",
+      "resetCreditConfirm": "Подтвердить?",
+      "resetCreditDialogTitle": "Сбросить использование?",
+      "resetCreditDialogDesc": "Сбросьте лимит скорости, чтобы продолжить работу без перерывов. Доступно сбросов: {{count}}.",
+      "resetCreditDialogAction": "Сбросить использование",
+      "resetCreditNoCredits": "Нет доступных сбросов",
+      "resetCreditConsumed": "5-часовая квота сброшена",
+      "resetCreditFailed": "Сбой сброса: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Сброс отправлен, но обновление квоты не удалось: {{error}}"
     },
     "quotaError": {
       "badge": "Ошибка квоты",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Не удалось обновить лимит: {{error}}",
       "notUpdated": "Лимит не обновлен",
       "updated": "Обновлено",
-      "notUpdatedShort": "Не обновлено"
+      "notUpdatedShort": "Не обновлено",
+      "openVerification": "Открыть проверку",
+      "openingVerification": "Открытие...",
+      "verificationWindowOpened": "Окно проверки Claude открыто. После проверки обновите лимит снова.",
+      "verificationWindowFailed": "Не удалось открыть окно проверки Claude: {{error}}"
     },
     "addTabs": {
       "desktop": "Рабочий",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Локальный вход Claude импортирован: {{name}}",
       "importSuccess": "Вход Claude импортирован: {{name}}",
       "switchHint": "Переключить официальный Claude",
-      "planUnknown": "План неизвестен"
+      "planUnknown": "План неизвестен",
+      "progress": {
+        "start": "Подготовка входа",
+        "profile": "Создание изолированного profile",
+        "resolveRuntime": "Поиск компонента входа",
+        "checkCache": "Проверка локального кэша компонента",
+        "cached": "Используется локальный кэш компонента",
+        "downloadStart": "Запуск загрузки компонента",
+        "downloading": "Загрузка компонента входа",
+        "downloaded": "Компонент входа загружен",
+        "verify": "Проверка целостности компонента",
+        "extract": "Распаковка компонента входа",
+        "runtimeReady": "Компонент входа готов",
+        "launch": "Открытие окна входа Claude",
+        "ready": "Окно входа открыто",
+        "default": "Подготовка компонента входа",
+        "bytesWithTotal": "Загружено {{downloaded}} из {{total}}",
+        "bytesOnly": "Загружено {{downloaded}}",
+        "hint": "После первой подготовки локальный кэш будет использоваться напрямую."
+      }
     },
     "oauth": {
       "title": "Авторизация Claude OAuth",

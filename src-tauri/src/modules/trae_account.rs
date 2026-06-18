@@ -4,6 +4,8 @@ use cbc::cipher::block_padding::Pkcs7;
 use cbc::cipher::{BlockDecryptMut, BlockEncryptMut, KeyIvInit};
 use rand::RngCore;
 use reqwest::{Method, Url};
+use ring::rand::SystemRandom;
+use ring::signature::{EcdsaKeyPair, ECDSA_P256_SHA256_ASN1_SIGNING};
 use serde_json::{Map, Value};
 use sha2::{Digest, Sha512};
 use std::collections::BTreeMap;
@@ -20,6 +22,7 @@ const TRAE_DEFAULT_AUTH_PROVIDER_ID: &str = "icube.cloudide";
 const TRAE_STORAGE_AUTH_KEY_PREFIX: &str = "iCubeAuthInfo://";
 const TRAE_STORAGE_SERVER_KEY_PREFIX: &str = "iCubeServerData://";
 const TRAE_STORAGE_ENTITLEMENT_KEY_PREFIX: &str = "iCubeEntitlementInfo://";
+const TRAE_STORAGE_DEVICE_KEY_PREFIX: &str = "iCubeAuthInfo://icube-dc:";
 const TRAE_STORAGE_AUTH_KEY: &str = "iCubeAuthInfo://icube.cloudide";
 const TRAE_STORAGE_ENTITLEMENT_KEY: &str = "iCubeEntitlementInfo://icube.cloudide";
 const TRAE_STORAGE_SERVER_KEY: &str = "iCubeServerData://icube.cloudide";
@@ -62,16 +65,17 @@ type Aes128CbcDec = cbc::Decryptor<Aes128>;
 
 const TRAE_ACCOUNT_API_ORIGIN_NORMAL: &str = "https://grow-normal.trae.ai";
 const TRAE_ACCOUNT_API_ORIGIN_SG: &str = "https://growsg-normal.trae.ai";
-const TRAE_ACCOUNT_API_ORIGIN_US: &str = "https://growva-normal.trae.ai";
+const TRAE_ACCOUNT_API_ORIGIN_US: &str = "https://growsg-normal.trae.ai";
 const TRAE_ACCOUNT_API_ORIGIN_USTTP: &str = "https://grow-normal.traeapi.us";
 const TRAE_EXCHANGE_TOKEN_PATH: &str = "/cloudide/api/v3/trae/oauth/ExchangeToken";
+const TRAE_AUTH_CODE_EXCHANGE_TOKEN_PATH: &str = "/trae/api/v3/oauth/ExchangeToken";
 const TRAE_GET_USER_INFO_PATH: &str = "/cloudide/api/v3/trae/GetUserInfo";
 const TRAE_CHECK_LOGIN_PATH: &str = "/cloudide/api/v3/trae/CheckLogin";
 const TRAE_PAY_STATUS_PATH: &str = "/trae/api/v1/pay/ide_user_pay_status";
 const TRAE_ENT_USAGE_PATH: &str = "/trae/api/v1/pay/ide_user_ent_usage";
 const TRAE_AUTH_CLIENT_ID: &str = "ono9krqynydwx5";
 const TRAE_EXCHANGE_CLIENT_SECRET: &str = "-";
-const TRAE_IDE_VERSION: &str = "1.0.0";
+const TRAE_IDE_VERSION: &str = "3.5.66";
 const TRAE_NEED_REFRESH_WINDOW_MILLISECONDS: i64 = 24 * 60 * 60 * 1000;
 const TRAE_CHECK_LOGIN_INVALID_ERROR_CODES: [&str; 5] =
     ["20324", "20101", "20315", "20125", "20126"];
@@ -183,13 +187,15 @@ fn normalize_origin(raw: &str) -> Option<String> {
 }
 
 fn is_official_trae_account_api_origin(origin: &str) -> bool {
-    matches!(
-        origin.trim_end_matches('/'),
-        TRAE_ACCOUNT_API_ORIGIN_NORMAL
-            | TRAE_ACCOUNT_API_ORIGIN_SG
-            | TRAE_ACCOUNT_API_ORIGIN_US
-            | TRAE_ACCOUNT_API_ORIGIN_USTTP
-    )
+    let normalized = origin.trim_end_matches('/');
+    [
+        TRAE_ACCOUNT_API_ORIGIN_NORMAL,
+        TRAE_ACCOUNT_API_ORIGIN_SG,
+        TRAE_ACCOUNT_API_ORIGIN_US,
+        TRAE_ACCOUNT_API_ORIGIN_USTTP,
+    ]
+    .iter()
+    .any(|candidate| normalized == *candidate)
 }
 
 fn official_trae_account_api_origin_for_region(
@@ -794,8 +800,35 @@ fn provider_id_from_storage_key(key: &str, prefix: &str) -> Option<String> {
         .and_then(|suffix| normalize_non_empty(Some(suffix)))
 }
 
+fn is_trae_device_key_storage_key(key: &str) -> bool {
+    key.starts_with(TRAE_STORAGE_DEVICE_KEY_PREFIX)
+}
+
+fn is_trae_device_provider_id(provider_id: &str) -> bool {
+    provider_id.trim().starts_with("icube-dc:")
+}
+
+fn is_trae_user_auth_storage_key(key: &str) -> bool {
+    key.starts_with(TRAE_STORAGE_AUTH_KEY_PREFIX)
+        && key != TRAE_STORAGE_USERTAG_KEY
+        && !is_trae_device_key_storage_key(key)
+}
+
+fn find_user_auth_storage_key(root_obj: &Map<String, Value>) -> Option<String> {
+    for key in root_obj.keys() {
+        if is_trae_user_auth_storage_key(key) {
+            return Some(key.clone());
+        }
+    }
+    None
+}
+
 fn build_auth_storage_key(provider_id: &str) -> String {
     format!("{}{}", TRAE_STORAGE_AUTH_KEY_PREFIX, provider_id)
+}
+
+fn build_device_key_storage_key(device_id: &str) -> String {
+    format!("{}{}", TRAE_STORAGE_DEVICE_KEY_PREFIX, device_id)
 }
 
 fn build_server_storage_key(provider_id: &str) -> String {
@@ -807,18 +840,16 @@ fn build_entitlement_storage_key(provider_id: &str) -> String {
 }
 
 fn resolve_storage_provider_id(root_obj: &Map<String, Value>) -> String {
-    if let Some(key) = find_storage_key_by_prefix(
-        root_obj,
-        TRAE_STORAGE_AUTH_KEY_PREFIX,
-        Some(TRAE_STORAGE_USERTAG_KEY),
-    ) {
+    if let Some(key) = find_user_auth_storage_key(root_obj) {
         if let Some(provider) = provider_id_from_storage_key(&key, TRAE_STORAGE_AUTH_KEY_PREFIX) {
             return provider;
         }
     }
     if let Some(key) = find_storage_key_by_prefix(root_obj, TRAE_STORAGE_SERVER_KEY_PREFIX, None) {
         if let Some(provider) = provider_id_from_storage_key(&key, TRAE_STORAGE_SERVER_KEY_PREFIX) {
-            return provider;
+            if !is_trae_device_provider_id(provider.as_str()) {
+                return provider;
+            }
         }
     }
     if let Some(key) =
@@ -827,19 +858,16 @@ fn resolve_storage_provider_id(root_obj: &Map<String, Value>) -> String {
         if let Some(provider) =
             provider_id_from_storage_key(&key, TRAE_STORAGE_ENTITLEMENT_KEY_PREFIX)
         {
-            return provider;
+            if !is_trae_device_provider_id(provider.as_str()) {
+                return provider;
+            }
         }
     }
     TRAE_DEFAULT_AUTH_PROVIDER_ID.to_string()
 }
 
 fn has_trae_auth_storage_key(root_obj: &Map<String, Value>) -> bool {
-    find_storage_key_by_prefix(
-        root_obj,
-        TRAE_STORAGE_AUTH_KEY_PREFIX,
-        Some(TRAE_STORAGE_USERTAG_KEY),
-    )
-    .is_some()
+    find_user_auth_storage_key(root_obj).is_some()
 }
 
 fn resolve_usertag_from_storage(
@@ -2002,6 +2030,71 @@ fn merge_usertag_map_for_inject(
     Ok(Some(encoded))
 }
 
+fn resolve_existing_device_key_storage_id(root_obj: &Map<String, Value>) -> Option<String> {
+    for key in root_obj.keys() {
+        let Some(device_id) = key.strip_prefix(TRAE_STORAGE_DEVICE_KEY_PREFIX) else {
+            continue;
+        };
+        if let Some(normalized) = normalize_non_empty(Some(device_id)) {
+            return Some(normalized);
+        }
+    }
+    None
+}
+
+fn resolve_device_id_for_inject(
+    root_obj: &Map<String, Value>,
+    account: &TraeAccount,
+) -> Option<String> {
+    pick_string_multi(
+        &[
+            account.trae_auth_raw.as_ref(),
+            account.trae_server_raw.as_ref(),
+        ],
+        &[
+            &["deviceInfo", "DeviceID"],
+            &["deviceInfo", "deviceId"],
+            &["DeviceID"],
+            &["deviceId"],
+            &["callbackQuery", "device_id"],
+            &["callbackQuery", "x_device_id"],
+        ],
+    )
+    .or_else(|| resolve_existing_device_key_storage_id(root_obj))
+}
+
+fn normalize_device_key_pair_value(value: &Value) -> Option<Value> {
+    let private_key = pick_string(Some(value), &[&["privateKeyPEM"], &["private_key_pem"]])?;
+    let public_key = pick_string(Some(value), &[&["publicKeyPEM"], &["public_key_pem"]])?;
+    Some(serde_json::json!({
+        "privateKeyPEM": private_key,
+        "publicKeyPEM": public_key,
+    }))
+}
+
+fn resolve_device_key_pair_for_inject(account: &TraeAccount) -> Option<Value> {
+    let auth_raw = account.trae_auth_raw.as_ref()?;
+    auth_raw
+        .get("deviceKeyPair")
+        .and_then(normalize_device_key_pair_value)
+        .or_else(|| normalize_device_key_pair_value(auth_raw))
+}
+
+fn write_device_key_pair_for_inject(
+    root_obj: &mut Map<String, Value>,
+    account: &TraeAccount,
+) -> Result<(), String> {
+    let Some(device_key_pair) = resolve_device_key_pair_for_inject(account) else {
+        return Ok(());
+    };
+    let Some(device_id) = resolve_device_id_for_inject(root_obj, account) else {
+        return Ok(());
+    };
+    let storage_key = build_device_key_storage_key(device_id.as_str());
+    root_obj.insert(storage_key, to_icube_cipher_string_value(&device_key_pair)?);
+    Ok(())
+}
+
 fn resolve_storage_keys_for_inject(root_obj: &Map<String, Value>) -> (String, String, String) {
     let provider_id = resolve_storage_provider_id(root_obj);
     (
@@ -2477,6 +2570,7 @@ pub fn inject_to_trae_at_path(storage_path: &Path, account_id: &str) -> Result<(
         .and_then(|value| parse_value_or_json_string_or_icube_cipher(Some(value)));
     let auth_raw = ensure_auth_raw_for_inject(&account, existing_auth_raw.as_ref());
     root_obj.insert(auth_storage_key, to_icube_cipher_string_value(&auth_raw)?);
+    write_device_key_pair_for_inject(root_obj, &account)?;
 
     if let Some(entitlement_raw) = ensure_entitlement_raw_for_inject(&account) {
         root_obj.insert(
@@ -2535,6 +2629,155 @@ fn pick_cookie_from_account(account: &TraeAccount) -> Option<String> {
             &["headers", "Cookie"],
         ],
     )
+}
+
+#[derive(Debug, Clone)]
+struct TraeDeviceKeyPair {
+    private_key_pem: String,
+    public_key_pem: String,
+}
+
+fn bytes_to_lower_hex(bytes: &[u8]) -> String {
+    let mut out = String::with_capacity(bytes.len() * 2);
+    for byte in bytes {
+        use std::fmt::Write as _;
+        let _ = write!(&mut out, "{:02x}", byte);
+    }
+    out
+}
+
+fn pem_to_der(pem: &str) -> Result<Vec<u8>, String> {
+    let body = pem
+        .lines()
+        .filter(|line| !line.trim_start().starts_with("-----"))
+        .map(str::trim)
+        .collect::<String>();
+    BASE64_STANDARD
+        .decode(body.as_bytes())
+        .map_err(|e| format!("解析 Trae 设备私钥 PEM 失败: {}", e))
+}
+
+fn resolve_device_key_pair_for_refresh(account: &TraeAccount) -> Option<TraeDeviceKeyPair> {
+    let value = resolve_device_key_pair_for_inject(account)?;
+    Some(TraeDeviceKeyPair {
+        private_key_pem: pick_string(Some(&value), &[&["privateKeyPEM"]])?,
+        public_key_pem: pick_string(Some(&value), &[&["publicKeyPEM"]])?,
+    })
+}
+
+fn resolve_ide_version_for_account(account: &TraeAccount) -> String {
+    pick_string_multi(
+        &[
+            account.trae_auth_raw.as_ref(),
+            account.trae_server_raw.as_ref(),
+        ],
+        &[
+            &["deviceInfo", "ClientVersion"],
+            &["ClientVersion"],
+            &["x_app_version"],
+            &["exchangeResponse", "IDEVersion"],
+        ],
+    )
+    .unwrap_or_else(|| TRAE_IDE_VERSION.to_string())
+}
+
+fn build_refresh_device_info(account: &TraeAccount, public_key_pem: &str) -> Value {
+    let mut device_info = account
+        .trae_auth_raw
+        .as_ref()
+        .and_then(|value| value.get("deviceInfo"))
+        .and_then(Value::as_object)
+        .cloned()
+        .unwrap_or_default();
+    device_info.insert(
+        "DevicePublicKey".to_string(),
+        Value::String(public_key_pem.to_string()),
+    );
+    device_info
+        .entry("PlatformCode".to_string())
+        .or_insert_with(|| Value::String("IDE_PC".to_string()));
+    device_info
+        .entry("DeviceType".to_string())
+        .or_insert_with(|| Value::String("PC".to_string()));
+    device_info
+        .entry("ClientVersion".to_string())
+        .or_insert_with(|| Value::String(resolve_ide_version_for_account(account)));
+    Value::Object(device_info)
+}
+
+fn sign_trae_device_proof(refresh_token: &str, private_key_pem: &str) -> Result<Value, String> {
+    let mut nonce_bytes = [0u8; 16];
+    rand::rngs::OsRng.fill_bytes(&mut nonce_bytes);
+    let nonce = bytes_to_lower_hex(&nonce_bytes);
+    let timestamp = chrono::Utc::now().timestamp();
+    let message = format!(
+        "POST {} {} {} {} {}",
+        TRAE_AUTH_CODE_EXCHANGE_TOKEN_PATH, TRAE_AUTH_CLIENT_ID, refresh_token, timestamp, nonce
+    );
+    let private_key_der = pem_to_der(private_key_pem)?;
+    let rng = SystemRandom::new();
+    let key_pair = EcdsaKeyPair::from_pkcs8(
+        &ECDSA_P256_SHA256_ASN1_SIGNING,
+        private_key_der.as_slice(),
+        &rng,
+    )
+    .map_err(|_| "解析 Trae 设备私钥失败".to_string())?;
+    let signature = key_pair
+        .sign(&rng, message.as_bytes())
+        .map_err(|_| "生成 Trae 设备签名失败".to_string())?;
+    Ok(serde_json::json!({
+        "Signature": BASE64_STANDARD.encode(signature.as_ref()),
+        "Timestamp": timestamp,
+        "Nonce": nonce,
+    }))
+}
+
+async fn request_exchange_token_by_official_refresh(
+    client: &reqwest::Client,
+    account: &TraeAccount,
+    routing_context: &TraeRefreshRoutingContext,
+    cookie: Option<&str>,
+) -> Result<Value, String> {
+    let refresh_token = normalize_non_empty(account.refresh_token.as_deref())
+        .ok_or_else(|| "Trae refresh token 缺失，无法按官方流程刷新登录态".to_string())?;
+    let device_key_pair = resolve_device_key_pair_for_refresh(account)
+        .ok_or_else(|| "Trae 设备密钥缺失，无法按官方新版流程刷新登录态".to_string())?;
+    let device_info = build_refresh_device_info(account, device_key_pair.public_key_pem.as_str());
+    let device_proof = sign_trae_device_proof(
+        refresh_token.as_str(),
+        device_key_pair.private_key_pem.as_str(),
+    )?;
+    let body = serde_json::json!({
+        "ClientID": TRAE_AUTH_CLIENT_ID,
+        "ClientSecret": "",
+        "RefreshToken": refresh_token,
+        "DeviceInfo": device_info,
+        "DeviceProof": device_proof,
+        "IDEVersion": resolve_ide_version_for_account(account),
+    });
+    let urls = build_api_urls(
+        routing_context.login_host.as_str(),
+        TRAE_AUTH_CODE_EXCHANGE_TOKEN_PATH,
+    );
+    let response = request_trae_json_with_candidates(
+        client,
+        Method::POST,
+        urls.as_slice(),
+        account.access_token.as_str(),
+        cookie,
+        Some(body),
+    )
+    .await?;
+    let root = extract_response_data(&response).unwrap_or(&response);
+    if pick_string(
+        Some(root),
+        &[&["Token"], &["accessToken"], &["access_token"], &["token"]],
+    )
+    .is_none()
+    {
+        return Err("Trae 官方 ExchangeToken 响应缺少 access token".to_string());
+    }
+    Ok(response)
 }
 
 fn normalize_login_region(raw: Option<&str>) -> Option<String> {
@@ -3456,30 +3699,51 @@ async fn refresh_account_async_once(account_id: &str) -> Result<TraeAccount, Str
         routing_context.ai_region.as_deref().unwrap_or("-")
     ));
 
-    let exchange_body = serde_json::json!({
-        "ClientID": TRAE_AUTH_CLIENT_ID,
-        "RefreshToken": account.refresh_token.clone().unwrap_or_default(),
-        "ClientSecret": TRAE_EXCHANGE_CLIENT_SECRET,
-        "UserID": "",
-        "refreshToken": account.refresh_token.clone().unwrap_or_default(),
-        "refresh_token": account.refresh_token.clone().unwrap_or_default(),
-        "token": account.access_token.clone(),
-    });
     if normalize_non_empty(account.refresh_token.as_deref()).is_none() {
         return Err("Trae refresh token 缺失，无法按官方流程刷新登录态".to_string());
     }
 
-    let exchange_urls = build_refresh_api_urls(&account, TRAE_EXCHANGE_TOKEN_PATH);
-    let exchange_response = request_trae_json_with_candidates(
+    let exchange_response = match request_exchange_token_by_official_refresh(
         &client,
-        Method::POST,
-        exchange_urls.as_slice(),
-        &account.access_token,
+        &account,
+        &routing_context,
         cookie.as_deref(),
-        Some(exchange_body),
     )
     .await
-    .map_err(|err| format!("Trae ExchangeToken 失败: {}", err))?;
+    {
+        Ok(response) => response,
+        Err(official_err) => {
+            logger::log_warn(&format!(
+                "[Trae Refresh] 官方新版 ExchangeToken 失败，尝试旧接口 fallback: {}",
+                official_err
+            ));
+            let exchange_body = serde_json::json!({
+                "ClientID": TRAE_AUTH_CLIENT_ID,
+                "RefreshToken": account.refresh_token.clone().unwrap_or_default(),
+                "ClientSecret": TRAE_EXCHANGE_CLIENT_SECRET,
+                "UserID": "",
+                "refreshToken": account.refresh_token.clone().unwrap_or_default(),
+                "refresh_token": account.refresh_token.clone().unwrap_or_default(),
+                "token": account.access_token.clone(),
+            });
+            let exchange_urls = build_refresh_api_urls(&account, TRAE_EXCHANGE_TOKEN_PATH);
+            request_trae_json_with_candidates(
+                &client,
+                Method::POST,
+                exchange_urls.as_slice(),
+                &account.access_token,
+                cookie.as_deref(),
+                Some(exchange_body),
+            )
+            .await
+            .map_err(|err| {
+                format!(
+                    "Trae ExchangeToken 失败: official={} | legacy={}",
+                    official_err, err
+                )
+            })?
+        }
+    };
     let exchange_context = build_refresh_routing_context(&account);
     apply_exchange_response(&mut account, &exchange_response, &exchange_context);
 
@@ -3941,6 +4205,67 @@ mod tests {
         assert_eq!(
             auth_obj.get("loginHost").and_then(Value::as_str),
             Some("https://api-sg-central.trae.ai")
+        );
+    }
+
+    #[test]
+    fn storage_provider_resolution_ignores_device_key_pair_entries() {
+        let mut root = Map::new();
+        root.insert(
+            "iCubeAuthInfo://icube-dc:7633793279305631249".to_string(),
+            Value::String("device-key-pair".to_string()),
+        );
+        root.insert(
+            "iCubeEntitlementInfo://icube-dc:7633793279305631249".to_string(),
+            Value::String("{}".to_string()),
+        );
+
+        assert_eq!(
+            resolve_storage_provider_id(&root),
+            TRAE_DEFAULT_AUTH_PROVIDER_ID
+        );
+        assert!(!has_trae_auth_storage_key(&root));
+
+        root.insert(
+            TRAE_STORAGE_AUTH_KEY.to_string(),
+            Value::String("auth-payload".to_string()),
+        );
+        assert_eq!(
+            resolve_storage_provider_id(&root),
+            TRAE_DEFAULT_AUTH_PROVIDER_ID
+        );
+        assert!(has_trae_auth_storage_key(&root));
+    }
+
+    #[test]
+    fn device_key_pair_for_inject_uses_official_device_storage_key() {
+        let mut account = sample_account();
+        account.trae_auth_raw = Some(serde_json::json!({
+            "deviceInfo": {
+                "DeviceID": "7633793279305631249"
+            },
+            "deviceKeyPair": {
+                "privateKeyPEM": "private-key",
+                "publicKeyPEM": "public-key"
+            }
+        }));
+        let mut root = Map::new();
+
+        write_device_key_pair_for_inject(&mut root, &account).expect("write device key");
+
+        assert!(root.contains_key("iCubeAuthInfo://icube-dc:7633793279305631249"));
+        assert!(!has_trae_auth_storage_key(&root));
+        let decoded = root
+            .get("iCubeAuthInfo://icube-dc:7633793279305631249")
+            .and_then(|value| parse_value_or_json_string_or_icube_cipher(Some(value)))
+            .expect("decoded device key");
+        assert_eq!(
+            decoded.get("privateKeyPEM").and_then(Value::as_str),
+            Some("private-key")
+        );
+        assert_eq!(
+            decoded.get("publicKeyPEM").and_then(Value::as_str),
+            Some("public-key")
         );
     }
 }

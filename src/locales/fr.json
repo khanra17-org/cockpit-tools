@@ -594,6 +594,8 @@
       "closeBehaviorAsk": "Demander à chaque fois",
       "closeBehaviorMinimize": "Minimiser dans la barre d'état",
       "closeBehaviorQuit": "Quitter l'application",
+      "startupMinimized": "Démarrer minimisé",
+      "startupMinimizedDesc": "Réduit automatiquement la fenêtre principale après le lancement; restauration depuis le Dock, la barre des tâches ou la zone d’état",
       "minimizeBehavior": "Comportement de minimisation de la fenêtre (macOS uniquement)",
       "minimizeBehaviorDesc": "Choisissez si la fenêtre minimisée reste dans le Dock et la barre de menus, ou uniquement dans la barre de menus",
       "minimizeBehaviorDockAndTray": "Dock + barre de menus (recommandé)",
@@ -2033,7 +2035,17 @@
       "hourly": "Quota de 5 heures",
       "weekly": "Quota hebdomadaire",
       "reset": "Réinitialiser",
-      "weeklyBlocksHourly": "Le quota hebdomadaire est à 0 ; le quota de 5 heures est donc indisponible"
+      "weeklyBlocksHourly": "Le quota hebdomadaire est à 0 ; le quota de 5 heures est donc indisponible",
+      "resetCredits": "Réinits {{count}}",
+      "resetCreditsTitle": "Réinitialisations restantes pour la fenêtre de 5 heures : {{count}}",
+      "resetCreditConfirm": "Confirmer ?",
+      "resetCreditDialogTitle": "Réinitialiser votre utilisation ?",
+      "resetCreditDialogDesc": "Réinitialisez la limite de débit pour continuer à travailler sans interruption. Réinitialisations disponibles : {{count}}.",
+      "resetCreditDialogAction": "Réinitialiser l’utilisation",
+      "resetCreditNoCredits": "Aucune réinitialisation disponible",
+      "resetCreditConsumed": "Quota de 5 heures réinitialisé",
+      "resetCreditFailed": "Échec de la réinitialisation : {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Réinitialisation envoyée, mais actualisation du quota échouée : {{error}}"
     },
     "quotaError": {
       "badge": "Erreur de quota",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Échec quota : {{error}}",
       "notUpdated": "Quota non actualisé",
       "updated": "Actualisé",
-      "notUpdatedShort": "Non actualisé"
+      "notUpdatedShort": "Non actualisé",
+      "openVerification": "Ouvrir la vérification",
+      "openingVerification": "Ouverture...",
+      "verificationWindowOpened": "Fenêtre de vérification Claude ouverte. Actualisez le quota après vérification.",
+      "verificationWindowFailed": "Échec de l’ouverture de la vérification Claude : {{error}}"
     },
     "addTabs": {
       "desktop": "Bureau",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Session Claude locale importée : {{name}}",
       "importSuccess": "Session Claude importée : {{name}}",
       "switchHint": "Basculer vers Claude officiel",
-      "planUnknown": "Offre inconnue"
+      "planUnknown": "Offre inconnue",
+      "progress": {
+        "start": "Préparation de la connexion",
+        "profile": "Création du profil isolé",
+        "resolveRuntime": "Recherche du composant de connexion",
+        "checkCache": "Vérification du cache local du composant",
+        "cached": "Utilisation du cache local du composant",
+        "downloadStart": "Démarrage du téléchargement",
+        "downloading": "Téléchargement du composant de connexion",
+        "downloaded": "Composant de connexion téléchargé",
+        "verify": "Vérification de l’intégrité du composant",
+        "extract": "Extraction du composant de connexion",
+        "runtimeReady": "Composant de connexion prêt",
+        "launch": "Ouverture de la fenêtre Claude",
+        "ready": "Fenêtre de connexion ouverte",
+        "default": "Préparation du composant de connexion",
+        "bytesWithTotal": "{{downloaded}} téléchargés sur {{total}}",
+        "bytesOnly": "{{downloaded}} téléchargés",
+        "hint": "Après la première préparation, le cache local sera réutilisé directement."
+      }
     },
     "oauth": {
       "title": "Autorisation Claude OAuth",

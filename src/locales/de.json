@@ -597,6 +597,8 @@
       "closeBehaviorAsk": "Jedes Mal fragen",
       "closeBehaviorMinimize": "In den Tray minimieren",
       "closeBehaviorQuit": "Anwendung beenden",
+      "startupMinimized": "Minimiert starten",
+      "startupMinimizedDesc": "Das Hauptfenster nach dem App-Start automatisch minimieren; Wiederherstellung über Dock, Taskleiste oder Tray",
       "minimizeBehavior": "Verhalten beim Minimieren des Fensters (nur macOS)",
       "minimizeBehaviorDesc": "Wählen Sie, ob ein minimiertes Fenster im Dock und in der Menüleiste bleibt oder nur in der Menüleiste",
       "minimizeBehaviorDockAndTray": "Dock + Menüleiste (empfohlen)",
@@ -2033,7 +2035,17 @@
       "hourly": "5-Stunden-Kontingent",
       "weekly": "Wöchentliches Kontingent",
       "reset": "Zurücksetzen",
-      "weeklyBlocksHourly": "Das Wochenkontingent ist 0, daher ist das 5-Stunden-Kontingent nicht verfügbar"
+      "weeklyBlocksHourly": "Das Wochenkontingent ist 0, daher ist das 5-Stunden-Kontingent nicht verfügbar",
+      "resetCredits": "Rücksetz. {{count}}",
+      "resetCreditsTitle": "Verbleibende Resets für das 5-Stunden-Fenster: {{count}}",
+      "resetCreditConfirm": "Bestätigen?",
+      "resetCreditDialogTitle": "Nutzung zurücksetzen?",
+      "resetCreditDialogDesc": "Setze das Rate-Limit zurück, um ohne Unterbrechung weiterzuarbeiten. Verfügbare Resets: {{count}}.",
+      "resetCreditDialogAction": "Nutzung zurücksetzen",
+      "resetCreditNoCredits": "Keine Resets verfügbar",
+      "resetCreditConsumed": "5-Stunden-Kontingent zurückgesetzt",
+      "resetCreditFailed": "Zurücksetzen fehlgeschlagen: {{error}}",
+      "resetCreditRefreshAfterConsumeFailed": "Reset gesendet, aber Kontingentaktualisierung fehlgeschlagen: {{error}}"
     },
     "quotaError": {
       "badge": "Kontingentfehler",
@@ -4694,7 +4706,11 @@
       "refreshWithWarning": "Kontingent-Refresh fehlgeschlagen: {{error}}",
       "notUpdated": "Kontingent nicht aktualisiert",
       "updated": "Aktualisiert",
-      "notUpdatedShort": "Nicht aktualisiert"
+      "notUpdatedShort": "Nicht aktualisiert",
+      "openVerification": "Prüfung öffnen",
+      "openingVerification": "Wird geöffnet...",
+      "verificationWindowOpened": "Claude-Prüffenster geöffnet. Aktualisieren Sie das Kontingent nach der Prüfung erneut.",
+      "verificationWindowFailed": "Claude-Prüffenster konnte nicht geöffnet werden: {{error}}"
     },
     "addTabs": {
       "desktop": "Desk",
@@ -4752,7 +4768,26 @@
       "localSuccess": "Lokale Claude-Anmeldung importiert: {{name}}",
       "importSuccess": "Claude-Anmeldung importiert: {{name}}",
       "switchHint": "Zum offiziellen Claude wechseln",
-      "planUnknown": "Abo unbekannt"
+      "planUnknown": "Abo unbekannt",
+      "progress": {
+        "start": "Anmeldevorgang vorbereiten",
+        "profile": "Isoliertes Profil erstellen",
+        "resolveRuntime": "Anmeldekomponente suchen",
+        "checkCache": "Lokalen Komponenten-Cache prüfen",
+        "cached": "Lokalen Komponenten-Cache verwenden",
+        "downloadStart": "Komponenten-Download starten",
+        "downloading": "Anmeldekomponente herunterladen",
+        "downloaded": "Anmeldekomponente heruntergeladen",
+        "verify": "Komponentenintegrität prüfen",
+        "extract": "Anmeldekomponente entpacken",
+        "runtimeReady": "Anmeldekomponente bereit",
+        "launch": "Claude-Anmeldefenster öffnen",
+        "ready": "Anmeldefenster geöffnet",
+        "default": "Anmeldekomponente vorbereiten",
+        "bytesWithTotal": "{{downloaded}} von {{total}} heruntergeladen",
+        "bytesOnly": "{{downloaded}} heruntergeladen",
+        "hint": "Nach der ersten Einrichtung wird der lokale Cache direkt wiederverwendet."
+      }
     },
     "oauth": {
       "title": "Claude OAuth-Autorisierung",

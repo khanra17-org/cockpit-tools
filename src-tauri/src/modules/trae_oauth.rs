@@ -1,6 +1,14 @@
+use base64::{
+    engine::general_purpose::{STANDARD as BASE64_STANDARD, URL_SAFE_NO_PAD},
+    Engine as _,
+};
+use rand::RngCore;
 use regex::Regex;
+use ring::rand::SystemRandom;
+use ring::signature::{EcdsaKeyPair, KeyPair, ECDSA_P256_SHA256_FIXED_SIGNING};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
+use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::io::ErrorKind;
@@ -33,16 +41,23 @@ const TRAE_LOGIN_GUIDANCE_URLS: [&str; 3] = [
 ];
 
 const TRAE_EXCHANGE_TOKEN_PATH: &str = "/cloudide/api/v3/trae/oauth/ExchangeToken";
+const TRAE_AUTH_CODE_EXCHANGE_TOKEN_PATH: &str = "/trae/api/v3/oauth/ExchangeToken";
 const TRAE_GET_USER_INFO_PATH: &str = "/cloudide/api/v3/trae/GetUserInfo";
 const TRAE_EXCHANGE_CLIENT_SECRET: &str = "-";
+const TRAE_ACCOUNT_API_ORIGIN_NORMAL: &str = "https://grow-normal.trae.ai";
+const TRAE_ACCOUNT_API_ORIGIN_SG: &str = "https://growsg-normal.trae.ai";
+const TRAE_ACCOUNT_API_ORIGIN_US: &str = "https://growsg-normal.trae.ai";
+const TRAE_ACCOUNT_API_ORIGIN_USTTP: &str = "https://grow-normal.traeapi.us";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct TraeCallbackPayload {
-    refresh_token: String,
+    refresh_token: Option<String>,
+    auth_code: Option<String>,
     login_host: String,
     login_region: Option<String>,
     login_trace_id: Option<String>,
     cloudide_token: Option<String>,
+    user_tag: Option<String>,
     raw_query: HashMap<String, String>,
 }
 
@@ -54,6 +69,10 @@ struct PendingOAuthState {
     callback_url: String,
     verification_uri: String,
     login_host: String,
+    #[serde(default)]
+    code_verifier: Option<String>,
+    #[serde(default)]
+    code_challenge: Option<String>,
     expires_at: i64,
     cancelled: bool,
     callback_result: Option<Result<TraeCallbackPayload, String>>,
@@ -79,6 +98,26 @@ struct TraeLoginContext {
     x_app_type: String,
 }
 
+#[derive(Debug, Clone)]
+struct TraePkcePair {
+    code_verifier: String,
+    code_challenge: String,
+}
+
+#[derive(Debug, Clone)]
+struct TraeDeviceKeyPair {
+    private_key_pem: String,
+    public_key_pem: String,
+}
+
+#[derive(Debug, Clone)]
+struct TraeExchangeResult {
+    response: Value,
+    api_host: Option<String>,
+    device_info: Option<Value>,
+    device_key_pair: Option<TraeDeviceKeyPair>,
+}
+
 lazy_static::lazy_static! {
     static ref PENDING_OAUTH_STATE: Arc<Mutex<Option<PendingOAuthState>>> = Arc::new(Mutex::new(None));
 }
@@ -89,6 +128,65 @@ fn now_timestamp() -> i64 {
 
 fn generate_service_machine_id() -> String {
     Uuid::new_v4().to_string()
+}
+
+fn generate_pkce_pair() -> TraePkcePair {
+    let mut random = [0u8; 48];
+    rand::rngs::OsRng.fill_bytes(&mut random);
+    let code_verifier = URL_SAFE_NO_PAD.encode(random);
+    let digest = Sha256::digest(code_verifier.as_bytes());
+    let code_challenge = URL_SAFE_NO_PAD.encode(digest);
+    TraePkcePair {
+        code_verifier,
+        code_challenge,
+    }
+}
+
+fn pem_wrap(label: &str, der: &[u8]) -> String {
+    let encoded = BASE64_STANDARD.encode(der);
+    let mut pem = String::new();
+    pem.push_str("-----BEGIN ");
+    pem.push_str(label);
+    pem.push_str("-----\n");
+    for chunk in encoded.as_bytes().chunks(64) {
+        pem.push_str(std::str::from_utf8(chunk).unwrap_or_default());
+        pem.push('\n');
+    }
+    pem.push_str("-----END ");
+    pem.push_str(label);
+    pem.push_str("-----\n");
+    pem
+}
+
+fn p256_public_key_spki_der(public_key: &[u8]) -> Result<Vec<u8>, String> {
+    if public_key.len() != 65 || public_key.first().copied() != Some(0x04) {
+        return Err("生成 Trae 设备公钥失败：P-256 公钥格式异常".to_string());
+    }
+    const P256_SPKI_PREFIX: &[u8] = &[
+        0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, 0x06, 0x08,
+        0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00,
+    ];
+    let mut der = Vec::with_capacity(P256_SPKI_PREFIX.len() + public_key.len());
+    der.extend_from_slice(P256_SPKI_PREFIX);
+    der.extend_from_slice(public_key);
+    Ok(der)
+}
+
+fn generate_device_key_pair() -> Result<TraeDeviceKeyPair, String> {
+    let rng = SystemRandom::new();
+    let private_key_pkcs8 = EcdsaKeyPair::generate_pkcs8(&ECDSA_P256_SHA256_FIXED_SIGNING, &rng)
+        .map_err(|_| "生成 Trae 设备私钥失败".to_string())?;
+    let key_pair = EcdsaKeyPair::from_pkcs8(
+        &ECDSA_P256_SHA256_FIXED_SIGNING,
+        private_key_pkcs8.as_ref(),
+        &rng,
+    )
+    .map_err(|_| "解析 Trae 设备私钥失败".to_string())?;
+    let public_key_der = p256_public_key_spki_der(key_pair.public_key().as_ref())?;
+    Ok(TraeDeviceKeyPair {
+        private_key_pem: pem_wrap("PRIVATE KEY", private_key_pkcs8.as_ref()),
+        public_key_pem: pem_wrap("PUBLIC KEY", public_key_der.as_slice()),
+    })
 }
 
 fn load_pending_login_from_disk() -> Option<PendingOAuthState> {
@@ -740,6 +838,17 @@ fn parse_query_map(raw_query: &str) -> HashMap<String, String> {
         .collect()
 }
 
+fn parse_callback_params(parsed: &Url) -> HashMap<String, String> {
+    let mut params = parse_query_map(parsed.query().unwrap_or_default());
+    if let Some(fragment) = parsed.fragment() {
+        let fragment_params = parse_query_map(fragment.trim_start_matches('?'));
+        for (key, value) in fragment_params {
+            params.entry(key).or_insert(value);
+        }
+    }
+    params
+}
+
 fn parse_callback_url(raw_callback_url: &str, callback_port: u16) -> Result<Url, String> {
     let trimmed = raw_callback_url.trim();
     if trimmed.is_empty() {
@@ -776,6 +885,66 @@ fn pick_query_value(params: &HashMap<String, String>, keys: &[&str]) -> Option<S
         }
     }
     None
+}
+
+fn extract_auth_code_from_auth_code_info(raw: &str) -> Result<Option<String>, String> {
+    let value: Value =
+        serde_json::from_str(raw).map_err(|e| format!("解析 authCodeInfo 失败: {}", e))?;
+    let auth_code = pick_string(
+        &value,
+        &[
+            &["AuthCode"],
+            &["authCode"],
+            &["auth_code"],
+            &["code"],
+            &["Result", "AuthCode"],
+            &["result", "authCode"],
+        ],
+    );
+    let Some(auth_code) = auth_code else {
+        return Ok(None);
+    };
+
+    if let Some(expire_at) = pick_i64(
+        &value,
+        &[
+            &["ExpireAt"],
+            &["expireAt"],
+            &["expire_at"],
+            &["expiresAt"],
+            &["Result", "ExpireAt"],
+            &["result", "expireAt"],
+        ],
+    ) {
+        let now_ms = chrono::Utc::now().timestamp_millis();
+        if expire_at > 0 && expire_at <= now_ms {
+            return Err("Trae authCodeInfo 已过期，请重新登录".to_string());
+        }
+    }
+
+    Ok(Some(auth_code))
+}
+
+fn extract_callback_auth_code(params: &HashMap<String, String>) -> Result<Option<String>, String> {
+    if let Some(code) = pick_query_value(
+        params,
+        &[
+            "authCode",
+            "auth_code",
+            "AuthCode",
+            "authorization_code",
+            "code",
+        ],
+    ) {
+        return Ok(Some(code));
+    }
+
+    let Some(auth_code_info) =
+        pick_query_value(params, &["authCodeInfo", "auth_code_info", "AuthCodeInfo"])
+    else {
+        return Ok(None);
+    };
+    extract_auth_code_from_auth_code_info(auth_code_info.as_str())
 }
 
 fn parse_bool_like(value: Option<&str>) -> Option<bool> {
@@ -936,7 +1105,7 @@ fn run_callback_server(
         }
 
         let query_raw = parsed.query().unwrap_or("");
-        let params = parse_query_map(query_raw);
+        let params = parse_callback_params(&parsed);
 
         if let Some(error_code) =
             pick_query_value(&params, &["error", "error_code", "err", "errorCode"])
@@ -963,11 +1132,10 @@ fn run_callback_server(
             break;
         }
 
-        let is_redirect = parse_bool_like(
-            pick_query_value(&params, &["isRedirect", "is_redirect", "redirect"]).as_deref(),
-        );
-        if is_redirect != Some(true) {
-            let message = "回调参数缺少 isRedirect=true".to_string();
+        let is_redirect =
+            parse_bool_like(pick_query_value(&params, &["isRedirect", "is_redirect"]).as_deref());
+        if is_redirect == Some(false) {
+            let message = "回调参数 isRedirect=false".to_string();
             let _ = request.respond(
                 Response::from_string(callback_failure_html(message.as_str()))
                     .with_status_code(StatusCode(400)),
@@ -985,8 +1153,19 @@ fn run_callback_server(
                 "refresh-token",
             ],
         );
+        let auth_code = match extract_callback_auth_code(&params) {
+            Ok(value) => value,
+            Err(message) => {
+                let _ = request.respond(
+                    Response::from_string(callback_failure_html(message.as_str()))
+                        .with_status_code(StatusCode(400)),
+                );
+                set_callback_result_if_matches(&login_id, Err(message));
+                break;
+            }
+        };
 
-        if refresh_token.is_none() {
+        if refresh_token.is_none() && auth_code.is_none() {
             let mut response =
                 Response::from_string(callback_pending_html()).with_status_code(StatusCode(200));
             if let Ok(content_type) = Header::from_bytes(
@@ -1000,7 +1179,7 @@ fn run_callback_server(
             if !query_raw.is_empty() {
                 set_callback_result_if_matches(
                     &login_id,
-                    Err("回调参数缺少 refreshToken".to_string()),
+                    Err("回调参数缺少 authCodeInfo/AuthCode 或 refreshToken".to_string()),
                 );
                 break;
             }
@@ -1032,7 +1211,8 @@ fn run_callback_server(
         };
 
         let payload = TraeCallbackPayload {
-            refresh_token: refresh_token.unwrap_or_default(),
+            refresh_token,
+            auth_code,
             login_host,
             login_region: pick_query_value(
                 &params,
@@ -1043,6 +1223,7 @@ fn run_callback_server(
                 &["loginTraceID", "loginTraceId", "login_trace_id", "trace_id"],
             ),
             cloudide_token: extract_cloudide_token(&params),
+            user_tag: pick_query_value(&params, &["userTag", "user_tag", "UserTag"]),
             raw_query: params,
         };
 
@@ -1208,6 +1389,7 @@ fn build_verification_uri(
     login_trace_id: &str,
     callback_url: &str,
     login_context: &TraeLoginContext,
+    code_challenge: &str,
 ) -> Result<String, String> {
     let mut url = ensure_https_url(login_host)?;
     url.set_path(TRAE_AUTHORIZATION_PATH);
@@ -1294,6 +1476,8 @@ fn build_verification_uri(
         login_context.x_app_type.as_str(),
         true,
     );
+    append_pair(&mut query, "code_challenge", code_challenge, true);
+    append_pair(&mut query, "code_challenge_method", "S256", false);
     url.set_query(Some(query.as_str()));
     Ok(url.to_string())
 }
@@ -1360,6 +1544,74 @@ fn build_api_urls(login_host: &str, path: &str) -> Vec<String> {
     dedup_keep_order(urls)
 }
 
+fn candidate_account_api_origins(login_region: Option<&str>) -> Vec<String> {
+    let mut origins = vec![TRAE_ACCOUNT_API_ORIGIN_NORMAL.to_string()];
+    match login_region
+        .and_then(|value| normalize_non_empty(Some(value)))
+        .map(|value| value.to_ascii_lowercase())
+        .as_deref()
+    {
+        Some("usttp") => origins.push(TRAE_ACCOUNT_API_ORIGIN_USTTP.to_string()),
+        Some("us") => origins.push(TRAE_ACCOUNT_API_ORIGIN_US.to_string()),
+        Some("sg") => origins.push(TRAE_ACCOUNT_API_ORIGIN_SG.to_string()),
+        _ => {}
+    }
+    origins.extend([
+        TRAE_ACCOUNT_API_ORIGIN_SG.to_string(),
+        TRAE_ACCOUNT_API_ORIGIN_US.to_string(),
+        TRAE_ACCOUNT_API_ORIGIN_USTTP.to_string(),
+    ]);
+    dedup_keep_order(origins)
+}
+
+fn build_account_api_urls(login_region: Option<&str>, path: &str) -> Vec<String> {
+    candidate_account_api_origins(login_region)
+        .into_iter()
+        .map(|origin| format!("{}{}", origin.trim_end_matches('/'), path))
+        .collect()
+}
+
+fn origin_from_url(raw: &str) -> Option<String> {
+    let url = Url::parse(raw).ok()?;
+    let host = url.host_str()?;
+    Some(format!("{}://{}", url.scheme(), host))
+}
+
+fn device_display_name() -> String {
+    std::env::var("USER")
+        .or_else(|_| std::env::var("USERNAME"))
+        .or_else(|_| std::env::var("HOSTNAME"))
+        .ok()
+        .and_then(|value| normalize_non_empty(Some(value.as_str())))
+        .unwrap_or_else(|| "PC".to_string())
+}
+
+fn device_brand_for_context(login_context: &TraeLoginContext) -> String {
+    match login_context.x_device_type.as_str() {
+        "mac" => "Apple".to_string(),
+        "windows" => "Microsoft".to_string(),
+        "linux" => "Linux".to_string(),
+        _ => login_context.x_device_brand.clone(),
+    }
+}
+
+fn build_official_device_info(login_context: &TraeLoginContext, device_public_key: &str) -> Value {
+    json!({
+        "DeviceID": login_context.device_id.as_str(),
+        "MachineID": login_context.machine_id.as_str(),
+        "PlatformCode": "IDE_PC",
+        "DeviceType": "PC",
+        "DeviceName": device_display_name(),
+        "DeviceModel": login_context.x_device_brand.as_str(),
+        "ClientVersion": login_context.x_app_version.as_str(),
+        "DevicePublicKey": device_public_key,
+        "DeviceBrand": device_brand_for_context(login_context),
+        "DeviceCPU": "",
+        "OSInfo": login_context.x_device_type.as_str(),
+        "OSVersion": login_context.x_os_version.as_str(),
+    })
+}
+
 fn extract_exchange_access_token(value: &Value) -> Option<String> {
     pick_string(
         value,
@@ -1423,10 +1675,15 @@ fn extract_exchange_expires_at(value: &Value) -> Option<i64> {
             &["Result", "ExpiresAt"],
             &["Result", "expiresAt"],
             &["Result", "expiredAt"],
+            &["Result", "TokenExpireAt"],
+            &["Result", "tokenExpireAt"],
             &["result", "expiresAt"],
             &["result", "expires_at"],
+            &["result", "tokenExpireAt"],
             &["data", "expiresAt"],
             &["data", "expires_at"],
+            &["data", "tokenExpireAt"],
+            &["TokenExpireAt"],
             &["expiresAt"],
             &["expires_at"],
         ],
@@ -1447,6 +1704,91 @@ fn extract_error_message(value: &Value) -> Option<String> {
             &["result", "message"],
         ],
     )
+}
+
+async fn request_exchange_token_by_auth_code(
+    client: &reqwest::Client,
+    login_region: Option<&str>,
+    auth_code: &str,
+    code_verifier: &str,
+    login_context: &TraeLoginContext,
+) -> Result<TraeExchangeResult, String> {
+    let urls = build_account_api_urls(login_region, TRAE_AUTH_CODE_EXCHANGE_TOKEN_PATH);
+    let device_key_pair = generate_device_key_pair()?;
+    let device_info =
+        build_official_device_info(login_context, device_key_pair.public_key_pem.as_str());
+    let mut errors: Vec<String> = Vec::new();
+
+    for url in urls {
+        let body = json!({
+            "ClientID": TRAE_AUTH_CLIENT_ID,
+            "AuthCode": auth_code,
+            "CodeVerifier": code_verifier,
+            "DeviceInfo": device_info.clone(),
+            "IDEVersion": login_context.x_app_version.as_str(),
+        });
+
+        let response = match client
+            .post(url.as_str())
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .header("x-cloudide-token", "")
+            .json(&body)
+            .send()
+            .await
+        {
+            Ok(resp) => resp,
+            Err(err) => {
+                errors.push(format!("{} => {}", url, err));
+                continue;
+            }
+        };
+
+        let status = response.status();
+        let text = match response.text().await {
+            Ok(body_text) => body_text,
+            Err(err) => {
+                errors.push(format!("{} => 读取响应失败: {}", url, err));
+                continue;
+            }
+        };
+
+        if !status.is_success() {
+            errors.push(format!(
+                "{} => HTTP {} (body_len={})",
+                url,
+                status.as_u16(),
+                text.len()
+            ));
+            continue;
+        }
+
+        let value: Value = match serde_json::from_str(text.as_str()) {
+            Ok(parsed) => parsed,
+            Err(err) => {
+                errors.push(format!("{} => 解析 JSON 失败: {}", url, err));
+                continue;
+            }
+        };
+
+        if extract_exchange_access_token(&value).is_some() {
+            return Ok(TraeExchangeResult {
+                response: value,
+                api_host: origin_from_url(url.as_str()),
+                device_info: Some(device_info),
+                device_key_pair: Some(device_key_pair),
+            });
+        }
+
+        let msg =
+            extract_error_message(&value).unwrap_or_else(|| "响应缺少 access token".to_string());
+        errors.push(format!("{} => {}", url, msg));
+    }
+
+    Err(format!(
+        "Trae AuthCode ExchangeToken 失败: {}",
+        errors.join(" | ")
+    ))
 }
 
 async fn request_exchange_token(
@@ -1584,7 +1926,10 @@ pub async fn start_login() -> Result<TraeOAuthStartResponse, String> {
     hydrate_pending_login_if_missing();
     if let Ok(guard) = PENDING_OAUTH_STATE.lock() {
         if let Some(state) = guard.as_ref() {
-            if !state.cancelled && now_timestamp() <= state.expires_at {
+            if !state.cancelled
+                && now_timestamp() <= state.expires_at
+                && state.code_verifier.is_some()
+            {
                 ensure_callback_server_for_state(state);
                 return Ok(TraeOAuthStartResponse {
                     login_id: state.login_id.clone(),
@@ -1601,6 +1946,7 @@ pub async fn start_login() -> Result<TraeOAuthStartResponse, String> {
     let login_id = Uuid::new_v4().to_string();
     let login_trace_id = Uuid::new_v4().to_string();
     let login_context = collect_trae_login_context();
+    let pkce_pair = generate_pkce_pair();
     let callback_port = find_available_callback_port()?;
     let callback_url = format!("http://127.0.0.1:{}{}", callback_port, CALLBACK_PATH);
 
@@ -1610,6 +1956,7 @@ pub async fn start_login() -> Result<TraeOAuthStartResponse, String> {
         login_trace_id.as_str(),
         callback_url.as_str(),
         &login_context,
+        pkce_pair.code_challenge.as_str(),
     )?;
 
     let state = PendingOAuthState {
@@ -1619,6 +1966,8 @@ pub async fn start_login() -> Result<TraeOAuthStartResponse, String> {
         callback_url: callback_url.clone(),
         verification_uri: verification_uri.clone(),
         login_host: login_host.clone(),
+        code_verifier: Some(pkce_pair.code_verifier),
+        code_challenge: Some(pkce_pair.code_challenge),
         expires_at: now_timestamp() + OAUTH_TIMEOUT_SECONDS,
         cancelled: false,
         callback_result: None,
@@ -1652,7 +2001,7 @@ pub async fn start_login() -> Result<TraeOAuthStartResponse, String> {
 pub async fn complete_login(login_id: &str) -> Result<TraeImportPayload, String> {
     hydrate_pending_login_if_missing();
     let result = async {
-        let (callback_payload, login_trace_id) = loop {
+        let (callback_payload, login_trace_id, code_verifier) = loop {
             let snapshot = {
                 let guard = PENDING_OAUTH_STATE
                     .lock()
@@ -1678,11 +2027,12 @@ pub async fn complete_login(login_id: &str) -> Result<TraeImportPayload, String>
                     state.callback_port,
                     state.verification_uri.clone(),
                     state.login_host.clone(),
+                    state.code_verifier.clone(),
                 )
             };
 
             if let Some(result) = snapshot.0 {
-                break (result?, snapshot.1);
+                break (result?, snapshot.1, snapshot.6);
             }
 
             tokio::time::sleep(Duration::from_millis(OAUTH_POLL_INTERVAL_MS)).await;
@@ -1707,24 +2057,58 @@ pub async fn complete_login(login_id: &str) -> Result<TraeImportPayload, String>
             .build()
             .map_err(|e| format!("创建 HTTP 客户端失败: {}", e))?;
 
-        let exchange_response = request_exchange_token(
-            &client,
-            callback_payload.login_host.as_str(),
-            callback_payload.refresh_token.as_str(),
-            callback_payload.cloudide_token.as_deref(),
-        )
-        .await?;
+        let login_context = collect_trae_login_context();
+        let exchange_result = if let Some(auth_code) = callback_payload.auth_code.as_deref() {
+            let verifier = code_verifier
+                .as_deref()
+                .ok_or_else(|| "Trae OAuth 登录会话缺少 code verifier，请重新发起登录".to_string())?;
+            request_exchange_token_by_auth_code(
+                &client,
+                Some(login_region.as_str()),
+                auth_code,
+                verifier,
+                &login_context,
+            )
+            .await?
+        } else {
+            let refresh_token = callback_payload
+                .refresh_token
+                .as_deref()
+                .ok_or_else(|| "回调参数缺少 authCodeInfo/AuthCode 或 refreshToken".to_string())?;
+            let response = request_exchange_token(
+                &client,
+                callback_payload.login_host.as_str(),
+                refresh_token,
+                callback_payload.cloudide_token.as_deref(),
+            )
+            .await?;
+            TraeExchangeResult {
+                response,
+                api_host: None,
+                device_info: None,
+                device_key_pair: None,
+            }
+        };
+
+        let TraeExchangeResult {
+            response: exchange_response,
+            api_host: exchange_api_host,
+            device_info,
+            device_key_pair,
+        } = exchange_result;
 
         let access_token = extract_exchange_access_token(&exchange_response)
             .ok_or_else(|| "Trae ExchangeToken 响应缺少 access token".to_string())?;
         let refresh_token = extract_exchange_refresh_token(&exchange_response)
-            .or_else(|| Some(callback_payload.refresh_token.clone()));
+            .or_else(|| callback_payload.refresh_token.clone());
         let token_type = extract_exchange_token_type(&exchange_response);
         let expires_at = extract_exchange_expires_at(&exchange_response);
 
         let user_info_response = match request_user_info(
             &client,
-            callback_payload.login_host.as_str(),
+            exchange_api_host
+                .as_deref()
+                .unwrap_or_else(|| callback_payload.login_host.as_str()),
             access_token.as_str(),
         )
         .await
@@ -1836,6 +2220,26 @@ pub async fn complete_login(login_id: &str) -> Result<TraeImportPayload, String>
             serde_json::to_value(&callback_payload.raw_query).unwrap_or_else(|_| json!({})),
         );
         auth_raw.insert("exchangeResponse".to_string(), exchange_response.clone());
+        if let Some(api_host) = exchange_api_host.as_ref() {
+            auth_raw.insert("apiHost".to_string(), Value::String(api_host.clone()));
+        }
+        if let Some(device) = device_info {
+            auth_raw.insert("deviceInfo".to_string(), device);
+        }
+        if let Some(pair) = device_key_pair {
+            auth_raw.insert(
+                "deviceKeyPair".to_string(),
+                json!({
+                    "privateKeyPEM": pair.private_key_pem,
+                    "publicKeyPEM": pair.public_key_pem,
+                }),
+            );
+        }
+        if let Some(user_tag) = callback_payload.user_tag.as_ref() {
+            auth_raw.insert("userTag".to_string(), Value::String(user_tag.clone()));
+        }
+
+        let user_tag_raw = callback_payload.user_tag.clone();
 
         let server_raw = json!({
             "loginHost": callback_payload.login_host,
@@ -1858,7 +2262,7 @@ pub async fn complete_login(login_id: &str) -> Result<TraeImportPayload, String>
             trae_entitlement_raw: None,
             trae_usage_raw: None,
             trae_server_raw: Some(server_raw),
-            trae_usertag_raw: None,
+            trae_usertag_raw: user_tag_raw,
             status: None,
             status_reason: None,
         })
@@ -1928,7 +2332,7 @@ pub fn submit_callback_url(login_id: &str, callback_url: &str) -> Result<(), Str
         return Err(format!("回调链接路径无效，必须为 {}", CALLBACK_PATH));
     }
 
-    let params = parse_query_map(parsed.query().unwrap_or_default());
+    let params = parse_callback_params(&parsed);
     if let Some(error_code) =
         pick_query_value(&params, &["error", "error_code", "err", "errorCode"])
     {
@@ -1950,11 +2354,10 @@ pub fn submit_callback_url(login_id: &str, callback_url: &str) -> Result<(), Str
         return Err(message);
     }
 
-    let is_redirect = parse_bool_like(
-        pick_query_value(&params, &["isRedirect", "is_redirect", "redirect"]).as_deref(),
-    );
-    if is_redirect != Some(true) {
-        return Err("回调参数缺少 isRedirect=true".to_string());
+    let is_redirect =
+        parse_bool_like(pick_query_value(&params, &["isRedirect", "is_redirect"]).as_deref());
+    if is_redirect == Some(false) {
+        return Err("回调参数 isRedirect=false".to_string());
     }
 
     let refresh_token = pick_query_value(
@@ -1965,8 +2368,11 @@ pub fn submit_callback_url(login_id: &str, callback_url: &str) -> Result<(), Str
             "RefreshToken",
             "refresh-token",
         ],
-    )
-    .ok_or_else(|| "回调参数缺少 refreshToken".to_string())?;
+    );
+    let auth_code = extract_callback_auth_code(&params)?;
+    if refresh_token.is_none() && auth_code.is_none() {
+        return Err("回调参数缺少 authCodeInfo/AuthCode 或 refreshToken".to_string());
+    }
 
     let login_host = pick_query_value(
         &params,
@@ -1983,6 +2389,7 @@ pub fn submit_callback_url(login_id: &str, callback_url: &str) -> Result<(), Str
 
     let payload = TraeCallbackPayload {
         refresh_token,
+        auth_code,
         login_host,
         login_region: pick_query_value(
             &params,
@@ -1993,6 +2400,7 @@ pub fn submit_callback_url(login_id: &str, callback_url: &str) -> Result<(), Str
             &["loginTraceID", "loginTraceId", "login_trace_id", "trace_id"],
         ),
         cloudide_token: extract_cloudide_token(&params),
+        user_tag: pick_query_value(&params, &["userTag", "user_tag", "UserTag"]),
         raw_query: params,
     };
 
@@ -2012,5 +2420,76 @@ pub fn restore_pending_oauth_listener() {
         .and_then(|guard| guard.as_ref().cloned());
     if let Some(state) = pending {
         ensure_callback_server_for_state(&state);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pkce_pair_uses_official_base64url_sha256_flow() {
+        let pair = generate_pkce_pair();
+        assert_eq!(pair.code_verifier.len(), 64);
+        assert!(!pair.code_verifier.contains('='));
+        let expected = URL_SAFE_NO_PAD.encode(Sha256::digest(pair.code_verifier.as_bytes()));
+        assert_eq!(pair.code_challenge, expected);
+    }
+
+    #[test]
+    fn verification_uri_contains_pkce_parameters() {
+        let context = TraeLoginContext {
+            plugin_version: "2.3.40354".to_string(),
+            machine_id: "machine-1".to_string(),
+            device_id: "7633793279305631249".to_string(),
+            x_device_brand: "Mac17,9".to_string(),
+            x_device_type: "mac".to_string(),
+            x_os_version: "macOS 26.5.1".to_string(),
+            x_env: String::new(),
+            x_app_version: "3.5.66".to_string(),
+            x_app_type: "stable".to_string(),
+        };
+
+        let raw = build_verification_uri(
+            "https://www.trae.ai",
+            "trace-1",
+            "http://127.0.0.1:49839/authorize",
+            &context,
+            "challenge-1",
+        )
+        .expect("verification uri");
+        let parsed = Url::parse(raw.as_str()).expect("valid url");
+        let params = parse_query_map(parsed.query().unwrap_or_default());
+
+        assert_eq!(
+            params.get("code_challenge").map(String::as_str),
+            Some("challenge-1")
+        );
+        assert_eq!(
+            params.get("code_challenge_method").map(String::as_str),
+            Some("S256")
+        );
+        assert_eq!(
+            params.get("auth_callback_url").map(String::as_str),
+            Some("http://127.0.0.1:49839/authorize")
+        );
+    }
+
+    #[test]
+    fn callback_auth_code_supports_official_auth_code_info() {
+        let mut params = HashMap::new();
+        params.insert(
+            "authCodeInfo".to_string(),
+            json!({
+                "AuthCode": "auth-code-1",
+                "ExpireAt": chrono::Utc::now().timestamp_millis() + 60_000,
+            })
+            .to_string(),
+        );
+
+        assert_eq!(
+            extract_callback_auth_code(&params).expect("auth code"),
+            Some("auth-code-1".to_string())
+        );
     }
 }

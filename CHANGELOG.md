@@ -7,6 +7,22 @@ All notable changes to Cockpit Tools will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
+## [0.26.1] - 2026-06-18
+
+### Added
+- **Codex reset credits are now visible and usable**: Codex accounts can show available reset credits and reset the 5-hour quota when credits are available.
+- **The app can now start minimized**: General settings now include a startup-minimized option that minimizes the main window after launch while keeping Dock, taskbar, and tray restore available.
+
+### Changed
+- **Claude quota refresh now runs silently**: Claude sign-in accounts use local cookies to request the Claude Web API instead of opening an Electron helper in the background.
+
+### Fixed
+- **Codex reauthorization now updates the original account**: reauthorizing an expired Codex OAuth account updates the selected account instead of creating a duplicate, and removes duplicate records with the same identity when possible.
+- **Trae login now works with the latest official flow**: Trae authorization has been updated for the current official client behavior, fixing recent login failures.
+- **GitHub Copilot login now supports the latest authorization flow**: GitHub Copilot authorization has been updated to fix recent login failures.
+- **Codex provider gateway tool use is more stable**: Claude Code tool calls routed through Codex no longer leak unmatched tool-call records to upstream responses.
+
+---
 ## [0.26.0] - 2026-06-18
 
 ### Added

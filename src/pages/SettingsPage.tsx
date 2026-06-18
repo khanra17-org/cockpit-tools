@@ -122,6 +122,7 @@ interface GeneralConfig {
   hide_dock_icon?: boolean;
   tray_icon_style?: 'template' | 'color';
   floating_card_show_on_startup?: boolean;
+  startup_minimized?: boolean;
   floating_card_always_on_top?: boolean;
   app_auto_launch_enabled?: boolean;
   opencode_app_path: string;
@@ -385,6 +386,7 @@ export function SettingsPage() {
   const [hideDockIcon, setHideDockIcon] = useState(false);
   const [trayIconStyle, setTrayIconStyle] = useState<'template' | 'color'>('template');
   const [floatingCardShowOnStartup, setFloatingCardShowOnStartup] = useState(false);
+  const [startupMinimized, setStartupMinimized] = useState(false);
   const [floatingCardAlwaysOnTop, setFloatingCardAlwaysOnTop] = useState(false);
   const [appAutoLaunchEnabled, setAppAutoLaunchEnabled] = useState(false);
   const [opencodeAppPath, setOpencodeAppPath] = useState('');
@@ -839,6 +841,7 @@ export function SettingsPage() {
           hideDockIcon,
           trayIconStyle: isMacOS ? trayIconStyle : undefined,
           floatingCardShowOnStartup,
+          startupMinimized,
           floatingCardAlwaysOnTop,
           appAutoLaunchEnabled,
           opencodeAppPath,
@@ -961,6 +964,7 @@ export function SettingsPage() {
     trayIconStyle,
     isMacOS,
     floatingCardShowOnStartup,
+    startupMinimized,
     floatingCardAlwaysOnTop,
     appAutoLaunchEnabled,
     generalLoaded,
@@ -1257,6 +1261,7 @@ export function SettingsPage() {
       setHideDockIcon(Boolean(config.hide_dock_icon));
       setTrayIconStyle(config.tray_icon_style === 'color' ? 'color' : 'template');
       setFloatingCardShowOnStartup(config.floating_card_show_on_startup ?? false);
+      setStartupMinimized(config.startup_minimized ?? false);
       setFloatingCardAlwaysOnTop(config.floating_card_always_on_top ?? false);
       setAppAutoLaunchEnabled(config.app_auto_launch_enabled ?? false);
       setOpencodeAppPath(config.opencode_app_path || '');
@@ -2411,6 +2416,30 @@ export function SettingsPage() {
                     <option value="ask">{t('settings.general.closeBehaviorAsk')}</option>
                     <option value="minimize">{t('settings.general.closeBehaviorMinimize')}</option>
                     <option value="quit">{t('settings.general.closeBehaviorQuit')}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="settings-row">
+                <div className="row-label">
+                  <div className="row-title">
+                    {t('settings.general.startupMinimized', '启动后自动最小化')}
+                  </div>
+                  <div className="row-desc">
+                    {t(
+                      'settings.general.startupMinimizedDesc',
+                      '应用启动完成后自动最小化主窗口，可从 Dock、任务栏或托盘恢复'
+                    )}
+                  </div>
+                </div>
+                <div className="row-control">
+                  <select
+                    className="settings-select"
+                    value={startupMinimized ? 'true' : 'false'}
+                    onChange={(e) => setStartupMinimized(e.target.value === 'true')}
+                  >
+                    <option value="false">{t('common.disable', '停用')}</option>
+                    <option value="true">{t('common.enable', '启用')}</option>
                   </select>
                 </div>
               </div>

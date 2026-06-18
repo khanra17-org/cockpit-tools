@@ -2852,16 +2852,35 @@ fn get_quota_snapshot<'a>(
     key: &str,
 ) -> Option<&'a serde_json::Map<String, serde_json::Value>> {
     let snapshots = quota_snapshots.and_then(|value| value.as_object())?;
-    let primary = snapshots.get(key).and_then(|snapshot| snapshot.as_object());
-    if primary.is_some() {
-        return primary;
-    }
-    if key == "premium_interactions" {
+    if matches!(key, "premium_models" | "premium_interactions") {
         return snapshots
             .get("premium_models")
+            .or_else(|| snapshots.get("premium_interactions"))
             .and_then(|snapshot| snapshot.as_object());
     }
-    None
+    snapshots.get(key).and_then(|snapshot| snapshot.as_object())
+}
+
+#[cfg(not(target_os = "macos"))]
+fn snapshot_without_displayable_quota(
+    snapshot: Option<&serde_json::Map<String, serde_json::Value>>,
+) -> bool {
+    let Some(data) = snapshot else {
+        return false;
+    };
+    if data.get("unlimited").and_then(|value| value.as_bool()) == Some(true) {
+        return false;
+    }
+
+    let entitlement = data.get("entitlement").and_then(parse_json_number);
+    if entitlement.map(|value| value < 0.0).unwrap_or(false) {
+        return false;
+    }
+    if let Some(value) = entitlement {
+        return value <= 0.0;
+    }
+
+    data.get("has_quota").and_then(|value| value.as_bool()) == Some(false)
 }
 
 #[cfg(not(target_os = "macos"))]
@@ -2878,6 +2897,10 @@ fn entitlement_from_snapshot(
 fn remaining_from_snapshot(
     snapshot: Option<&serde_json::Map<String, serde_json::Value>>,
 ) -> Option<f64> {
+    if snapshot_without_displayable_quota(snapshot) {
+        return None;
+    }
+
     if let Some(remaining) = snapshot
         .and_then(|data| data.get("remaining"))
         .and_then(parse_json_number)
@@ -2924,6 +2947,9 @@ fn used_percent_from_snapshot(
         == Some(true)
     {
         return Some(0);
+    }
+    if snapshot_without_displayable_quota(snapshot) {
+        return None;
     }
 
     let entitlement = snapshot

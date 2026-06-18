@@ -80,6 +80,29 @@ export interface ClaudeDesktopLoginStartResponse {
   intervalSeconds: number;
 }
 
+export type ClaudeDesktopLoginProgressPhase =
+  | 'start'
+  | 'profile'
+  | 'resolve-runtime'
+  | 'check-cache'
+  | 'cached'
+  | 'download-start'
+  | 'downloading'
+  | 'downloaded'
+  | 'verify'
+  | 'extract'
+  | 'runtime-ready'
+  | 'launch'
+  | 'ready';
+
+export interface ClaudeDesktopLoginProgressPayload {
+  progressId: string;
+  phase: ClaudeDesktopLoginProgressPhase | string;
+  percent?: number | null;
+  downloadedBytes?: number | null;
+  totalBytes?: number | null;
+}
+
 export interface ClaudeOAuthStartResponse {
   loginId: string;
   verificationUri: string;

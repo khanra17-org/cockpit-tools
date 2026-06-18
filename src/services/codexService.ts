@@ -216,6 +216,11 @@ export async function refreshCodexQuota(accountId: string): Promise<CodexQuota> 
   return await invoke('refresh_codex_quota', { accountId });
 }
 
+/** 消耗一次 Codex 主动重置次数 */
+export async function consumeCodexResetCredit(accountId: string): Promise<void> {
+  return await invoke('consume_codex_reset_credit', { accountId });
+}
+
 /** 强制刷新单个账号的订阅信息 */
 export async function refreshCodexSubscriptionInfo(accountId: string): Promise<CodexAccount> {
   return await invoke('refresh_codex_subscription_info', { accountId });
@@ -232,8 +237,14 @@ export async function startCodexOAuthLogin(): Promise<CodexOAuthLoginStartRespon
 }
 
 /** 新 OAuth 流程：完成登录 */
-export async function completeCodexOAuthLogin(loginId: string): Promise<CodexAccount> {
-  return await invoke('codex_oauth_login_completed', { loginId });
+export async function completeCodexOAuthLogin(
+  loginId: string,
+  reauthAccountId?: string | null
+): Promise<CodexAccount> {
+  return await invoke('codex_oauth_login_completed', {
+    loginId,
+    reauthAccountId: reauthAccountId ?? null,
+  });
 }
 
 /** 新 OAuth 流程：取消登录 */
