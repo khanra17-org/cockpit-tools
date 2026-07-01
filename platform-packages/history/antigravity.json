@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "antigravity",
-  "latestVersion": "0.26.8",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "antigravity",
       "platformId": "antigravity",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Antigravity",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -34,34 +34,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-24",
-          "notes": [
-            "Antigravity page shell, account overview, multi-instance, wakeup, and verification tabs are supplied by the platform package UI runtime.",
-            "Antigravity account, OAuth, quota, switching, multi-instance, runtime, wakeup, and verification commands now execute through the package sidecar adapter; the package no longer declares platform business native boundaries."
-          ]
         }
       ],
       "contributions": {
@@ -98,230 +87,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 7068479,
-          "sha256": "0f0306848e67f381d2e1721621e5a746cd3cea23c92b1456214aba4e40e92243"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 7069629,
+          "sha256": "cd8dac349f379c15909cebca7f45dacb91b74021680cd541b01f148ca0959e05"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 7359893,
-          "sha256": "bfef805caa4c9d074a3115b757868c699002f96d27e00c4f7c5ae327017741d9"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 7360308,
+          "sha256": "91f2642189cd389afc154431302a7793600687029bcc6942e67cb6bddaf55c38"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 7917914,
-          "sha256": "9fc2a2d0e27fe1317df8432add199e68486dad4975a0c2c45c89f70b07d46d64"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 7927644,
+          "sha256": "a345c1ee443d804ff641f684ab752594475adf0d8ce4cd6666599c37e17439c4"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 7699778,
-          "sha256": "79d9ed4ab4ce4c8a9476aa682a8ca1322cc8237b7cafc1fa91e2f5d2947755b7"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 7698568,
+          "sha256": "6ba21f2c92f4e36b4cd1d4c61b2e7b2b36585be3b5302bd5d8afcbea889fb2ed"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 7148042,
-          "sha256": "41a5d06ae1fb9b426b3457a6109a38a437a493e04464c437d3c1289350a02796"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 7151473,
+          "sha256": "75576f0562cd14c717f27d30d9896e010f744a89edbd1f358e0e9c6dae590e3e"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 7068479,
-      "sha256": "0f0306848e67f381d2e1721621e5a746cd3cea23c92b1456214aba4e40e92243",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-antigravity-adapter",
-        "macosEntry": "adapter/macos/cockpit-antigravity-adapter",
-        "windowsEntry": "adapter/windows/cockpit-antigravity-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-antigravity-adapter",
-        "methods": [
-          "health.check",
-          "accounts.list",
-          "accounts.current",
-          "accounts.currentId",
-          "accounts.saveSnapshot",
-          "accounts.addRefreshToken",
-          "accounts.setCurrent",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.reorder",
-          "accounts.importOldTools",
-          "accounts.importLocal",
-          "accounts.syncFromExtension",
-          "accounts.importJson",
-          "accounts.importFiles",
-          "accounts.export",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.updateTags",
-          "accounts.updateNotes",
-          "accounts.groups.load",
-          "accounts.groups.save",
-          "accounts.syncCurrentFromClient",
-          "accounts.refreshCurrent",
-          "quota.alertPayload",
-          "switch.inject",
-          "switch.history.load",
-          "switch.history.clear",
-          "instances.store.get",
-          "instances.store.replace",
-          "instance.getDefaults",
-          "instance.list",
-          "instance.create",
-          "instance.update",
-          "instance.delete",
-          "instance.start",
-          "instance.stop",
-          "instance.closeAll",
-          "instance.openWindow",
-          "runtime.detectLaunchPath",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault",
-          "runtime.restore",
-          "oauth.prepareUrl",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.submitCallbackUrl",
-          "wakeup.fetchAvailableModels",
-          "wakeup.trigger",
-          "wakeup.scheduler.syncState",
-          "wakeup.scheduler.runEnabledTasks",
-          "wakeup.scheduler.confirmTask",
-          "wakeup.scheduler.cancelTask",
-          "wakeup.scheduler.checkTimeouts",
-          "wakeup.runtime.ensureReady",
-          "wakeup.crontab.validate",
-          "wakeup.sharedHistory.load",
-          "wakeup.sharedHistory.add",
-          "wakeup.sharedHistory.clear",
-          "wakeup.sharedScope.cancel",
-          "wakeup.sharedScope.release",
-          "wakeup.setOfficialLsVersionMode",
-          "wakeup.verification.loadState",
-          "wakeup.verification.loadHistory",
-          "wakeup.verification.deleteHistory",
-          "wakeup.verification.runBatch"
-        ]
-      }
-    },
-    {
-      "id": "antigravity",
-      "platformId": "antigravity",
-      "version": "0.26.7",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "Antigravity",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "switch",
-        "quota",
-        "runtime",
-        "instances",
-        "wakeup",
-        "verification"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.7",
-          "date": "2026-06-24",
-          "notes": [
-            "Antigravity page shell, account overview, multi-instance, wakeup, and verification tabs are supplied by the platform package UI runtime.",
-            "Antigravity account, OAuth, quota, switching, multi-instance, runtime, wakeup, and verification commands now execute through the package sidecar adapter; the package no longer declares platform business native boundaries."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "antigravity",
-            "label": "Antigravity",
-            "labelKey": "nav.overview",
-            "iconKey": "antigravity",
-            "page": "overview"
-          }
-        ],
-        "dataPaths": [
-          "accounts.json",
-          "accounts",
-          "groups.json",
-          "display_groups.json",
-          "antigravity_legacy_instances.json",
-          "wakeup_history.json",
-          "wakeup_verification_state.json",
-          "wakeup_verification_history.json"
-        ],
-        "localStorageKeys": [
-          "agtools.antigravity.runtime_target.v1",
-          "agtools.wakeup.enabled",
-          "agtools.wakeup.tasks",
-          "agtools.wakeup.schedule",
-          "agtools.wakeup.official_ls_version_mode",
-          "agtools.accountsOverview.antigravity.*"
-        ],
-        "nativeBoundaries": []
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 7058054,
-          "sha256": "0cf0fa9bd03b45ca7129a8d31a76e86814e730958b6a83e127822862b8b84db7"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 7349468,
-          "sha256": "b493fb8fc5202ba24ee55c6511bcdf3e8f086b46718927ee9c774ed56f1f49d1"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 7907489,
-          "sha256": "8119bb8fab85c5b3df1f2e6e82eac701f281b95b5e67dba0bdba617f58c16ecf"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 7689353,
-          "sha256": "51e9dd2f0f08927cd8787776de5a47e944930e84ca49c29d2012690097941bbd"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 7138024,
-          "sha256": "33ae445ce7e9fd456608deddb88202a07ad07c3b1d30d419aa24519cd66e822d"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 7058054,
-      "sha256": "0cf0fa9bd03b45ca7129a8d31a76e86814e730958b6a83e127822862b8b84db7",
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 7069629,
+      "sha256": "cd8dac349f379c15909cebca7f45dacb91b74021680cd541b01f148ca0959e05",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-antigravity-adapter",

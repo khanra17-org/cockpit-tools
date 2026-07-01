@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "codex",
-  "latestVersion": "0.26.11",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "codex",
       "platformId": "codex",
-      "version": "0.26.11",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Codex",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -38,100 +38,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.11",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.10",
-          "date": "2026-06-29",
-          "notes": [
-            "Restores APIKEY.FUN quick add behavior from the relay page to Codex.",
-            "The Codex add dialog now opens with the APIKEY.FUN provider settings prefilled even when the remote UI loads after navigation."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "恢复中转站快速添加到 Codex 的预填行为。",
-                "即使 Codex 远端 UI 在跳转后才加载，也会自动打开添加弹框并带入 APIKEY.FUN 配置。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "恢復中轉站快速加入 Codex 的預填行為。",
-                "即使 Codex 遠端 UI 在跳轉後才載入，也會自動開啟新增彈框並帶入 APIKEY.FUN 設定。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.9",
-          "date": "2026-06-29",
-          "notes": [
-            "Repairs Codex account migration after upgrading from legacy JSON storage to the platform account database.",
-            "When old JSON account files contain accounts missing from SQLite, the adapter now restores the missing records without overwriting existing database records."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "修复从旧版 JSON 账号存储升级到平台账号数据库后，Codex 账号数量可能变少的问题。",
-                "当旧账号文件中存在 SQLite 缺失的账号时，adapter 会自动补齐缺失记录，同时不会覆盖数据库中已有账号。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "修復從舊版 JSON 帳號儲存升級到平台帳號資料庫後，Codex 帳號數量可能變少的問題。",
-                "當舊帳號檔案中存在 SQLite 缺少的帳號時，adapter 會自動補齊缺少記錄，同時不會覆蓋資料庫中既有帳號。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.8",
-          "date": "2026-06-27",
-          "notes": [
-            "Adds a wakeup entry in the Codex account overview. It opens the existing wakeup test dialog directly with accounts sorted by 5h quota from high to low by default.",
-            "The wakeup test account picker now supports manual sorting by default order, 5h quota, weekly quota, creation time, or email."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "Codex 账号总览新增“唤醒账号”入口：直接打开现有测试唤醒弹框，账号默认按 5h 额度从高到低排序。",
-                "测试唤醒账号选择器支持手动切换排序：默认顺序、5h 额度、周额度、创建时间或邮箱。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "Codex 帳號總覽新增「喚醒帳號」入口：直接開啟既有測試喚醒彈框，帳號預設依 5h 額度由高到低排序。",
-                "測試喚醒帳號選擇器支援手動切換排序：預設順序、5h 額度、週額度、建立時間或信箱。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Codex account overview, model providers, API service, local gateway, wakeup tasks, sessions, thread sync, and multi-instance tabs are supplied by the Codex platform package UI runtime and sidecar adapter.",
-            "Codex keeps nativeBoundaries empty; Core Shell only retains package lifecycle, runtime gate, adapter runner, event bridge, and system window/open capabilities."
-          ]
         }
       ],
       "contributions": {
@@ -187,403 +110,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-macos-aarch64.zip",
-          "downloadSizeBytes": 14826118,
-          "sha256": "7fb79383b716afe169cb3dcd2728d2815ef73fe3b17b54a82db0b848d8fa8d87"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 14824198,
+          "sha256": "9915f6cf6531e28ae03da27f0d8755002eaef89e817eaf096b51ce069910caa8"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-macos-x86_64.zip",
-          "downloadSizeBytes": 15808981,
-          "sha256": "877b6e2dd219a87a55afc23dd72edf6ecd11a4e60faa7e5a62554585f2d9d593"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 15809109,
+          "sha256": "caaeec76bab17e9829fe3d16b62ed080512932952b4aadc34fd41a586f4d27f7"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-linux-x86_64.zip",
-          "downloadSizeBytes": 16323032,
-          "sha256": "5d4f9619c49c3cffbf11defeb28ff19eb04475f38119edf019b9545780f04137"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 16331001,
+          "sha256": "649fb0474fa9a9919f32a777a315c9e90289ba7f45d5c6fa378775318ddf608f"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-linux-aarch64.zip",
-          "downloadSizeBytes": 15321613,
-          "sha256": "bb70ce0d9bbfed4a36e94d0c1dda9d8522854b84a01df5f7272d0d7462e6a7bd"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 15321139,
+          "sha256": "edada4425800045a203ff6dc8be56b30829d6912c527a7a586fd890b195c84a3"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-windows-x86_64.zip",
-          "downloadSizeBytes": 15593079,
-          "sha256": "fd9b3e15ed116ce423ba8301fd25896df2eb9fd455ff0344acded541018f3190"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 15593472,
+          "sha256": "0ed44bcdc44b2eb3156861171a7f1730c37bc8b02fa99a326ca8cddbc8b1bad9"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-macos-aarch64.zip",
-      "downloadSizeBytes": 14826118,
-      "sha256": "7fb79383b716afe169cb3dcd2728d2815ef73fe3b17b54a82db0b848d8fa8d87",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-codex-adapter",
-        "macosEntry": "adapter/macos/cockpit-codex-adapter",
-        "windowsEntry": "adapter/windows/cockpit-codex-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-codex-adapter",
-        "methods": [
-          "health.check",
-          "adapter.shutdown",
-          "runtime.restore",
-          "runtime.shutdownForAppExit",
-          "accounts.list",
-          "accounts.current",
-          "accounts.keepaliveDue",
-          "accounts.pickAutoSwitchTarget",
-          "switch.account",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.addToken",
-          "accounts.addApiKey",
-          "accounts.updateName",
-          "accounts.updateApiKeyCredentials",
-          "accounts.updateTags",
-          "accounts.updateNote",
-          "accounts.loadGroups",
-          "accounts.saveGroups",
-          "accounts.importFromLocal",
-          "accounts.importFromJson",
-          "accounts.importFromFiles",
-          "accounts.batchImport.startFromFiles",
-          "accounts.batchImport.cancel",
-          "accounts.batchImport.resume",
-          "accounts.batchImport.preview",
-          "accounts.batchImport.confirm",
-          "accounts.refreshProfile",
-          "accounts.export",
-          "quota.refresh",
-          "quota.refreshCurrent",
-          "quota.refreshAll",
-          "quota.resetCredits",
-          "quota.consumeResetCredit",
-          "quota.referralInviteEligibility",
-          "quota.referralEligibilityRules",
-          "quota.sendReferralInvites",
-          "quota.refreshSubscriptionInfo",
-          "quota.alertPayload",
-          "accounts.updateApiKeyBoundOAuthAccount",
-          "accounts.refreshApiKeyUsage",
-          "oauth.isPortInUse",
-          "oauth.closePortProcess",
-          "oauth.start",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.submitCallbackUrl",
-          "oauth.restorePendingListener",
-          "localAccess.updateBoundOAuthAccount",
-          "config.path",
-          "config.quick.get",
-          "config.quick.save",
-          "config.appSpeed.get",
-          "config.appSpeed.save",
-          "config.apiServiceAppSpeed.get",
-          "config.apiServiceAppSpeed.save",
-          "accounts.updateAppSpeed",
-          "modelProviders.load",
-          "modelProviders.save",
-          "modelProviders.chatTestBatch",
-          "localAccess.getState",
-          "localAccess.rotateApiKey",
-          "localAccess.clearStats",
-          "localAccess.prepareRestart",
-          "localAccess.killPort",
-          "localAccess.removeAccount",
-          "localAccess.createApiKey",
-          "localAccess.rotateNamedApiKey",
-          "localAccess.deleteApiKey",
-          "localAccess.setEnabled",
-          "localAccess.activate",
-          "localAccess.saveAccounts",
-          "localAccess.updatePort",
-          "localAccess.updateRoutingStrategy",
-          "localAccess.updateCustomRouting",
-          "localAccess.updateAccountModelRules",
-          "localAccess.updateModelRules",
-          "localAccess.updateModelPricings",
-          "localAccess.updateRoutingOptions",
-          "localAccess.updateTimeouts",
-          "localAccess.updateTimeoutPresets",
-          "localAccess.updateUpstreamProxyConfig",
-          "localAccess.updateGatewayMode",
-          "localAccess.updateDebugLogs",
-          "localAccess.updateAccessScope",
-          "localAccess.updateClientBaseUrlHost",
-          "localAccess.updateImageGenerationMode",
-          "localAccess.updateApiKey",
-          "localAccess.queryRequestLogs",
-          "localAccess.test",
-          "localAccess.chatTest",
-          "localAccess.chatTestStream",
-          "wakeup.fetchAvailableModels",
-          "wakeup.runtime.ensureReady",
-          "wakeup.crontab.validate",
-          "wakeup.sharedHistory.load",
-          "wakeup.sharedHistory.add",
-          "wakeup.sharedHistory.clear",
-          "wakeup.sharedScope.cancel",
-          "wakeup.sharedScope.release",
-          "wakeup.setOfficialLsVersionMode",
-          "wakeup.verification.loadState",
-          "wakeup.verification.loadHistory",
-          "wakeup.verification.deleteHistory",
-          "wakeup.getCliStatus",
-          "wakeup.updateRuntimeConfig",
-          "wakeup.getOverview",
-          "wakeup.getState",
-          "wakeup.saveState",
-          "wakeup.loadHistory",
-          "wakeup.clearHistory",
-          "wakeup.cancelScope",
-          "wakeup.releaseScope",
-          "settings.setLaunchOnSwitch",
-          "settings.setLocalAccessEntryVisible",
-          "modelProviders.testConnection",
-          "modelProviders.listModels",
-          "modelProviders.queryUsage",
-          "sessions.syncThreadsAcrossInstances",
-          "sessions.syncToInstance",
-          "sessions.visibilityRepairProviders.list",
-          "sessions.visibilityRepairInstances.list",
-          "sessions.visibilityRepair.run",
-          "sessions.list",
-          "sessions.tokenStats",
-          "sessions.moveToTrash",
-          "sessions.listTrash",
-          "sessions.restoreFromTrash",
-          "instances.store.get",
-          "instances.store.replace",
-          "instances.defaults",
-          "instances.list",
-          "instances.create",
-          "instances.update",
-          "instances.delete",
-          "instances.stop",
-          "instances.closeAll",
-          "instances.window.open",
-          "instances.quickConfig.get",
-          "instances.quickConfig.save",
-          "instances.configPath",
-          "instances.launchCommand.get",
-          "wakeup.trigger",
-          "wakeup.test",
-          "wakeup.runTask",
-          "wakeup.runEnabledTasks",
-          "wakeup.scheduler.syncState",
-          "wakeup.scheduler.runEnabledTasks",
-          "wakeup.scheduler.confirmTask",
-          "wakeup.scheduler.cancelTask",
-          "wakeup.scheduler.checkTimeouts",
-          "wakeup.verification.runBatch",
-          "instances.start"
-        ]
-      }
-    },
-    {
-      "id": "codex",
-      "platformId": "codex",
-      "version": "0.26.10",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "Codex",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "quota",
-        "apiService",
-        "localAccess",
-        "modelProviders",
-        "wakeup",
-        "sessions",
-        "threadSync",
-        "runtime",
-        "instances",
-        "cli"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.10",
-          "date": "2026-06-29",
-          "notes": [
-            "Restores APIKEY.FUN quick add behavior from the relay page to Codex.",
-            "The Codex add dialog now opens with the APIKEY.FUN provider settings prefilled even when the remote UI loads after navigation."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "恢复中转站快速添加到 Codex 的预填行为。",
-                "即使 Codex 远端 UI 在跳转后才加载，也会自动打开添加弹框并带入 APIKEY.FUN 配置。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "恢復中轉站快速加入 Codex 的預填行為。",
-                "即使 Codex 遠端 UI 在跳轉後才載入，也會自動開啟新增彈框並帶入 APIKEY.FUN 設定。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.9",
-          "date": "2026-06-29",
-          "notes": [
-            "Repairs Codex account migration after upgrading from legacy JSON storage to the platform account database.",
-            "When old JSON account files contain accounts missing from SQLite, the adapter now restores the missing records without overwriting existing database records."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "修复从旧版 JSON 账号存储升级到平台账号数据库后，Codex 账号数量可能变少的问题。",
-                "当旧账号文件中存在 SQLite 缺失的账号时，adapter 会自动补齐缺失记录，同时不会覆盖数据库中已有账号。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "修復從舊版 JSON 帳號儲存升級到平台帳號資料庫後，Codex 帳號數量可能變少的問題。",
-                "當舊帳號檔案中存在 SQLite 缺少的帳號時，adapter 會自動補齊缺少記錄，同時不會覆蓋資料庫中既有帳號。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.8",
-          "date": "2026-06-27",
-          "notes": [
-            "Adds a wakeup entry in the Codex account overview. It opens the existing wakeup test dialog directly with accounts sorted by 5h quota from high to low by default.",
-            "The wakeup test account picker now supports manual sorting by default order, 5h quota, weekly quota, creation time, or email."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "Codex 账号总览新增“唤醒账号”入口：直接打开现有测试唤醒弹框，账号默认按 5h 额度从高到低排序。",
-                "测试唤醒账号选择器支持手动切换排序：默认顺序、5h 额度、周额度、创建时间或邮箱。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "Codex 帳號總覽新增「喚醒帳號」入口：直接開啟既有測試喚醒彈框，帳號預設依 5h 額度由高到低排序。",
-                "測試喚醒帳號選擇器支援手動切換排序：預設順序、5h 額度、週額度、建立時間或信箱。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Codex account overview, model providers, API service, local gateway, wakeup tasks, sessions, thread sync, and multi-instance tabs are supplied by the Codex platform package UI runtime and sidecar adapter.",
-            "Codex keeps nativeBoundaries empty; Core Shell only retains package lifecycle, runtime gate, adapter runner, event bridge, and system window/open capabilities."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "codex",
-            "label": "Codex",
-            "labelKey": "nav.codex",
-            "iconKey": "codex",
-            "page": "codex"
-          }
-        ],
-        "dataPaths": [
-          "codex_accounts.json",
-          "codex_accounts",
-          "codex_instances.json",
-          "codex_account_groups.json",
-          "codex_model_providers.json",
-          "codex_local_access.json",
-          "codex_local_access_stats.json",
-          "codex_local_access_takeover_backups.json",
-          "codex_provider_gateway_sidecars",
-          "codex_wakeup_tasks.json",
-          "codex_wakeup_history.json",
-          "codex_wakeup_runtime_config.json",
-          "codex_wakeup_managed_homes",
-          "codex_session_trash",
-          ".codex-global-state.json"
-        ],
-        "localStorageKeys": [
-          "agtools.codex.accounts.cache",
-          "agtools.codex.accounts.current",
-          "agtools.codex.accounts_view_mode",
-          "agtools.codex.accounts.overview_layout_mode",
-          "agtools.codex.accounts.custom_sort_order.v1",
-          "agtools.codex.accounts.custom_sort_active.v1",
-          "agtools.codex.accounts.filter.Codex",
-          "agtools.codex.apiKeyUsage.cache.v1",
-          "agtools.codex.local_access_entry_expanded.v1",
-          "agtools.codex.local_access_address_kind.v1",
-          "agtools.codex.api_service.gateway_guide.dismissed.v1",
-          "agtools.codex.modelProviders.usage.cache.v1",
-          "agtools.codex.modelProviders.custom_sort_order.v1",
-          "agtools.codex.modelProviders.custom_sort_active.v1",
-          "agtools.codex.wakeup.model_selection",
-          "agtools.codex.instances.cache",
-          "agtools.codex.instances.sort_field",
-          "agtools.codex.instances.sort_direction"
-        ],
-        "nativeBoundaries": []
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.10-macos-aarch64.zip",
-          "downloadSizeBytes": 14819400,
-          "sha256": "96b9b5dc7c2cd5e8bbe22576fdd59ec88af95e36a022b0697c4cb48235907394"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.10-macos-x86_64.zip",
-          "downloadSizeBytes": 15802266,
-          "sha256": "6b8927b4d3f6ef2e6055b498516720e8703473b85ac8cf614c8d099488e9b0ee"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.10-linux-x86_64.zip",
-          "downloadSizeBytes": 16316313,
-          "sha256": "d5a5f4fc21cce2c9cdc258223eaee848338a0e78ec72f2541f23697d0e0e7022"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.10-linux-aarch64.zip",
-          "downloadSizeBytes": 15314886,
-          "sha256": "6bc974719240e3cbdf50d432dfea677a3f56ddffde3c5f3b61cd79341a5d1b8f"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.10-windows-x86_64.zip",
-          "downloadSizeBytes": 15585772,
-          "sha256": "868ef3bca5e3b9de127cfc45b75b1a98417e9f66208d75ec59f3b9420e1ea73a"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.10-macos-aarch64.zip",
-      "downloadSizeBytes": 14819400,
-      "sha256": "96b9b5dc7c2cd5e8bbe22576fdd59ec88af95e36a022b0697c4cb48235907394",
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 14824198,
+      "sha256": "9915f6cf6531e28ae03da27f0d8755002eaef89e817eaf096b51ce069910caa8",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-codex-adapter",

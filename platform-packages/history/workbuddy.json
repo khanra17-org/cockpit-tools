@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "workbuddy",
-  "latestVersion": "0.26.8",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "workbuddy",
       "platformId": "workbuddy",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "WorkBuddy",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -84,34 +84,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "WorkBuddy account overview, multi-instance tabs, OAuth, token import, local import, switching, quota refresh, check-in, CodeBuddy CN sync, launch commands, and page interactions are now supplied by the WorkBuddy platform package.",
-            "Core Shell keeps only WorkBuddy platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -141,195 +130,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3630669,
-          "sha256": "06e8e9de4569b1b4428f4aad02070fc2ddb5e99150aa4363f4ad21d8980e5a37"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3634104,
+          "sha256": "6e4217e07c76fc4de60125bb05d0533f224625531613c6a44d535c365e2ffdbc"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3745501,
-          "sha256": "a5a29565b529e06660909763ac4d750ff4fa283aad2fdb4e0622bd9f48d97ecf"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3751170,
+          "sha256": "0e5c4cbc24a369a085ea4254a971a98dd6693c95aef07ef6e190ce5be6583d44"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 3951297,
-          "sha256": "35555bc60486349f29c60865e69742e214f7e998573e3b1b923949e56d914d11"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 3969576,
+          "sha256": "b6cc9999a9f08c3af1793eb4e679a841f4845957a3d5deb939853b61d4000e3a"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 3905166,
-          "sha256": "273dd91efe94f60ff1de1d97e71c67353ed1c83f1b65ba8f90e0ff1ea5717b17"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 3907732,
+          "sha256": "e06e9875780885717d681937988da035535fdeaa4e1977a57417d97207c0f162"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3743224,
-          "sha256": "44d14ec7908014c1d2890d05f6aa45dab75d6bf181bcec01d3fcf7f847283e59"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3749910,
+          "sha256": "858df960ca9c72010a398d9c3c87e47a2744bbba38e01086ce8cca0d5f2cc804"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3630669,
-      "sha256": "06e8e9de4569b1b4428f4aad02070fc2ddb5e99150aa4363f4ad21d8980e5a37"
-    },
-    {
-      "id": "workbuddy",
-      "platformId": "workbuddy",
-      "version": "0.26.7",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "WorkBuddy",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-workbuddy-adapter",
-        "macosEntry": "adapter/macos/cockpit-workbuddy-adapter",
-        "windowsEntry": "adapter/windows/cockpit-workbuddy-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-workbuddy-adapter",
-        "methods": [
-          "health.check",
-          "accounts.list",
-          "accounts.current",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.importJson",
-          "accounts.importLocal",
-          "accounts.addToken",
-          "accounts.export",
-          "accounts.indexPath",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.syncToCodebuddyCn",
-          "accounts.updateTags",
-          "quota.alertPayload",
-          "oauth.start",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.restorePendingListener",
-          "switch.inject",
-          "switch.injectDefaultProfile",
-          "checkin.status",
-          "checkin.perform",
-          "instances.store.get",
-          "instances.store.replace",
-          "instance.getDefaults",
-          "instance.list",
-          "instance.create",
-          "instance.update",
-          "instance.delete",
-          "instance.start",
-          "instance.stop",
-          "instance.closeAll",
-          "instance.openWindow",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault"
-        ]
-      },
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "tokenImport",
-        "localImport",
-        "switch",
-        "quota",
-        "runtime",
-        "instances",
-        "checkin",
-        "sync"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "WorkBuddy account overview, multi-instance tabs, OAuth, token import, local import, switching, quota refresh, check-in, CodeBuddy CN sync, launch commands, and page interactions are now supplied by the WorkBuddy platform package.",
-            "Core Shell keeps only WorkBuddy platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "workbuddy",
-            "label": "WorkBuddy",
-            "labelKey": "nav.workbuddy",
-            "iconKey": "workbuddy",
-            "page": "workbuddy"
-          }
-        ],
-        "dataPaths": [
-          "workbuddy_accounts.json",
-          "workbuddy_accounts",
-          "workbuddy_instances.json"
-        ],
-        "localStorageKeys": [
-          "agtools.workbuddy.accounts.cache",
-          "agtools.workbuddy.current_account_id",
-          "agtools.workbuddy.flow_notice_collapsed",
-          "agtools.workbuddy.instances.cache"
-        ],
-        "nativeBoundaries": []
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3623283,
-          "sha256": "62e9bb6dd21800a13579b1453f0ff32a92add9e021221119d13c313591fcd48a"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3738115,
-          "sha256": "e14ff4169a7b9425dedd3aeee37c8c723c3fa00b4bc56df624947fe1c8e1ed3a"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 3943911,
-          "sha256": "e645ea3740bd80ff16c304cb448547746d95d8f21788eaf334b996d1b99d5b0a"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 3897780,
-          "sha256": "054524f3155eefeb8c64b29cd83a60f89d1755eb3b9eb45af184b01fbcc665d4"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3735746,
-          "sha256": "d58f9b7a01bfc4caf85d7596aa1f68ec61a3b45871b2eb0400879f91f195b227"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3623283,
-      "sha256": "62e9bb6dd21800a13579b1453f0ff32a92add9e021221119d13c313591fcd48a"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3634104,
+      "sha256": "6e4217e07c76fc4de60125bb05d0533f224625531613c6a44d535c365e2ffdbc"
     }
   ]
 }

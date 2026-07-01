@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "kiro",
-  "latestVersion": "0.26.9",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "kiro",
       "platformId": "kiro",
-      "version": "0.26.9",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Kiro",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -73,41 +73,41 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-macos-aarch64.zip",
-          "downloadSizeBytes": 3775575,
-          "sha256": "bc81b4549a471e45c8fa6766505a90187ea265fe831bf311de679de1a5a43bb2"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3777271,
+          "sha256": "4d79dee15123686729e3c49de71545913c9f6cda0abde40a1aab0bf4235f592d"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-macos-x86_64.zip",
-          "downloadSizeBytes": 3888787,
-          "sha256": "22b22341e8747ad26c2b94a3f743c7ee13fdd577bd53d046a293b0e53a028f43"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3888245,
+          "sha256": "9621b9a0ea8103224fde49dfb01b8a7c2b7c66c0d28c561ab7daffcd283e1371"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-linux-x86_64.zip",
-          "downloadSizeBytes": 4104987,
-          "sha256": "f9810802a0eaa19acbb30198b504a738bc02b5f0dbfd7a9a27baf6cafc4fecb3"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4114480,
+          "sha256": "404ec8c8724b74509f5776ccda29d02209fa00e3d5d3f405ae2cd68cdbb64ea3"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-linux-aarch64.zip",
-          "downloadSizeBytes": 4054333,
-          "sha256": "0ab3209b9f00760e9165b3c19895b941ff2a189462ff1fc88ea2cd64820fa39b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4056429,
+          "sha256": "e38e64f1632ebb3fcb5fd320c4459c7a1d3566eda59cc0f58cdbcc1633e85a2e"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-windows-x86_64.zip",
-          "downloadSizeBytes": 3885874,
-          "sha256": "7f532fda1f0d950277417c4c8fc1f4f26b40bdca7308175f511763541b3c63c5"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3887913,
+          "sha256": "f7cdbbde2fb05a933d42fce93edaa025859339d7efab133bbb70ffcc518c334b"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-macos-aarch64.zip",
-      "downloadSizeBytes": 3775575,
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3777271,
       "capabilities": [
         "accounts",
         "oauth",
@@ -118,56 +118,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.9",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Fixes the Windows adapter startup crash when an unfinished Kiro OAuth session is present.",
-            "The adapter now completes its bootstrap handshake before restoring pending OAuth listeners, and restores them inside a Tokio runtime context."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "修复 Windows 上存在未完成 Kiro OAuth 会话时 adapter 启动崩溃的问题。",
-                "adapter 现在会先完成启动握手，再在 Tokio runtime 上下文中恢复 pending OAuth 监听。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "修復 Windows 上存在未完成 Kiro OAuth 工作階段時 adapter 啟動崩潰的問題。",
-                "adapter 現在會先完成啟動握手，再於 Tokio runtime 上下文中恢復 pending OAuth 監聽。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.8",
-          "date": "2026-06-30",
-          "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Kiro account overview, multi-instance tabs, OAuth, switching, quota refresh, and page interactions are now supplied by the Kiro platform package.",
-            "Core Shell keeps only Kiro platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -193,325 +160,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "bc81b4549a471e45c8fa6766505a90187ea265fe831bf311de679de1a5a43bb2"
-    },
-    {
-      "id": "kiro",
-      "platformId": "kiro",
-      "version": "0.26.8",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "Kiro",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-kiro-adapter",
-        "macosEntry": "adapter/macos/cockpit-kiro-adapter",
-        "windowsEntry": "adapter/windows/cockpit-kiro-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-kiro-adapter",
-        "methods": [
-          "health.check",
-          "accounts.list",
-          "accounts.current",
-          "accounts.keepaliveDue",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.importJson",
-          "accounts.importLocal",
-          "accounts.addToken",
-          "accounts.export",
-          "accounts.indexPath",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.updateTags",
-          "quota.alertPayload",
-          "oauth.start",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.submitCallbackUrl",
-          "oauth.restorePendingListener",
-          "switch.inject",
-          "instances.store.get",
-          "instances.store.replace",
-          "instance.getDefaults",
-          "instance.list",
-          "instance.create",
-          "instance.update",
-          "instance.delete",
-          "instance.start",
-          "instance.stop",
-          "instance.closeAll",
-          "instance.openWindow",
-          "runtime.detectLaunchPath",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault"
-        ]
-      },
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3776372,
-          "sha256": "53d4c6766da6a74e75a0b06839db72761ed188521eda1cad76fa59ae5cef0eb5"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3888220,
-          "sha256": "984eabfe1405e0ce800ac2dee4abe5c0ffcb3eb6ceb66c83347bdeee41802d15"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4104596,
-          "sha256": "f606a599b6afc88d9489ba4691bb9f7c25cb6647da83164c926b33e1d6cb2dd3"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 4053845,
-          "sha256": "e21a1b09add34aa87178713cdfd4b2ea8ca1f6c7a9e7aa2d107abdc547a31435"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3885461,
-          "sha256": "bbb8705c2d0e2c927022f2a13224970a6fb8e1d1739f91b15a59557fab45dd8e"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3776372,
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "switch",
-        "quota",
-        "runtime",
-        "instances"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.8",
-          "date": "2026-06-30",
-          "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Kiro account overview, multi-instance tabs, OAuth, switching, quota refresh, and page interactions are now supplied by the Kiro platform package.",
-            "Core Shell keeps only Kiro platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "kiro",
-            "label": "Kiro",
-            "labelKey": "nav.kiro",
-            "iconKey": "kiro",
-            "page": "kiro"
-          }
-        ],
-        "dataPaths": [
-          "kiro_accounts.json",
-          "kiro_accounts",
-          "kiro_instances.json"
-        ],
-        "localStorageKeys": [
-          "agtools.kiro.accounts.cache",
-          "agtools.kiro.current_account_id",
-          "agtools.kiro.flow_notice_collapsed",
-          "agtools.kiro.instances.cache"
-        ],
-        "nativeBoundaries": []
-      },
-      "sha256": "53d4c6766da6a74e75a0b06839db72761ed188521eda1cad76fa59ae5cef0eb5"
-    },
-    {
-      "id": "kiro",
-      "platformId": "kiro",
-      "version": "0.26.7",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "Kiro",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-kiro-adapter",
-        "macosEntry": "adapter/macos/cockpit-kiro-adapter",
-        "windowsEntry": "adapter/windows/cockpit-kiro-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-kiro-adapter",
-        "methods": [
-          "health.check",
-          "accounts.list",
-          "accounts.current",
-          "accounts.keepaliveDue",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.importJson",
-          "accounts.importLocal",
-          "accounts.addToken",
-          "accounts.export",
-          "accounts.indexPath",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.updateTags",
-          "quota.alertPayload",
-          "oauth.start",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.submitCallbackUrl",
-          "oauth.restorePendingListener",
-          "switch.inject",
-          "instances.store.get",
-          "instances.store.replace",
-          "instance.getDefaults",
-          "instance.list",
-          "instance.create",
-          "instance.update",
-          "instance.delete",
-          "instance.start",
-          "instance.stop",
-          "instance.closeAll",
-          "instance.openWindow",
-          "runtime.detectLaunchPath",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault"
-        ]
-      },
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3768937,
-          "sha256": "0d8f8d6288f9c40c71c045f9f0692133541c9de8bca834e0b01f63c7ee5a50f9"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3880785,
-          "sha256": "dff7e6ec848f3ba6ea69bd21f1bd762b0bd2696b08d5a4c69477279d44408345"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4097161,
-          "sha256": "4e9de5637cf78ee69c16de818f9b72b44ebaae895a05cc5062f9dbd2730d1aff"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4046410,
-          "sha256": "b8c73ef44fb71f8fcdd884c197cc1d4a60a12210064737e35a50706e3a1e9bb0"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3878027,
-          "sha256": "e961f92efc60ff969a7bf16a32effa356d473f251587c31ce3671ea43273a696"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3768937,
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "switch",
-        "quota",
-        "runtime",
-        "instances"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Kiro account overview, multi-instance tabs, OAuth, switching, quota refresh, and page interactions are now supplied by the Kiro platform package.",
-            "Core Shell keeps only Kiro platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "kiro",
-            "label": "Kiro",
-            "labelKey": "nav.kiro",
-            "iconKey": "kiro",
-            "page": "kiro"
-          }
-        ],
-        "dataPaths": [
-          "kiro_accounts.json",
-          "kiro_accounts",
-          "kiro_instances.json"
-        ],
-        "localStorageKeys": [
-          "agtools.kiro.accounts.cache",
-          "agtools.kiro.current_account_id",
-          "agtools.kiro.flow_notice_collapsed",
-          "agtools.kiro.instances.cache"
-        ],
-        "nativeBoundaries": []
-      },
-      "sha256": "0d8f8d6288f9c40c71c045f9f0692133541c9de8bca834e0b01f63c7ee5a50f9"
+      "sha256": "4d79dee15123686729e3c49de71545913c9f6cda0abde40a1aab0bf4235f592d"
     }
   ]
 }

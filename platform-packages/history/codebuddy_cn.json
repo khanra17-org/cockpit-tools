@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "codebuddy_cn",
-  "latestVersion": "0.26.8",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "codebuddy_cn",
       "platformId": "codebuddy_cn",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "CodeBuddy CN",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -81,34 +81,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "CodeBuddy CN account overview, multi-instance tabs, OAuth, token import, local import, switching, quota refresh, WorkBuddy sync, launch commands, and page interactions are now supplied by the CodeBuddy CN platform package.",
-            "Core Shell keeps only CodeBuddy CN platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -138,192 +127,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3635470,
-          "sha256": "61cdfc410eaf1890044da1e425a644aabf2e84be21a809125b9de56ff9ba749c"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3641000,
+          "sha256": "37abaf71942909cafdc38d6c7fd79adf584b64ea6594d4ade6fb89965a2b4bb7"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3756222,
-          "sha256": "30aab7023b4ed31d9b199e0f0cb07b06a674df376fccc89c09511071e013a4bd"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3761554,
+          "sha256": "d5951f545052a84b48a9827e62cb59ed3139de60965440ebb5955359cc930bc4"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 3965045,
-          "sha256": "c66b056c92192a5a4b3cb93f6a31c351d0e9f73374697887b647a1b2d638a989"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 3981055,
+          "sha256": "5eaf0dfc3871720674a9ae3d37e6016319478d6473501a5bce30dbe44be0ea4a"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 3915474,
-          "sha256": "f2109ad0110446335ff6ee905e6972720ecfd43bdbab9fe5344fc271363285ee"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 3919307,
+          "sha256": "9e4f0ee23d9c734fd078880ed6b600bcb096580e5b21aa1cac61b7241c18244e"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3755289,
-          "sha256": "62cdd173d033fa8321a528b7c14cbcb01943af21f34b2d8b93f204c776bc78ac"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3764576,
+          "sha256": "f19a8946dc2c1ee8d992423ccef5a2a414f361b9910ca54f94734470acbcef41"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3635470,
-      "sha256": "61cdfc410eaf1890044da1e425a644aabf2e84be21a809125b9de56ff9ba749c"
-    },
-    {
-      "id": "codebuddy_cn",
-      "platformId": "codebuddy_cn",
-      "version": "0.26.7",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "CodeBuddy CN",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-codebuddy-cn-adapter",
-        "macosEntry": "adapter/macos/cockpit-codebuddy-cn-adapter",
-        "windowsEntry": "adapter/windows/cockpit-codebuddy-cn-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-codebuddy-cn-adapter",
-        "methods": [
-          "health.check",
-          "accounts.list",
-          "accounts.current",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.importJson",
-          "accounts.importLocal",
-          "accounts.addToken",
-          "accounts.export",
-          "accounts.indexPath",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.syncToWorkbuddy",
-          "accounts.updateTags",
-          "quota.alertPayload",
-          "oauth.start",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.restorePendingListener",
-          "switch.inject",
-          "switch.injectDefaultProfile",
-          "instances.store.get",
-          "instances.store.replace",
-          "instance.getDefaults",
-          "instance.list",
-          "instance.create",
-          "instance.update",
-          "instance.delete",
-          "instance.start",
-          "instance.stop",
-          "instance.closeAll",
-          "instance.openWindow",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault"
-        ]
-      },
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "tokenImport",
-        "localImport",
-        "switch",
-        "quota",
-        "runtime",
-        "instances",
-        "sync"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "CodeBuddy CN account overview, multi-instance tabs, OAuth, token import, local import, switching, quota refresh, WorkBuddy sync, launch commands, and page interactions are now supplied by the CodeBuddy CN platform package.",
-            "Core Shell keeps only CodeBuddy CN platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "codebuddy_cn",
-            "label": "CodeBuddy CN",
-            "labelKey": "nav.codebuddyCn",
-            "iconKey": "codebuddy_cn",
-            "page": "codebuddy-cn"
-          }
-        ],
-        "dataPaths": [
-          "codebuddy_cn_accounts.json",
-          "codebuddy_cn_accounts",
-          "codebuddy_cn_instances.json"
-        ],
-        "localStorageKeys": [
-          "agtools.codebuddycn.accounts.cache",
-          "agtools.codebuddycn.current_account_id",
-          "agtools.codebuddycn.flow_notice_collapsed",
-          "agtools.codebuddycn.instances.cache"
-        ],
-        "nativeBoundaries": []
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3628030,
-          "sha256": "c894e998b5c603432af337d75f7a9b3a106eea9fcd0b60e4075450f9416d1eaf"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3748782,
-          "sha256": "d199b4c6c292fe6e3c177170a72301c3db1c9f3a8a8c2dfe7cb9cb02b4a72461"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 3957605,
-          "sha256": "b042d789152f81b84b687634fb0987c9160c4b018c9547c02979c8a55c3e7bc6"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 3908034,
-          "sha256": "3674208267343090e465db31e31894b4601e1be06b1b025bc50383327624df11"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3747859,
-          "sha256": "dc8fd8fd035225e78d1c9f3aaabbc99691bd68161a11478776c32b08cf8af8e0"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3628030,
-      "sha256": "c894e998b5c603432af337d75f7a9b3a106eea9fcd0b60e4075450f9416d1eaf"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3641000,
+      "sha256": "37abaf71942909cafdc38d6c7fd79adf584b64ea6594d4ade6fb89965a2b4bb7"
     }
   ]
 }

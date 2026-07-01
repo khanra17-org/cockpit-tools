@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "claude_manager",
-  "latestVersion": "0.26.9",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "claude_manager",
       "platformId": "claude_manager",
-      "version": "0.26.9",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Claude",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -92,56 +92,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.9",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.8",
-          "date": "2026-06-29",
-          "notes": [
-            "Restores APIKEY.FUN quick add behavior from the relay page to Claude and Claude CLI.",
-            "The Claude add dialog now opens with APIKEY.FUN provider settings prefilled even when the remote UI loads after navigation."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "恢复中转站快速添加到 Claude 和 Claude CLI 的预填行为。",
-                "即使 Claude 远端 UI 在跳转后才加载，也会自动打开添加弹框并带入 APIKEY.FUN 配置。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "恢復中轉站快速加入 Claude 和 Claude CLI 的預填行為。",
-                "即使 Claude 遠端 UI 在跳轉後才載入，也會自動開啟新增彈框並帶入 APIKEY.FUN 設定。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Claude account overview, Claude CLI, Gateway, OAuth, quota, Desktop runtime, and multi-instance tabs are supplied by the Claude platform package UI runtime and sidecar adapter.",
-            "Claude keeps nativeBoundaries empty; Core Shell only retains package lifecycle, runtime gate, adapter runner, event bridge, and system window/open capabilities."
-          ]
         }
       ],
       "contributions": {
@@ -180,234 +147,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-macos-aarch64.zip",
-          "downloadSizeBytes": 4869724,
-          "sha256": "45636e2306777b9cc5dbb210862bdfe2464debcc984d87bc7f65321af1a14228"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 4870716,
+          "sha256": "1c0520429cb63e3009c83fa1a6fb4c85c65d85e68b3f86a8d99d9301e8b3a5ec"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-macos-x86_64.zip",
-          "downloadSizeBytes": 5006294,
-          "sha256": "15b433bf9de5edda19335df659680c362ae0736cd8cb7b76af7fb9c30323e556"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 5003952,
+          "sha256": "15b488f5ffb7ef9f335941bc4f76e64564c95c10bd1eed0bbc6f6f2f66698ccf"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-linux-x86_64.zip",
-          "downloadSizeBytes": 5170380,
-          "sha256": "2029c0d3e090343f314f18cd22d3728ae68dbb4a68607d881839d00bd172981a"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 5177057,
+          "sha256": "f997bf27f7f61ae51c84211490dcba7fbc0c28ad1e5b8b8b939a7bddc9bd72cd"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-linux-aarch64.zip",
-          "downloadSizeBytes": 5117383,
-          "sha256": "63046c3850da59975b5a94cc232a687136bc25699d7dd3a12ba03c3f3667202b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 5116083,
+          "sha256": "62cdf6c7dae1039c7752b783ec988a0e92a93ddb494197bf9d7f7e309dff4af2"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-windows-x86_64.zip",
-          "downloadSizeBytes": 4979094,
-          "sha256": "6830b665cef160bf7bd82e2bccd690fec166c55f4f7713b2f684edc204ff3e4f"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 4979448,
+          "sha256": "87167eff56ac3ef7423be4bc8ede6c6c88f3790f5159254805cec6336e148022"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-macos-aarch64.zip",
-      "downloadSizeBytes": 4869724,
-      "sha256": "45636e2306777b9cc5dbb210862bdfe2464debcc984d87bc7f65321af1a14228"
-    },
-    {
-      "id": "claude_manager",
-      "platformId": "claude_manager",
-      "version": "0.26.8",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "Claude",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-claude-adapter",
-        "macosEntry": "adapter/macos/cockpit-claude-adapter",
-        "windowsEntry": "adapter/windows/cockpit-claude-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-claude-adapter",
-        "methods": [
-          "health.check",
-          "adapter.shutdown",
-          "accounts.list",
-          "accounts.current",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.importJson",
-          "accounts.importApiKey",
-          "accounts.importDesktopGateway",
-          "accounts.updateDesktopGateway",
-          "accounts.importCliLocal",
-          "accounts.export",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.updateTags",
-          "accounts.updatePlan",
-          "accounts.updateNote",
-          "accounts.indexPath",
-          "gateway.listModels",
-          "oauth.start",
-          "oauth.complete",
-          "oauth.cancel",
-          "desktopLogin.start",
-          "desktopLogin.complete",
-          "desktopLogin.cancel",
-          "desktopLogin.openVerificationWindow",
-          "cli.getLaunchCommand",
-          "cli.executeLaunchCommand",
-          "instances.store.get",
-          "instances.store.replace",
-          "instance.getDefaults",
-          "instance.list",
-          "instance.create",
-          "instance.update",
-          "instance.delete",
-          "instance.start",
-          "instance.stop",
-          "instance.openWindow",
-          "instance.closeAll",
-          "instance.getLaunchCommand",
-          "instance.executeLaunchCommand",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault",
-          "switch.inject",
-          "runtime.detectLaunchPath",
-          "runtime.scanLaunchTargets"
-        ]
-      },
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "capabilities": [
-        "accounts",
-        "desktop",
-        "cli",
-        "gateway",
-        "oauth",
-        "quota",
-        "runtime",
-        "instances"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.8",
-          "date": "2026-06-29",
-          "notes": [
-            "Restores APIKEY.FUN quick add behavior from the relay page to Claude and Claude CLI.",
-            "The Claude add dialog now opens with APIKEY.FUN provider settings prefilled even when the remote UI loads after navigation."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "恢复中转站快速添加到 Claude 和 Claude CLI 的预填行为。",
-                "即使 Claude 远端 UI 在跳转后才加载，也会自动打开添加弹框并带入 APIKEY.FUN 配置。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "恢復中轉站快速加入 Claude 和 Claude CLI 的預填行為。",
-                "即使 Claude 遠端 UI 在跳轉後才載入，也會自動開啟新增彈框並帶入 APIKEY.FUN 設定。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Claude account overview, Claude CLI, Gateway, OAuth, quota, Desktop runtime, and multi-instance tabs are supplied by the Claude platform package UI runtime and sidecar adapter.",
-            "Claude keeps nativeBoundaries empty; Core Shell only retains package lifecycle, runtime gate, adapter runner, event bridge, and system window/open capabilities."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "claude_manager",
-            "label": "Claude",
-            "labelKey": "nav.claude",
-            "iconKey": "claude",
-            "page": "claude"
-          }
-        ],
-        "dataPaths": [
-          "claude_accounts.json",
-          "claude_accounts",
-          "claude_instances.json",
-          "claude_oauth_pending.json",
-          "claude_desktop_login_pending.json",
-          "claude_desktop_profiles",
-          "claude_desktop_login",
-          "claude_desktop_backups",
-          "claude_code_settings_managed_env_keys.json"
-        ],
-        "localStorageKeys": [
-          "agtools.claude.accounts.cache.v2",
-          "agtools.claude.current_account_id",
-          "agtools.claude.instances.cache",
-          "agtools.claude.flow_notice_collapsed",
-          "agtools.claude.accounts_view_mode",
-          "agtools.claude.apiKeyUsage.cache.v1",
-          "agtools.claude.cli.last_working_dir"
-        ],
-        "nativeBoundaries": []
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 4862383,
-          "sha256": "a97caaa787773ff9c5a058e2f838d6cd6e8216130f3feb573e38c4faec84116f"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 4998953,
-          "sha256": "5f3b29f1071a0bfde7dd2c78538dc83e73f3c5036b5fd37e3d451f2239bbe0f6"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 5163039,
-          "sha256": "4ee898faedf81ecc8c769552b89da57770939d4859eb1740cdb9359a03fc49a6"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 5110042,
-          "sha256": "ff34abf56bda80b69ec52ef1624aee852b4056b7fe2d16b2d70dc9a72a56842d"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 4971669,
-          "sha256": "39d2195c2984668d5d04d2916a56db45ec30cd043739abe2b1717f6e6b187e09"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 4862383,
-      "sha256": "a97caaa787773ff9c5a058e2f838d6cd6e8216130f3feb573e38c4faec84116f"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 4870716,
+      "sha256": "1c0520429cb63e3009c83fa1a6fb4c85c65d85e68b3f86a8d99d9301e8b3a5ec"
     }
   ]
 }

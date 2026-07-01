@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "gemini",
-  "latestVersion": "0.26.8",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "gemini",
       "platformId": "gemini",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Gemini Cli",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -80,34 +80,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Gemini Cli account overview, multi-instance tabs, OAuth, token import, switching, quota refresh, launch commands, and page interactions are now supplied by the Gemini platform package.",
-            "Core Shell keeps only Gemini platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -138,192 +127,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3748184,
-          "sha256": "63af1bc183df9693a7313c29c162dfe4a64ea0387dc722c70415f1db8335f9e5"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3749269,
+          "sha256": "cd7b302cfa0bc394fafa3d45561c8b2f00883d0e7af5059dd31fae521316693f"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3856002,
-          "sha256": "9a0ba021a76a7ad208eb295ecabd95832174bad5885bbef7b1cab89d9bc2f197"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3855673,
+          "sha256": "46e1b4bc4e1c99d7fa8a6b682e028dd22adbd84345c30f231efde212aa483f28"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4022775,
-          "sha256": "3d03314fdbef1ff3ac003ee0ba6bdfaa16e817daf2e2c07e6d084fbedd2d6877"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4032107,
+          "sha256": "f5612814318570c82bb01af988ffd3436194f6f8ca6da22b26a89c8e70c01a25"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 3979378,
-          "sha256": "b5ed7587759f1f399fae8ba26e88996fc0ecfe83d2e1f8424a19c3d4ebef1c35"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 3980710,
+          "sha256": "ae16578f6145be2d35a459fed32329b6cf9561bffc911d59a210e36b5c728d22"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3815004,
-          "sha256": "dafcc1aa69731f03eec26efde32f12bb8765a611f1e1572428ee5db02efa9a14"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3817229,
+          "sha256": "ee1a057363b3ed90fcd8d244d07b2f68a872a7f58e02835430c49fbef057918b"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3748184,
-      "sha256": "63af1bc183df9693a7313c29c162dfe4a64ea0387dc722c70415f1db8335f9e5"
-    },
-    {
-      "id": "gemini",
-      "platformId": "gemini",
-      "version": "0.26.7",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "Gemini Cli",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-gemini-adapter",
-        "macosEntry": "adapter/macos/cockpit-gemini-adapter",
-        "windowsEntry": "adapter/windows/cockpit-gemini-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-gemini-adapter",
-        "methods": [
-          "health.check",
-          "accounts.list",
-          "accounts.current",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.importJson",
-          "accounts.importLocal",
-          "accounts.addToken",
-          "accounts.export",
-          "accounts.indexPath",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.updateTags",
-          "quota.alertPayload",
-          "oauth.start",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.submitCallbackUrl",
-          "oauth.restorePendingListener",
-          "switch.inject",
-          "switch.injectDefaultProfile",
-          "instances.store.get",
-          "instances.store.replace",
-          "instance.getDefaults",
-          "instance.list",
-          "instance.create",
-          "instance.update",
-          "instance.delete",
-          "instance.start",
-          "instance.stop",
-          "instance.closeAll",
-          "instance.openWindow",
-          "instance.getLaunchCommand",
-          "instance.executeLaunchCommand",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault"
-        ]
-      },
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "switch",
-        "quota",
-        "runtime",
-        "instances"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Gemini Cli account overview, multi-instance tabs, OAuth, token import, switching, quota refresh, launch commands, and page interactions are now supplied by the Gemini platform package.",
-            "Core Shell keeps only Gemini platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "gemini",
-            "label": "Gemini Cli",
-            "labelKey": "nav.gemini",
-            "iconKey": "gemini",
-            "page": "gemini"
-          }
-        ],
-        "dataPaths": [
-          "gemini_accounts.json",
-          "gemini_accounts",
-          "gemini_instances.json",
-          "gemini_oauth_pending.json"
-        ],
-        "localStorageKeys": [
-          "agtools.gemini.accounts.cache",
-          "agtools.gemini.current_account_id",
-          "agtools.gemini.flow_notice_collapsed",
-          "agtools.gemini.instances.cache"
-        ],
-        "nativeBoundaries": []
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3740834,
-          "sha256": "48c85e97162ddf23c10c8a910e30b6b526ebfb51ffa5addc47ba3bd8dcc4cc0d"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3848652,
-          "sha256": "f8fc8d21a14ef9a2c82ea41184d32fa2c327f5268857fa2940bd6235adea986e"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4015425,
-          "sha256": "3e765de60158582cc6d7b80e9fcf0a79ee26b843386d39df2f730f6627b48b75"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 3972028,
-          "sha256": "7a98eee637b8899d4f9c05f289c17d859b2c1d4dc0ba69609c0e3f9bcd06ff65"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3807617,
-          "sha256": "1c836b156161de1b2f4553f58069b39fd690cd39040f3e371eff91a47bcfb68b"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3740834,
-      "sha256": "48c85e97162ddf23c10c8a910e30b6b526ebfb51ffa5addc47ba3bd8dcc4cc0d"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3749269,
+      "sha256": "cd7b302cfa0bc394fafa3d45561c8b2f00883d0e7af5059dd31fae521316693f"
     }
   ]
 }

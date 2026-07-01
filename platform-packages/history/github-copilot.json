@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "github-copilot",
-  "latestVersion": "0.26.8",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "github-copilot",
       "platformId": "github-copilot",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "GitHub Copilot",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -70,41 +70,41 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3762345,
-          "sha256": "f7ab6c37e1b175ecbfdc6f9af7f1a38bc7875c7f096bfab9c02bddde43a9c1a7"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3766226,
+          "sha256": "e00fa42a4aa9332bac5b46a72f848ca9a556793ec0ac2236ff81276c40439ebc"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3876050,
-          "sha256": "d25136c3e615a59925f4496c1f8b109444d14ef5656cec80a5e62e1bd69f3a96"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3878854,
+          "sha256": "30942dc8756eeb2e9c767cfd1aecddb310a321b126236f208711a7bb9007a078"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4090041,
-          "sha256": "727bd54b357feb00d2e5584bfdc4b4570f7674b4bd98bab379c6368d0d3928a0"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4100562,
+          "sha256": "bcc5199785c9fecbda9488a2635aa1f608d7e11ba8b1fbe8bf29ec8df20d991f"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 4037982,
-          "sha256": "c65a128e5392132e266a0ab663d1f5c379ce85dc7e8a70b724eb841fc8b463d1"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4042640,
+          "sha256": "2bfc14a47b7e85dab8cd1826be3a6f4666156911310c96e487d12b60f4a0f0e3"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3873610,
-          "sha256": "bcfb5b8317ac82c6255ad92d5ac2cf6c12ee4dad5197cdd68b358676afd1f3cb"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3877757,
+          "sha256": "5807233ccec312a900563d9763e25e49311e96c3d06464c1f520fd803563a8c9"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3762345,
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3766226,
       "capabilities": [
         "accounts",
         "oauth",
@@ -115,34 +115,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "GitHub Copilot account overview, VS Code switching, OAuth, quota refresh, OpenCode sync, and multi-instance tabs are now supplied by the GitHub Copilot platform package.",
-            "Core Shell keeps only GitHub Copilot platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -168,152 +157,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "f7ab6c37e1b175ecbfdc6f9af7f1a38bc7875c7f096bfab9c02bddde43a9c1a7"
-    },
-    {
-      "id": "github-copilot",
-      "platformId": "github-copilot",
-      "version": "0.26.7",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "GitHub Copilot",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-github-copilot-adapter",
-        "macosEntry": "adapter/macos/cockpit-github-copilot-adapter",
-        "windowsEntry": "adapter/windows/cockpit-github-copilot-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-github-copilot-adapter",
-        "methods": [
-          "health.check",
-          "accounts.list",
-          "accounts.current",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.importJson",
-          "accounts.importLocal",
-          "accounts.addToken",
-          "accounts.export",
-          "accounts.indexPath",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.updateTags",
-          "quota.alertPayload",
-          "oauth.start",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.restorePendingListener",
-          "switch.inject",
-          "instances.store.get",
-          "instances.store.replace",
-          "instance.getDefaults",
-          "instance.list",
-          "instance.create",
-          "instance.update",
-          "instance.delete",
-          "instance.start",
-          "instance.stop",
-          "instance.closeAll",
-          "instance.openWindow",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault"
-        ]
-      },
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3754925,
-          "sha256": "e0ba5bbae35fd8475d308d1966bc8defc37723ba18dfc3ed5a8328d74118343d"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3868630,
-          "sha256": "a0fb51f88ec427dd18c23dd444ddabfee4d8951f31402a462d1a4be3e4dc7c0d"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4082621,
-          "sha256": "5030f1fbb422a5eb2db7b21596aacbe2fffa036b05582909cbe2c970489f17b1"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4030562,
-          "sha256": "218b23146a8778fb9ff28b366af49f6f6ad12dfc8175a8fcd3b6ab4380c0c65d"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3866210,
-          "sha256": "3784740298c2f41a28c4f1fd1e4ab9d146343f8ef77d74e866fc03325c0bc5a7"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3754925,
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "switch",
-        "quota",
-        "runtime",
-        "instances"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "GitHub Copilot account overview, VS Code switching, OAuth, quota refresh, OpenCode sync, and multi-instance tabs are now supplied by the GitHub Copilot platform package.",
-            "Core Shell keeps only GitHub Copilot platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "github-copilot",
-            "label": "GitHub Copilot",
-            "labelKey": "nav.githubCopilot",
-            "iconKey": "github-copilot",
-            "page": "github-copilot"
-          }
-        ],
-        "dataPaths": [
-          "github_copilot_accounts.json",
-          "github_copilot_accounts",
-          "github_copilot_instances.json"
-        ],
-        "localStorageKeys": [
-          "agtools.github_copilot.accounts.cache",
-          "agtools.github_copilot.current_account_id",
-          "agtools.github_copilot.flow_notice_collapsed",
-          "agtools.github_copilot.instances.cache"
-        ],
-        "nativeBoundaries": []
-      },
-      "sha256": "e0ba5bbae35fd8475d308d1966bc8defc37723ba18dfc3ed5a8328d74118343d"
+      "sha256": "e00fa42a4aa9332bac5b46a72f848ca9a556793ec0ac2236ff81276c40439ebc"
     }
   ]
 }

@@ -1,14 +1,14 @@
 {
   "version": "1",
   "platformId": "zed",
-  "latestVersion": "0.26.8",
+  "latestVersion": "1.0.0",
   "versions": [
     {
       "id": "zed",
       "platformId": "zed",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Zed",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -60,41 +60,41 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3876890,
-          "sha256": "f6c0877b21486f1ffde1560fd716cf0802e0827b4d8490c7f4b2c99446c586cb"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3882753,
+          "sha256": "887acda63b7117d20db511e7a35cdbd6836b4cf951b6e6e64bf25bca88bd8135"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3976100,
-          "sha256": "1499f9827b1221a052e2a48d4205bbff9d22a204b014668762bc60582f46d8f4"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3982406,
+          "sha256": "b062fb586863066d012145a3d0ee74e1903ed4248a84ef1b90c77958b8b6f6b0"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4177730,
-          "sha256": "6c1b22c2df7452bca269c23c9300ee54ee012b398df8166cb0043920808482b7"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4189727,
+          "sha256": "146dc715f0a63cb51d63394d2e738234cca3eceb31a912b4fbefad3bd8fff891"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 4139072,
-          "sha256": "1007dcde66350623d3d7176be3e048fcc2ee244c24d96dbe073cd0aff7bee371"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4142739,
+          "sha256": "8d13d48ebdb4ecc8838dcfc43c7abea8566f8866a594e906af722f266345aacf"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3970287,
-          "sha256": "b515107cf40a384bae2333275600d7d2f24eea8197c5d7521271a2e0adfca55b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3981519,
+          "sha256": "0f1fa052a4cd80ac52a69f88b2e0568870f94de362e8eb9b54a1ba3569bc1bf6"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3876890,
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3882753,
       "capabilities": [
         "accounts",
         "oauth",
@@ -104,42 +104,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-22",
-          "notes": [
-            "Zed account overview, tabs, runtime controls, and page interactions are now supplied by the Zed platform package UI runtime.",
-            "Core Shell keeps the platform package lifecycle controls while Zed page UI changes can ship through Zed package updates."
-          ]
-        },
-        {
-          "version": "0.26.6",
-          "date": "2026-06-22",
-          "notes": [
-            "Zed platform package uses a sidecar adapter boundary for accounts, OAuth, switching, quota, and runtime commands.",
-            "Platform package lifecycle supports independent install, update, uninstall, size display, and runtime readiness checks."
-          ]
         }
       ],
       "contributions": {
@@ -163,147 +144,7 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "f6c0877b21486f1ffde1560fd716cf0802e0827b4d8490c7f4b2c99446c586cb"
-    },
-    {
-      "id": "zed",
-      "platformId": "zed",
-      "version": "0.26.7",
-      "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
-      "displayName": "Zed",
-      "entry": "runtime/index.json",
-      "packageMode": "hotUpdate",
-      "installKind": "sidecarAdapter",
-      "adapter": {
-        "protocol": "http-json-v1",
-        "entry": "adapter/macos/cockpit-zed-adapter",
-        "macosEntry": "adapter/macos/cockpit-zed-adapter",
-        "windowsEntry": "adapter/windows/cockpit-zed-adapter.exe",
-        "linuxEntry": "adapter/linux/cockpit-zed-adapter",
-        "methods": [
-          "health.check",
-          "accounts.list",
-          "accounts.current",
-          "accounts.delete",
-          "accounts.deleteMany",
-          "accounts.importJson",
-          "accounts.importLocal",
-          "accounts.export",
-          "accounts.refresh",
-          "accounts.refreshAll",
-          "accounts.updateTags",
-          "quota.alertPayload",
-          "oauth.start",
-          "oauth.peek",
-          "oauth.complete",
-          "oauth.cancel",
-          "oauth.submitCallbackUrl",
-          "oauth.restorePendingListener",
-          "switch.inject",
-          "switch.logoutCurrent",
-          "runtime.status",
-          "runtime.startDefault",
-          "runtime.stopDefault",
-          "runtime.restartDefault",
-          "runtime.focusDefault"
-        ]
-      },
-      "ui": {
-        "protocol": "react-remote-esm-v1",
-        "entry": "ui/remoteEntry.js",
-        "style": "ui/style.css",
-        "exports": [
-          "mount",
-          "unmount"
-        ]
-      },
-      "artifacts": [
-        {
-          "os": "macos",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.7-macos-aarch64.zip",
-          "downloadSizeBytes": 3869376,
-          "sha256": "507738fde4f252792b327a43cd4d51e6531dc8140389468bc3a2f60124a95054"
-        },
-        {
-          "os": "macos",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.7-macos-x86_64.zip",
-          "downloadSizeBytes": 3968586,
-          "sha256": "38fab17cf16037579e05911264df87d496db3c06089b01677333340b2e80c5e8"
-        },
-        {
-          "os": "linux",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.7-linux-x86_64.zip",
-          "downloadSizeBytes": 4170216,
-          "sha256": "4cf225b9354dc08667b8903ce4488a185c6282bfb417ebf186553100ed98734a"
-        },
-        {
-          "os": "linux",
-          "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.7-linux-aarch64.zip",
-          "downloadSizeBytes": 4131558,
-          "sha256": "0133846f7bcb68d3ea05ed7a96ed600ea28b810c003face83c49b7dd8b124da6"
-        },
-        {
-          "os": "windows",
-          "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.7-windows-x86_64.zip",
-          "downloadSizeBytes": 3962934,
-          "sha256": "1447515590310fe3c2a77dd5758f742db51f954da7539f1cc54e9cd93990078e"
-        }
-      ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.7-macos-aarch64.zip",
-      "downloadSizeBytes": 3869376,
-      "capabilities": [
-        "accounts",
-        "oauth",
-        "switch",
-        "quota",
-        "runtime"
-      ],
-      "changelog": [
-        {
-          "version": "0.26.7",
-          "date": "2026-06-22",
-          "notes": [
-            "Zed account overview, tabs, runtime controls, and page interactions are now supplied by the Zed platform package UI runtime.",
-            "Core Shell keeps the platform package lifecycle controls while Zed page UI changes can ship through Zed package updates."
-          ]
-        },
-        {
-          "version": "0.26.6",
-          "date": "2026-06-22",
-          "notes": [
-            "Zed platform package uses a sidecar adapter boundary for accounts, OAuth, switching, quota, and runtime commands.",
-            "Platform package lifecycle supports independent install, update, uninstall, size display, and runtime readiness checks."
-          ]
-        }
-      ],
-      "contributions": {
-        "platforms": [
-          {
-            "id": "zed",
-            "label": "Zed",
-            "labelKey": "nav.zed",
-            "iconKey": "zed",
-            "page": "zed"
-          }
-        ],
-        "dataPaths": [
-          "zed_accounts.json",
-          "zed_accounts"
-        ],
-        "localStorageKeys": [
-          "agtools.zed.accounts.cache",
-          "agtools.zed.current_account_id",
-          "agtools.zed.flow_notice_collapsed"
-        ],
-        "nativeBoundaries": []
-      },
-      "sha256": "507738fde4f252792b327a43cd4d51e6531dc8140389468bc3a2f60124a95054"
+      "sha256": "887acda63b7117d20db511e7a35cdbd6836b4cf951b6e6e64bf25bca88bd8135"
     }
   ]
 }

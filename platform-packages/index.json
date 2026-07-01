@@ -4,9 +4,9 @@
     {
       "id": "antigravity",
       "platformId": "antigravity",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Antigravity",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -32,34 +32,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-24",
-          "notes": [
-            "Antigravity page shell, account overview, multi-instance, wakeup, and verification tabs are supplied by the platform package UI runtime.",
-            "Antigravity account, OAuth, quota, switching, multi-instance, runtime, wakeup, and verification commands now execute through the package sidecar adapter; the package no longer declares platform business native boundaries."
-          ]
         }
       ],
       "contributions": {
@@ -96,42 +85,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 7068479,
-          "sha256": "0f0306848e67f381d2e1721621e5a746cd3cea23c92b1456214aba4e40e92243"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 7069629,
+          "sha256": "cd8dac349f379c15909cebca7f45dacb91b74021680cd541b01f148ca0959e05"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 7359893,
-          "sha256": "bfef805caa4c9d074a3115b757868c699002f96d27e00c4f7c5ae327017741d9"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 7360308,
+          "sha256": "91f2642189cd389afc154431302a7793600687029bcc6942e67cb6bddaf55c38"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 7917914,
-          "sha256": "9fc2a2d0e27fe1317df8432add199e68486dad4975a0c2c45c89f70b07d46d64"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 7927644,
+          "sha256": "a345c1ee443d804ff641f684ab752594475adf0d8ce4cd6666599c37e17439c4"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 7699778,
-          "sha256": "79d9ed4ab4ce4c8a9476aa682a8ca1322cc8237b7cafc1fa91e2f5d2947755b7"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 7698568,
+          "sha256": "6ba21f2c92f4e36b4cd1d4c61b2e7b2b36585be3b5302bd5d8afcbea889fb2ed"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 7148042,
-          "sha256": "41a5d06ae1fb9b426b3457a6109a38a437a493e04464c437d3c1289350a02796"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 7151473,
+          "sha256": "75576f0562cd14c717f27d30d9896e010f744a89edbd1f358e0e9c6dae590e3e"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 7068479,
-      "sha256": "0f0306848e67f381d2e1721621e5a746cd3cea23c92b1456214aba4e40e92243",
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 7069629,
+      "sha256": "cd8dac349f379c15909cebca7f45dacb91b74021680cd541b01f148ca0959e05",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-antigravity-adapter",
@@ -214,9 +203,9 @@
     {
       "id": "antigravity_ide",
       "platformId": "antigravity_ide",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Antigravity IDE",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -242,34 +231,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-24",
-          "notes": [
-            "Antigravity IDE page shell, account overview, multi-instance, wakeup, and verification tabs are supplied by the platform package UI runtime.",
-            "Antigravity IDE account, OAuth, quota, switching, multi-instance, runtime, wakeup, and verification commands now execute through the package sidecar adapter; the package no longer declares platform business native boundaries."
-          ]
         }
       ],
       "contributions": {
@@ -306,42 +284,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 7068597,
-          "sha256": "873350f46e0f001798adc585e2f315935f360a4355a14a9e94554e37ff8432d2"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 7070382,
+          "sha256": "a5b0c4c4d85acb8a671a4f0c0b8968ec000d4913d630c8f9a820aa93bdea1586"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 7359918,
-          "sha256": "c0b211b1bac3d58efdbf70eea67a88f5319f1638ecd4ca3029e52bb1e00c6bb3"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 7360186,
+          "sha256": "467e0f04b7f5ce97bb0d2b574100ce0f26bbb5a780558db24b7cda9d224c0452"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 7918504,
-          "sha256": "60fac3e2e49480a084a07c853d3b876a6d8156050e8781ce197b7c19c9747373"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 7927833,
+          "sha256": "f4903acde09bd1df28367854dda2d9252991534a71977881f8c5886867fbec59"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 7699664,
-          "sha256": "dc78ff908670d6ad15c0be25aa562647d286411d0dfb5c54f7894ebdf5db698b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 7699751,
+          "sha256": "1d8c3882f45336434ed7584f4ed4c362058651d47ca40bcd79a9d5bcf31d53d5"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 7148289,
-          "sha256": "ed4116404af9b39a87f095f8dddc3ab55c10f388a8d1bbb1599fdcde9b1b73b7"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 7151633,
+          "sha256": "f6b3e99747d07dc8bc49c8530e658bde3e5842439b057c09d27bdb15c7f28c79"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 7068597,
-      "sha256": "873350f46e0f001798adc585e2f315935f360a4355a14a9e94554e37ff8432d2",
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/antigravity_ide-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 7070382,
+      "sha256": "a5b0c4c4d85acb8a671a4f0c0b8968ec000d4913d630c8f9a820aa93bdea1586",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-antigravity-ide-adapter",
@@ -424,9 +402,9 @@
     {
       "id": "claude_manager",
       "platformId": "claude_manager",
-      "version": "0.26.9",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Claude",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -510,56 +488,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.9",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.8",
-          "date": "2026-06-29",
-          "notes": [
-            "Restores APIKEY.FUN quick add behavior from the relay page to Claude and Claude CLI.",
-            "The Claude add dialog now opens with APIKEY.FUN provider settings prefilled even when the remote UI loads after navigation."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "恢复中转站快速添加到 Claude 和 Claude CLI 的预填行为。",
-                "即使 Claude 远端 UI 在跳转后才加载，也会自动打开添加弹框并带入 APIKEY.FUN 配置。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "恢復中轉站快速加入 Claude 和 Claude CLI 的預填行為。",
-                "即使 Claude 遠端 UI 在跳轉後才載入，也會自動開啟新增彈框並帶入 APIKEY.FUN 設定。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Claude account overview, Claude CLI, Gateway, OAuth, quota, Desktop runtime, and multi-instance tabs are supplied by the Claude platform package UI runtime and sidecar adapter.",
-            "Claude keeps nativeBoundaries empty; Core Shell only retains package lifecycle, runtime gate, adapter runner, event bridge, and system window/open capabilities."
-          ]
         }
       ],
       "contributions": {
@@ -598,49 +543,49 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-macos-aarch64.zip",
-          "downloadSizeBytes": 4869724,
-          "sha256": "45636e2306777b9cc5dbb210862bdfe2464debcc984d87bc7f65321af1a14228"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 4870716,
+          "sha256": "1c0520429cb63e3009c83fa1a6fb4c85c65d85e68b3f86a8d99d9301e8b3a5ec"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-macos-x86_64.zip",
-          "downloadSizeBytes": 5006294,
-          "sha256": "15b433bf9de5edda19335df659680c362ae0736cd8cb7b76af7fb9c30323e556"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 5003952,
+          "sha256": "15b488f5ffb7ef9f335941bc4f76e64564c95c10bd1eed0bbc6f6f2f66698ccf"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-linux-x86_64.zip",
-          "downloadSizeBytes": 5170380,
-          "sha256": "2029c0d3e090343f314f18cd22d3728ae68dbb4a68607d881839d00bd172981a"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 5177057,
+          "sha256": "f997bf27f7f61ae51c84211490dcba7fbc0c28ad1e5b8b8b939a7bddc9bd72cd"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-linux-aarch64.zip",
-          "downloadSizeBytes": 5117383,
-          "sha256": "63046c3850da59975b5a94cc232a687136bc25699d7dd3a12ba03c3f3667202b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 5116083,
+          "sha256": "62cdf6c7dae1039c7752b783ec988a0e92a93ddb494197bf9d7f7e309dff4af2"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-windows-x86_64.zip",
-          "downloadSizeBytes": 4979094,
-          "sha256": "6830b665cef160bf7bd82e2bccd690fec166c55f4f7713b2f684edc204ff3e4f"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 4979448,
+          "sha256": "87167eff56ac3ef7423be4bc8ede6c6c88f3790f5159254805cec6336e148022"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-0.26.9-macos-aarch64.zip",
-      "downloadSizeBytes": 4869724,
-      "sha256": "45636e2306777b9cc5dbb210862bdfe2464debcc984d87bc7f65321af1a14228"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/claude_manager-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 4870716,
+      "sha256": "1c0520429cb63e3009c83fa1a6fb4c85c65d85e68b3f86a8d99d9301e8b3a5ec"
     },
     {
       "id": "zed",
       "platformId": "zed",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Zed",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -692,41 +637,41 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3876890,
-          "sha256": "f6c0877b21486f1ffde1560fd716cf0802e0827b4d8490c7f4b2c99446c586cb"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3882753,
+          "sha256": "887acda63b7117d20db511e7a35cdbd6836b4cf951b6e6e64bf25bca88bd8135"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3976100,
-          "sha256": "1499f9827b1221a052e2a48d4205bbff9d22a204b014668762bc60582f46d8f4"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3982406,
+          "sha256": "b062fb586863066d012145a3d0ee74e1903ed4248a84ef1b90c77958b8b6f6b0"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4177730,
-          "sha256": "6c1b22c2df7452bca269c23c9300ee54ee012b398df8166cb0043920808482b7"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4189727,
+          "sha256": "146dc715f0a63cb51d63394d2e738234cca3eceb31a912b4fbefad3bd8fff891"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 4139072,
-          "sha256": "1007dcde66350623d3d7176be3e048fcc2ee244c24d96dbe073cd0aff7bee371"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4142739,
+          "sha256": "8d13d48ebdb4ecc8838dcfc43c7abea8566f8866a594e906af722f266345aacf"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3970287,
-          "sha256": "b515107cf40a384bae2333275600d7d2f24eea8197c5d7521271a2e0adfca55b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3981519,
+          "sha256": "0f1fa052a4cd80ac52a69f88b2e0568870f94de362e8eb9b54a1ba3569bc1bf6"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3876890,
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/zed-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3882753,
       "capabilities": [
         "accounts",
         "oauth",
@@ -736,42 +681,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-22",
-          "notes": [
-            "Zed account overview, tabs, runtime controls, and page interactions are now supplied by the Zed platform package UI runtime.",
-            "Core Shell keeps the platform package lifecycle controls while Zed page UI changes can ship through Zed package updates."
-          ]
-        },
-        {
-          "version": "0.26.6",
-          "date": "2026-06-22",
-          "notes": [
-            "Zed platform package uses a sidecar adapter boundary for accounts, OAuth, switching, quota, and runtime commands.",
-            "Platform package lifecycle supports independent install, update, uninstall, size display, and runtime readiness checks."
-          ]
         }
       ],
       "contributions": {
@@ -795,14 +721,14 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "f6c0877b21486f1ffde1560fd716cf0802e0827b4d8490c7f4b2c99446c586cb"
+      "sha256": "887acda63b7117d20db511e7a35cdbd6836b4cf951b6e6e64bf25bca88bd8135"
     },
     {
       "id": "kiro",
       "platformId": "kiro",
-      "version": "0.26.9",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Kiro",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -867,41 +793,41 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-macos-aarch64.zip",
-          "downloadSizeBytes": 3775575,
-          "sha256": "bc81b4549a471e45c8fa6766505a90187ea265fe831bf311de679de1a5a43bb2"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3777271,
+          "sha256": "4d79dee15123686729e3c49de71545913c9f6cda0abde40a1aab0bf4235f592d"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-macos-x86_64.zip",
-          "downloadSizeBytes": 3888787,
-          "sha256": "22b22341e8747ad26c2b94a3f743c7ee13fdd577bd53d046a293b0e53a028f43"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3888245,
+          "sha256": "9621b9a0ea8103224fde49dfb01b8a7c2b7c66c0d28c561ab7daffcd283e1371"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-linux-x86_64.zip",
-          "downloadSizeBytes": 4104987,
-          "sha256": "f9810802a0eaa19acbb30198b504a738bc02b5f0dbfd7a9a27baf6cafc4fecb3"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4114480,
+          "sha256": "404ec8c8724b74509f5776ccda29d02209fa00e3d5d3f405ae2cd68cdbb64ea3"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-linux-aarch64.zip",
-          "downloadSizeBytes": 4054333,
-          "sha256": "0ab3209b9f00760e9165b3c19895b941ff2a189462ff1fc88ea2cd64820fa39b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4056429,
+          "sha256": "e38e64f1632ebb3fcb5fd320c4459c7a1d3566eda59cc0f58cdbcc1633e85a2e"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-windows-x86_64.zip",
-          "downloadSizeBytes": 3885874,
-          "sha256": "7f532fda1f0d950277417c4c8fc1f4f26b40bdca7308175f511763541b3c63c5"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3887913,
+          "sha256": "f7cdbbde2fb05a933d42fce93edaa025859339d7efab133bbb70ffcc518c334b"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-0.26.9-macos-aarch64.zip",
-      "downloadSizeBytes": 3775575,
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/kiro-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3777271,
       "capabilities": [
         "accounts",
         "oauth",
@@ -912,56 +838,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.9",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Fixes the Windows adapter startup crash when an unfinished Kiro OAuth session is present.",
-            "The adapter now completes its bootstrap handshake before restoring pending OAuth listeners, and restores them inside a Tokio runtime context."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "修复 Windows 上存在未完成 Kiro OAuth 会话时 adapter 启动崩溃的问题。",
-                "adapter 现在会先完成启动握手，再在 Tokio runtime 上下文中恢复 pending OAuth 监听。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "修復 Windows 上存在未完成 Kiro OAuth 工作階段時 adapter 啟動崩潰的問題。",
-                "adapter 現在會先完成啟動握手，再於 Tokio runtime 上下文中恢復 pending OAuth 監聽。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.8",
-          "date": "2026-06-30",
-          "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Kiro account overview, multi-instance tabs, OAuth, switching, quota refresh, and page interactions are now supplied by the Kiro platform package.",
-            "Core Shell keeps only Kiro platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -987,14 +880,14 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "bc81b4549a471e45c8fa6766505a90187ea265fe831bf311de679de1a5a43bb2"
+      "sha256": "4d79dee15123686729e3c49de71545913c9f6cda0abde40a1aab0bf4235f592d"
     },
     {
       "id": "github-copilot",
       "platformId": "github-copilot",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "GitHub Copilot",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -1056,41 +949,41 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3762345,
-          "sha256": "f7ab6c37e1b175ecbfdc6f9af7f1a38bc7875c7f096bfab9c02bddde43a9c1a7"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3766226,
+          "sha256": "e00fa42a4aa9332bac5b46a72f848ca9a556793ec0ac2236ff81276c40439ebc"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3876050,
-          "sha256": "d25136c3e615a59925f4496c1f8b109444d14ef5656cec80a5e62e1bd69f3a96"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3878854,
+          "sha256": "30942dc8756eeb2e9c767cfd1aecddb310a321b126236f208711a7bb9007a078"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4090041,
-          "sha256": "727bd54b357feb00d2e5584bfdc4b4570f7674b4bd98bab379c6368d0d3928a0"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4100562,
+          "sha256": "bcc5199785c9fecbda9488a2635aa1f608d7e11ba8b1fbe8bf29ec8df20d991f"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 4037982,
-          "sha256": "c65a128e5392132e266a0ab663d1f5c379ce85dc7e8a70b724eb841fc8b463d1"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4042640,
+          "sha256": "2bfc14a47b7e85dab8cd1826be3a6f4666156911310c96e487d12b60f4a0f0e3"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3873610,
-          "sha256": "bcfb5b8317ac82c6255ad92d5ac2cf6c12ee4dad5197cdd68b358676afd1f3cb"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3877757,
+          "sha256": "5807233ccec312a900563d9763e25e49311e96c3d06464c1f520fd803563a8c9"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3762345,
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/github-copilot-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3766226,
       "capabilities": [
         "accounts",
         "oauth",
@@ -1101,34 +994,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "GitHub Copilot account overview, VS Code switching, OAuth, quota refresh, OpenCode sync, and multi-instance tabs are now supplied by the GitHub Copilot platform package.",
-            "Core Shell keeps only GitHub Copilot platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -1154,14 +1036,14 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "f7ab6c37e1b175ecbfdc6f9af7f1a38bc7875c7f096bfab9c02bddde43a9c1a7"
+      "sha256": "e00fa42a4aa9332bac5b46a72f848ca9a556793ec0ac2236ff81276c40439ebc"
     },
     {
       "id": "windsurf",
       "platformId": "windsurf",
-      "version": "0.26.9",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Windsurf",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -1228,41 +1110,41 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-0.26.9-macos-aarch64.zip",
-          "downloadSizeBytes": 3784390,
-          "sha256": "b3b331b31defa7a655b30be6d4eaa21fd0128abff040959cfae2bc9b6d74a3f7"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3787230,
+          "sha256": "b4506442a72a71d5130ce7e1cfa92fc9708aa489718ffd85fa942769b14f4010"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-0.26.9-macos-x86_64.zip",
-          "downloadSizeBytes": 3900400,
-          "sha256": "d18ad58b199b800eb8af8dd0d04f74244afd5c802b11c383eb29ea1e8eb84309"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3900178,
+          "sha256": "c64f10c5562cbe24ea650797bb8787f995fe97c11bc9503a1aa325985fa9e898"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-0.26.9-linux-x86_64.zip",
-          "downloadSizeBytes": 4113078,
-          "sha256": "8cf83f139812a6f3e18cf1ef45e586adba63d563fe483bf874a08625bf97572d"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4122270,
+          "sha256": "433ca1faeef5c31b209e7baa352f2a2d1d52fc244ad202b16b18c124d5df3d27"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-0.26.9-linux-aarch64.zip",
-          "downloadSizeBytes": 4064556,
-          "sha256": "e7871ae4b6a405e3cbea2b101a13589cf382daf186a7926853147c0a10244a3c"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4066093,
+          "sha256": "b9f39c6940104e6b05e53d838d881f0b6010898ecb7b2a995734d2670d087471"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-0.26.9-windows-x86_64.zip",
-          "downloadSizeBytes": 3899917,
-          "sha256": "611ecbf6b491b3f30381b6dd36143fa7a9752a7b38040f52e603e2d66b2dd439"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3902170,
+          "sha256": "89a1945bbe5e356536bfa75033da27984f013d90ec5688cb8c23eb5ba58e625c"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-0.26.9-macos-aarch64.zip",
-      "downloadSizeBytes": 3784390,
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/windsurf-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3787230,
       "capabilities": [
         "accounts",
         "oauth",
@@ -1274,56 +1156,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.9",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Hardens Windows adapter startup when an unfinished Windsurf OAuth session is present.",
-            "The adapter now completes its bootstrap handshake before restoring pending OAuth listeners, and restores them inside a Tokio runtime context."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "加固 Windows 上存在未完成 Windsurf OAuth 会话时的 adapter 启动流程。",
-                "adapter 现在会先完成启动握手，再在 Tokio runtime 上下文中恢复 pending OAuth 监听。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "加固 Windows 上存在未完成 Windsurf OAuth 工作階段時的 adapter 啟動流程。",
-                "adapter 現在會先完成啟動握手，再於 Tokio runtime 上下文中恢復 pending OAuth 監聽。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.8",
-          "date": "2026-06-30",
-          "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Windsurf account overview, multi-instance tabs, OAuth, token import, password login, VS Code switching, quota refresh, and page interactions are now supplied by the Windsurf platform package.",
-            "Core Shell keeps only Windsurf platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -1349,14 +1198,14 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "b3b331b31defa7a655b30be6d4eaa21fd0128abff040959cfae2bc9b6d74a3f7"
+      "sha256": "b4506442a72a71d5130ce7e1cfa92fc9708aa489718ffd85fa942769b14f4010"
     },
     {
       "id": "cursor",
       "platformId": "cursor",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Cursor",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -1425,34 +1274,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Cursor account overview, multi-instance tabs, OAuth, token import, switching, quota refresh, and page interactions are now supplied by the Cursor platform package.",
-            "Core Shell keeps only Cursor platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -1482,49 +1320,49 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3906106,
-          "sha256": "f86069c0f9b8b43c3e24c39e8a725b8dfc63b606849c7de7ccfc646c3a808a5b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3907392,
+          "sha256": "0feaa44cfe2fa3c8c5410b938bf3af3dec2e339467e1e0ddcdde0a231bfc11ca"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 4014184,
-          "sha256": "4a5cc0ac572de5a9be9baa42a40ddf0af573f47e6f1f2c696a817595bbd1e74b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 4018041,
+          "sha256": "e94c9687c43e7d7a74abd0e023202b28d0967fb160f0a03d4ed5636b45db9796"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4223286,
-          "sha256": "8225070fb919edc4b9f77799cad6a19c5b573572ffbbe6c82e52feeba8efe88c"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4234683,
+          "sha256": "fd6539c7c3a64d9c20766066d852bc33dbfc30286d215464c9952e4d0cbedc8d"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 4179765,
-          "sha256": "57e5f578e378ad5f6fe129fcd81a0424125a5c4043d353a8bb281a9a64164f0a"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4180618,
+          "sha256": "c74fe0bdc4801e07da7d82dc83d00c02354c2374e89e87a697ef825a9f256b50"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 4011730,
-          "sha256": "0c4b3b63d4bd047edc5412303f86140ec2e47b808d0fb9fb186bf6ee98863d1b"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 4014394,
+          "sha256": "8e333a9e6b03c392e6e016423c8d845a23355b736048ea333173c088c8e634ae"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3906106,
-      "sha256": "f86069c0f9b8b43c3e24c39e8a725b8dfc63b606849c7de7ccfc646c3a808a5b"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/cursor-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3907392,
+      "sha256": "0feaa44cfe2fa3c8c5410b938bf3af3dec2e339467e1e0ddcdde0a231bfc11ca"
     },
     {
       "id": "gemini",
       "platformId": "gemini",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Gemini Cli",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -1596,34 +1434,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Gemini Cli account overview, multi-instance tabs, OAuth, token import, switching, quota refresh, launch commands, and page interactions are now supplied by the Gemini platform package.",
-            "Core Shell keeps only Gemini platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -1654,49 +1481,49 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3748184,
-          "sha256": "63af1bc183df9693a7313c29c162dfe4a64ea0387dc722c70415f1db8335f9e5"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3749269,
+          "sha256": "cd7b302cfa0bc394fafa3d45561c8b2f00883d0e7af5059dd31fae521316693f"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3856002,
-          "sha256": "9a0ba021a76a7ad208eb295ecabd95832174bad5885bbef7b1cab89d9bc2f197"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3855673,
+          "sha256": "46e1b4bc4e1c99d7fa8a6b682e028dd22adbd84345c30f231efde212aa483f28"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4022775,
-          "sha256": "3d03314fdbef1ff3ac003ee0ba6bdfaa16e817daf2e2c07e6d084fbedd2d6877"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4032107,
+          "sha256": "f5612814318570c82bb01af988ffd3436194f6f8ca6da22b26a89c8e70c01a25"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 3979378,
-          "sha256": "b5ed7587759f1f399fae8ba26e88996fc0ecfe83d2e1f8424a19c3d4ebef1c35"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 3980710,
+          "sha256": "ae16578f6145be2d35a459fed32329b6cf9561bffc911d59a210e36b5c728d22"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3815004,
-          "sha256": "dafcc1aa69731f03eec26efde32f12bb8765a611f1e1572428ee5db02efa9a14"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3817229,
+          "sha256": "ee1a057363b3ed90fcd8d244d07b2f68a872a7f58e02835430c49fbef057918b"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3748184,
-      "sha256": "63af1bc183df9693a7313c29c162dfe4a64ea0387dc722c70415f1db8335f9e5"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/gemini-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3749269,
+      "sha256": "cd7b302cfa0bc394fafa3d45561c8b2f00883d0e7af5059dd31fae521316693f"
     },
     {
       "id": "trae",
       "platformId": "trae",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Trae",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -1768,34 +1595,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Trae account overview, multi-instance tabs, OAuth, token import, switching, quota refresh, launch commands, and page interactions are now supplied by the Trae platform package.",
-            "Core Shell keeps only Trae platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -1826,49 +1642,49 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3953831,
-          "sha256": "6c70e3f16e9bc6605801bf65e350f738ecc65ed94785a037ecb766f5147d7279"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3954821,
+          "sha256": "3490e1c56d548c4b451ce3c854237b8c6ef77426fa9555e804f52c488ba1934c"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 4078623,
-          "sha256": "9490a925416141b97d944bdffd279f06a9b881a75582aa034a937a2bf3885efa"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 4077485,
+          "sha256": "4b8a7e76faf3074d204d2b6e25e6690963f85f1a6e2d0722d0b920faf99c36bc"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4292825,
-          "sha256": "68b3b75fd71369a5b08ac42767414d9d8b915e6ddb468b8a64465fa6bd776d1c"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4301742,
+          "sha256": "ff9ba7ecb67a92cd90b86e5bd80ba26a11499e8c2d1c4bcfbd4ee950e9680a23"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 4230698,
-          "sha256": "6caaa5f8c0f37726a2bef39458f107ecb8623834512c303ed2327d4b726c15ce"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 4230212,
+          "sha256": "2b7e43bda1827a0040484500a1271f855c7eb4379e969d5305227457fed390c6"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 4066130,
-          "sha256": "076c5f97f536873b1c3d905327171a14fc4e76d5d8dcf692520f015a0e50767c"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 4067371,
+          "sha256": "a21b6d183373703126cb122583635c801aa4ee8673122ed47ab08d5fa1fd9b6c"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3953831,
-      "sha256": "6c70e3f16e9bc6605801bf65e350f738ecc65ed94785a037ecb766f5147d7279"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/trae-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3954821,
+      "sha256": "3490e1c56d548c4b451ce3c854237b8c6ef77426fa9555e804f52c488ba1934c"
     },
     {
       "id": "qoder",
       "platformId": "qoder",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Qoder",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -1931,41 +1747,41 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3730417,
-          "sha256": "cceee9aa66f1e98437e28af0a6b1e104d961eb182c056251640d1a83e81635ef"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3730876,
+          "sha256": "1855b76ac40bfb296b24cd5a735907d5b338919a8973ba09afc4ffcefe6992f0"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3836827,
-          "sha256": "046979ff8be24a08395b2bc26bdeed875f1d2d6824eac6b436c44f9276cfeb49"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3838516,
+          "sha256": "a0029b220bf1e2aaee2bf1cbc7c9880eb339918d8d0d20ea4369c3c8afed9e2d"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 4041991,
-          "sha256": "c6f64408317aceb920774b8470a572b20d1eca304354d099fe5897de52e65f41"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 4053639,
+          "sha256": "8d2e5561fb264a2a581b53d20c4d7af470c5ea58aee2bf90d1b9f5bc5b96a10a"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 3998461,
-          "sha256": "3b05a8bf31cdd1d30ab369bfb6b9329d99fddfab804aad26781f73f234ce1145"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 3996602,
+          "sha256": "03dc534cc057f64507561240f4eacae0305b454f8473762c260e1d5296667c2b"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3825396,
-          "sha256": "a9f49de12b9dbc2d5564e03a4e271993ce4a1cc41fec9b7a4c6d6a3dbae18be9"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3826835,
+          "sha256": "93f0e608e3e36daa3f35e6447f7d9ff9331127bfab6df43f286953187a54bdf2"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3730417,
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/qoder-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3730876,
       "capabilities": [
         "accounts",
         "oauth",
@@ -1976,34 +1792,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Qoder account overview, multi-instance tabs, OAuth, switching, quota refresh, launch commands, and page interactions are now supplied by the Qoder platform package.",
-            "Core Shell keeps only Qoder platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -2029,14 +1834,14 @@
         ],
         "nativeBoundaries": []
       },
-      "sha256": "cceee9aa66f1e98437e28af0a6b1e104d961eb182c056251640d1a83e81635ef"
+      "sha256": "1855b76ac40bfb296b24cd5a735907d5b338919a8973ba09afc4ffcefe6992f0"
     },
     {
       "id": "codebuddy",
       "platformId": "codebuddy",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "CodeBuddy",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -2107,34 +1912,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "CodeBuddy account overview, multi-instance tabs, OAuth, token import, local import, switching, quota refresh, launch commands, and page interactions are now supplied by the CodeBuddy platform package.",
-            "Core Shell keeps only CodeBuddy platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -2164,49 +1958,49 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3610164,
-          "sha256": "7bb51fb3a80b19d4271fb1b2ee0cf713564fe32662a23de5271fc1cea2f383a1"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3614420,
+          "sha256": "0a59d72b1c8b1c274ab95b60378e8901ff45ed217fa1475ea22fc14f29f99bef"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3725370,
-          "sha256": "94d4f60b14a2f44df0d4ed04416c55ccca230b3bad6473677a0d7c919d405b2c"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3729943,
+          "sha256": "e16ee6369699cbc3817972f83813d572323aaff7af68d6f7ae07e493af317456"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 3933506,
-          "sha256": "5ff7e73b80f92d61000fd4d8f41b2384ff2ef757525b1afa41976f38c5a7cf9d"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 3950350,
+          "sha256": "3677515f702782af92bc5513a4ec72088233654e639c9a297c4c00229cd4bde0"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 3885718,
-          "sha256": "79fc5f8331f3f01d9a606127e1fe61b6a00ea0fbf84bd7b1d153bb409d576183"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 3888368,
+          "sha256": "d12657a5b6cf26c89e7be5621040fb9828892784d160bfb7a66f3096734a9553"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3724830,
-          "sha256": "dabb716e8715b29983c362b965a565d5e73e1f3c6ec6dd3ad6856cb7cb85513f"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3734372,
+          "sha256": "0262fe807b09532c9aca058d3b74c9d8436f3b43d8f62ddc5ea32a7a2520e858"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3610164,
-      "sha256": "7bb51fb3a80b19d4271fb1b2ee0cf713564fe32662a23de5271fc1cea2f383a1"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3614420,
+      "sha256": "0a59d72b1c8b1c274ab95b60378e8901ff45ed217fa1475ea22fc14f29f99bef"
     },
     {
       "id": "codebuddy_cn",
       "platformId": "codebuddy_cn",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "CodeBuddy CN",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -2279,34 +2073,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "CodeBuddy CN account overview, multi-instance tabs, OAuth, token import, local import, switching, quota refresh, WorkBuddy sync, launch commands, and page interactions are now supplied by the CodeBuddy CN platform package.",
-            "Core Shell keeps only CodeBuddy CN platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -2336,49 +2119,49 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3635470,
-          "sha256": "61cdfc410eaf1890044da1e425a644aabf2e84be21a809125b9de56ff9ba749c"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3641000,
+          "sha256": "37abaf71942909cafdc38d6c7fd79adf584b64ea6594d4ade6fb89965a2b4bb7"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3756222,
-          "sha256": "30aab7023b4ed31d9b199e0f0cb07b06a674df376fccc89c09511071e013a4bd"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3761554,
+          "sha256": "d5951f545052a84b48a9827e62cb59ed3139de60965440ebb5955359cc930bc4"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 3965045,
-          "sha256": "c66b056c92192a5a4b3cb93f6a31c351d0e9f73374697887b647a1b2d638a989"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 3981055,
+          "sha256": "5eaf0dfc3871720674a9ae3d37e6016319478d6473501a5bce30dbe44be0ea4a"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 3915474,
-          "sha256": "f2109ad0110446335ff6ee905e6972720ecfd43bdbab9fe5344fc271363285ee"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 3919307,
+          "sha256": "9e4f0ee23d9c734fd078880ed6b600bcb096580e5b21aa1cac61b7241c18244e"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3755289,
-          "sha256": "62cdd173d033fa8321a528b7c14cbcb01943af21f34b2d8b93f204c776bc78ac"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3764576,
+          "sha256": "f19a8946dc2c1ee8d992423ccef5a2a414f361b9910ca54f94734470acbcef41"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3635470,
-      "sha256": "61cdfc410eaf1890044da1e425a644aabf2e84be21a809125b9de56ff9ba749c"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codebuddy_cn-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3641000,
+      "sha256": "37abaf71942909cafdc38d6c7fd79adf584b64ea6594d4ade6fb89965a2b4bb7"
     },
     {
       "id": "workbuddy",
       "platformId": "workbuddy",
-      "version": "0.26.8",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "WorkBuddy",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -2454,34 +2237,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.8",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "WorkBuddy account overview, multi-instance tabs, OAuth, token import, local import, switching, quota refresh, check-in, CodeBuddy CN sync, launch commands, and page interactions are now supplied by the WorkBuddy platform package.",
-            "Core Shell keeps only WorkBuddy platform lifecycle controls, runtime gate, Host API, and adapter runner."
-          ]
         }
       ],
       "contributions": {
@@ -2511,49 +2283,49 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-macos-aarch64.zip",
-          "downloadSizeBytes": 3630669,
-          "sha256": "06e8e9de4569b1b4428f4aad02070fc2ddb5e99150aa4363f4ad21d8980e5a37"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 3634104,
+          "sha256": "6e4217e07c76fc4de60125bb05d0533f224625531613c6a44d535c365e2ffdbc"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-macos-x86_64.zip",
-          "downloadSizeBytes": 3745501,
-          "sha256": "a5a29565b529e06660909763ac4d750ff4fa283aad2fdb4e0622bd9f48d97ecf"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 3751170,
+          "sha256": "0e5c4cbc24a369a085ea4254a971a98dd6693c95aef07ef6e190ce5be6583d44"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-linux-x86_64.zip",
-          "downloadSizeBytes": 3951297,
-          "sha256": "35555bc60486349f29c60865e69742e214f7e998573e3b1b923949e56d914d11"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 3969576,
+          "sha256": "b6cc9999a9f08c3af1793eb4e679a841f4845957a3d5deb939853b61d4000e3a"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-linux-aarch64.zip",
-          "downloadSizeBytes": 3905166,
-          "sha256": "273dd91efe94f60ff1de1d97e71c67353ed1c83f1b65ba8f90e0ff1ea5717b17"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 3907732,
+          "sha256": "e06e9875780885717d681937988da035535fdeaa4e1977a57417d97207c0f162"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-windows-x86_64.zip",
-          "downloadSizeBytes": 3743224,
-          "sha256": "44d14ec7908014c1d2890d05f6aa45dab75d6bf181bcec01d3fcf7f847283e59"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 3749910,
+          "sha256": "858df960ca9c72010a398d9c3c87e47a2744bbba38e01086ce8cca0d5f2cc804"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-0.26.8-macos-aarch64.zip",
-      "downloadSizeBytes": 3630669,
-      "sha256": "06e8e9de4569b1b4428f4aad02070fc2ddb5e99150aa4363f4ad21d8980e5a37"
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/workbuddy-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 3634104,
+      "sha256": "6e4217e07c76fc4de60125bb05d0533f224625531613c6a44d535c365e2ffdbc"
     },
     {
       "id": "codex",
       "platformId": "codex",
-      "version": "0.26.11",
+      "version": "1.0.0",
       "apiVersion": 1,
-      "minCoreVersion": "0.26.5",
+      "minCoreVersion": "1.0.0",
       "displayName": "Codex",
       "entry": "runtime/index.json",
       "packageMode": "hotUpdate",
@@ -2583,100 +2355,23 @@
       ],
       "changelog": [
         {
-          "version": "0.26.11",
-          "date": "2026-06-30",
+          "version": "1.0.0",
+          "date": "2026-07-01",
           "notes": [
-            "Adds immutable platform package version history metadata so users can install, reinstall, update, or roll back to published package versions.",
-            "Refreshes the platform package artifact for the main channel without replacing any previously published zip."
+            "Platform has been split into an independent package and now runs independently from the host application."
           ],
           "locales": {
             "zh-CN": {
               "notes": [
-                "新增不可变的平台包版本历史元数据，用户可以安装、重新安装、更新或回退到已发布的平台包版本。",
-                "刷新主通道平台包产物，同时不替换任何已发布过的旧 zip。"
+                "平台拆成独立的包独立运行。"
               ]
             },
             "zh-TW": {
               "notes": [
-                "新增不可變的平台包版本歷史中繼資料，使用者可以安裝、重新安裝、更新或回復到已發布的平台包版本。",
-                "刷新主通道平台包產物，同時不替換任何已發布過的舊 zip。"
+                "平台拆成獨立的包並獨立運行。"
               ]
             }
           }
-        },
-        {
-          "version": "0.26.10",
-          "date": "2026-06-29",
-          "notes": [
-            "Restores APIKEY.FUN quick add behavior from the relay page to Codex.",
-            "The Codex add dialog now opens with the APIKEY.FUN provider settings prefilled even when the remote UI loads after navigation."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "恢复中转站快速添加到 Codex 的预填行为。",
-                "即使 Codex 远端 UI 在跳转后才加载，也会自动打开添加弹框并带入 APIKEY.FUN 配置。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "恢復中轉站快速加入 Codex 的預填行為。",
-                "即使 Codex 遠端 UI 在跳轉後才載入，也會自動開啟新增彈框並帶入 APIKEY.FUN 設定。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.9",
-          "date": "2026-06-29",
-          "notes": [
-            "Repairs Codex account migration after upgrading from legacy JSON storage to the platform account database.",
-            "When old JSON account files contain accounts missing from SQLite, the adapter now restores the missing records without overwriting existing database records."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "修复从旧版 JSON 账号存储升级到平台账号数据库后，Codex 账号数量可能变少的问题。",
-                "当旧账号文件中存在 SQLite 缺失的账号时，adapter 会自动补齐缺失记录，同时不会覆盖数据库中已有账号。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "修復從舊版 JSON 帳號儲存升級到平台帳號資料庫後，Codex 帳號數量可能變少的問題。",
-                "當舊帳號檔案中存在 SQLite 缺少的帳號時，adapter 會自動補齊缺少記錄，同時不會覆蓋資料庫中既有帳號。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.8",
-          "date": "2026-06-27",
-          "notes": [
-            "Adds a wakeup entry in the Codex account overview. It opens the existing wakeup test dialog directly with accounts sorted by 5h quota from high to low by default.",
-            "The wakeup test account picker now supports manual sorting by default order, 5h quota, weekly quota, creation time, or email."
-          ],
-          "locales": {
-            "zh-CN": {
-              "notes": [
-                "Codex 账号总览新增“唤醒账号”入口：直接打开现有测试唤醒弹框，账号默认按 5h 额度从高到低排序。",
-                "测试唤醒账号选择器支持手动切换排序：默认顺序、5h 额度、周额度、创建时间或邮箱。"
-              ]
-            },
-            "zh-TW": {
-              "notes": [
-                "Codex 帳號總覽新增「喚醒帳號」入口：直接開啟既有測試喚醒彈框，帳號預設依 5h 額度由高到低排序。",
-                "測試喚醒帳號選擇器支援手動切換排序：預設順序、5h 額度、週額度、建立時間或信箱。"
-              ]
-            }
-          }
-        },
-        {
-          "version": "0.26.7",
-          "date": "2026-06-23",
-          "notes": [
-            "Codex account overview, model providers, API service, local gateway, wakeup tasks, sessions, thread sync, and multi-instance tabs are supplied by the Codex platform package UI runtime and sidecar adapter.",
-            "Codex keeps nativeBoundaries empty; Core Shell only retains package lifecycle, runtime gate, adapter runner, event bridge, and system window/open capabilities."
-          ]
         }
       ],
       "contributions": {
@@ -2732,42 +2427,42 @@
         {
           "os": "macos",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-macos-aarch64.zip",
-          "downloadSizeBytes": 14826118,
-          "sha256": "7fb79383b716afe169cb3dcd2728d2815ef73fe3b17b54a82db0b848d8fa8d87"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-macos-aarch64.zip",
+          "downloadSizeBytes": 14824198,
+          "sha256": "9915f6cf6531e28ae03da27f0d8755002eaef89e817eaf096b51ce069910caa8"
         },
         {
           "os": "macos",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-macos-x86_64.zip",
-          "downloadSizeBytes": 15808981,
-          "sha256": "877b6e2dd219a87a55afc23dd72edf6ecd11a4e60faa7e5a62554585f2d9d593"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-macos-x86_64.zip",
+          "downloadSizeBytes": 15809109,
+          "sha256": "caaeec76bab17e9829fe3d16b62ed080512932952b4aadc34fd41a586f4d27f7"
         },
         {
           "os": "linux",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-linux-x86_64.zip",
-          "downloadSizeBytes": 16323032,
-          "sha256": "5d4f9619c49c3cffbf11defeb28ff19eb04475f38119edf019b9545780f04137"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-linux-x86_64.zip",
+          "downloadSizeBytes": 16331001,
+          "sha256": "649fb0474fa9a9919f32a777a315c9e90289ba7f45d5c6fa378775318ddf608f"
         },
         {
           "os": "linux",
           "arch": "aarch64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-linux-aarch64.zip",
-          "downloadSizeBytes": 15321613,
-          "sha256": "bb70ce0d9bbfed4a36e94d0c1dda9d8522854b84a01df5f7272d0d7462e6a7bd"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-linux-aarch64.zip",
+          "downloadSizeBytes": 15321139,
+          "sha256": "edada4425800045a203ff6dc8be56b30829d6912c527a7a586fd890b195c84a3"
         },
         {
           "os": "windows",
           "arch": "x86_64",
-          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-windows-x86_64.zip",
-          "downloadSizeBytes": 15593079,
-          "sha256": "fd9b3e15ed116ce423ba8301fd25896df2eb9fd455ff0344acded541018f3190"
+          "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-windows-x86_64.zip",
+          "downloadSizeBytes": 15593472,
+          "sha256": "0ed44bcdc44b2eb3156861171a7f1730c37bc8b02fa99a326ca8cddbc8b1bad9"
         }
       ],
-      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-0.26.11-macos-aarch64.zip",
-      "downloadSizeBytes": 14826118,
-      "sha256": "7fb79383b716afe169cb3dcd2728d2815ef73fe3b17b54a82db0b848d8fa8d87",
+      "downloadUrl": "https://github.com/jlcodes99/cockpit-tools/releases/download/platform-packages-main/codex-1.0.0-macos-aarch64.zip",
+      "downloadSizeBytes": 14824198,
+      "sha256": "9915f6cf6531e28ae03da27f0d8755002eaef89e817eaf096b51ce069910caa8",
       "adapter": {
         "protocol": "http-json-v1",
         "entry": "adapter/macos/cockpit-codex-adapter",
