@@ -30,6 +30,7 @@ import { useCodexPelicanStore } from "../stores/useCodexPelicanStore";
 import { CodexRecycleBinModal } from "../components/CodexRecycleBinModal";
 import { emitAccountsChanged } from "../utils/accountSyncEvents";
 import { PELICAN_GROUPS_CHANGED } from "../components/codex/pelican/PelicanResults";
+import { AggregateQuotaProjectionChart } from "../components/AggregateQuotaProjectionChart";
 
 
 /** 渲染 CodexAccountsView 的 activeTab === "overview" 业务面板。 */
@@ -389,6 +390,9 @@ export function CodexAccountsOverviewPanel(props: CodexAccountsViewProps) {
               </button>
             </div>
           )}
+
+          {/* Aggregate capacity projection panel */}
+          <AggregateQuotaProjectionChart platform="codex" accounts={filteredAccounts} />
 
           <div className="toolbar">
             <div className="toolbar-left">
