@@ -134,6 +134,7 @@ import {
 } from '../utils/claudeCliLaunchPreferences';
 import { ClaudeInstancesContent } from './ClaudeInstancesPage';
 import type { InstanceProfile } from '../types/instance';
+import { AggregateQuotaProjectionChart } from '../components/AggregateQuotaProjectionChart';
 
 const CLAUDE_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.claude.flow_notice_collapsed';
 const CLAUDE_ACCOUNTS_VIEW_MODE_KEY = 'agtools.claude.accounts_view_mode';
@@ -2886,6 +2887,9 @@ export function ClaudeAccountsPage({ subPlatform = 'desktop' }: ClaudeAccountsPa
               </button>
             </div>
           )}
+
+          {/* Aggregate capacity projection panel */}
+          <AggregateQuotaProjectionChart platform="claude" accounts={filteredAccounts} />
 
           <div className="toolbar">
             <div className="toolbar-left">
