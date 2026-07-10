@@ -15,6 +15,8 @@ const TRAE_APP_NAME: &str = "Trae";
 #[cfg(target_os = "macos")]
 const CODEX_APP_PATH: &str = "/Applications/Codex.app/Contents/MacOS/Codex";
 #[cfg(target_os = "macos")]
+const CODEX_CHATGPT_APP_PATH: &str = "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT";
+#[cfg(target_os = "macos")]
 const ANTIGRAVITY_APP_PATH: &str = "/Applications/Antigravity IDE.app/Contents/MacOS/Electron";
 #[cfg(target_os = "macos")]
 const ANTIGRAVITY_LEGACY_APP_PATH: &str =
@@ -698,12 +700,17 @@ fn windows_app_launch_signature(app: &str) -> Option<WindowsAppLaunchSignature> 
             supports_multi_instance: true,
         }),
         "codex" => Some(WindowsAppLaunchSignature {
-            label: "Codex",
-            exe_names: &["Codex.exe"],
-            command_names: &["codex"],
-            protocol_names: &["codex"],
-            display_keywords: &["codex", "openai codex"],
-            common_paths: &["Codex\\Codex.exe", "OpenAI Codex\\Codex.exe"],
+            label: "ChatGPT / Codex",
+            exe_names: &["ChatGPT.exe", "Codex.exe"],
+            command_names: &["chatgpt", "codex"],
+            protocol_names: &["chatgpt", "codex"],
+            display_keywords: &["chatgpt", "codex", "openai chatgpt", "openai codex"],
+            common_paths: &[
+                "ChatGPT\\ChatGPT.exe",
+                "OpenAI ChatGPT\\ChatGPT.exe",
+                "Codex\\Codex.exe",
+                "OpenAI Codex\\Codex.exe",
+            ],
             supports_multi_instance: true,
         }),
         "vscode" => Some(WindowsAppLaunchSignature {
@@ -2152,7 +2159,7 @@ fn find_codex_process_exe() -> Option<std::path::PathBuf> {
         let _pid_str = parts.next().unwrap_or("").trim();
         let cmdline = parts.next().unwrap_or("").trim();
         let lower = cmdline.to_lowercase();
-        if !lower.contains("codex.app/contents/macos/codex") {
+        if !is_codex_macos_main_process_command_line(&lower) {
             continue;
         }
         if lower.contains("--type=") || lower.contains("crashpad_handler") {
@@ -2163,6 +2170,18 @@ fn find_codex_process_exe() -> Option<std::path::PathBuf> {
         }
     }
     None
+}
+
+#[cfg(target_os = "macos")]
+fn is_codex_macos_main_process_command_line(lower_cmdline: &str) -> bool {
+    lower_cmdline.contains("chatgpt.app/contents/macos/chatgpt")
+        || lower_cmdline.contains("codex.app/contents/macos/codex")
+}
+
+#[cfg(target_os = "macos")]
+fn resolve_codex_macos_exec_path(path_str: &str) -> Option<std::path::PathBuf> {
+    resolve_macos_exec_path(path_str, "ChatGPT")
+        .or_else(|| resolve_macos_exec_path(path_str, "Codex"))
 }
 
 #[cfg(target_os = "windows")]
@@ -3196,10 +3215,14 @@ fn compare_windows_store_version(left: &[u32], right: &[u32]) -> std::cmp::Order
 #[cfg(target_os = "windows")]
 fn parse_codex_store_version_from_dir_name(dir_name: &str) -> Option<Vec<u32>> {
     let lower = dir_name.to_ascii_lowercase();
-    if !lower.starts_with("openai.codex_") {
-        return None;
-    }
-    let suffix = dir_name.get("OpenAI.Codex_".len()..)?;
+    let prefix = [
+        "openai.chatgpt_",
+        "openai.chatgpt-desktop_",
+        "openai.codex_",
+    ]
+    .iter()
+    .find(|prefix| lower.starts_with(**prefix))?;
+    let suffix = dir_name.get(prefix.len()..)?;
     let version_part = suffix.split('_').next()?.trim();
     if version_part.is_empty() {
         return None;
@@ -3215,6 +3238,17 @@ fn parse_codex_store_version_from_dir_name(dir_name: &str) -> Option<Vec<u32>> {
         return None;
     }
     Some(version)
+}
+
+#[cfg(target_os = "windows")]
+fn find_codex_windows_app_main_exe(app_dir: &std::path::Path) -> Option<std::path::PathBuf> {
+    for exe_name in ["ChatGPT.exe", "Codex.exe"] {
+        let candidate = app_dir.join(exe_name);
+        if candidate.exists() {
+            return Some(candidate);
+        }
+    }
+    None
 }
 
 #[cfg(target_os = "windows")]
@@ -3252,10 +3286,10 @@ fn detect_codex_exec_path_by_windowsapps_scan() -> Option<std::path::PathBuf> {
                 continue;
             };
 
-            let candidate = entry.path().join("app").join("Codex.exe");
-            if !candidate.exists() {
-                continue;
-            }
+            let candidate = match find_codex_windows_app_main_exe(&entry.path().join("app")) {
+                Some(path) => path,
+                None => continue,
+            };
 
             let replace = match &best {
                 None => true,
@@ -3282,9 +3316,22 @@ fn detect_codex_exec_path_by_windowsapps_scan() -> Option<std::path::PathBuf> {
 
 #[cfg(target_os = "windows")]
 fn detect_codex_exec_path_by_appx_install_location() -> Option<std::path::PathBuf> {
-    let script = r#"$pkg = Get-AppxPackage -Name 'OpenAI.Codex' -ErrorAction SilentlyContinue |
+    let script = r#"$names = @('OpenAI.ChatGPT', 'OpenAI.ChatGPT-Desktop', 'OpenAI.Codex')
+$pkg = $names |
+  ForEach-Object { Get-AppxPackage -Name $_ -ErrorAction SilentlyContinue } |
   Sort-Object -Property Version -Descending |
   Select-Object -First 1
+if (-not $pkg) {
+  $pkg = Get-AppxPackage |
+    Where-Object {
+      $_.Name -like 'OpenAI.ChatGPT*' -or
+      $_.Name -like 'OpenAI.Codex*' -or
+      $_.PackageFamilyName -like 'OpenAI.ChatGPT*' -or
+      $_.PackageFamilyName -like 'OpenAI.Codex*'
+    } |
+  Sort-Object -Property Version -Descending |
+  Select-Object -First 1
+}
 if ($pkg -and -not [string]::IsNullOrWhiteSpace($pkg.InstallLocation)) {
   Write-Output ([string]$pkg.InstallLocation.Trim())
 }"#;
@@ -3300,9 +3347,11 @@ if ($pkg -and -not [string]::IsNullOrWhiteSpace($pkg.InstallLocation)) {
         if install_location.is_empty() {
             continue;
         }
-        let candidate = std::path::PathBuf::from(install_location)
-            .join("app")
-            .join("Codex.exe");
+        let Some(candidate) = find_codex_windows_app_main_exe(
+            &std::path::PathBuf::from(install_location).join("app"),
+        ) else {
+            continue;
+        };
         if candidate.exists() {
             crate::modules::logger::log_info(&format!(
                 "[Path Detect] codex appx install hit: {}",
@@ -3316,7 +3365,14 @@ if ($pkg -and -not [string]::IsNullOrWhiteSpace($pkg.InstallLocation)) {
 
 #[cfg(target_os = "windows")]
 fn detect_codex_store_app_user_model_id_by_startapps() -> Option<String> {
-    let script = r#"$entry = Get-StartApps | Where-Object { $_.AppID -like 'OpenAI.Codex_*' } |
+    let script = r#"$entry = Get-StartApps |
+  Where-Object {
+    $_.AppID -like 'OpenAI.ChatGPT*' -or
+    $_.AppID -like 'OpenAI.Codex_*' -or
+    $_.Name -like 'ChatGPT*' -or
+    $_.Name -like 'Codex*'
+  } |
+  Sort-Object @{ Expression = { if ($_.AppID -like 'OpenAI.ChatGPT*' -or $_.Name -like 'ChatGPT*') { 0 } else { 1 } } }, Name |
   Select-Object -First 1
 if ($entry -and -not [string]::IsNullOrWhiteSpace($entry.AppID)) {
   Write-Output ([string]$entry.AppID.Trim())
@@ -3339,9 +3395,22 @@ if ($entry -and -not [string]::IsNullOrWhiteSpace($entry.AppID)) {
 
 #[cfg(target_os = "windows")]
 fn detect_codex_store_app_user_model_id_by_appx_fallback() -> Option<String> {
-    let script = r#"$pkg = Get-AppxPackage -Name 'OpenAI.Codex' -ErrorAction SilentlyContinue |
+    let script = r#"$names = @('OpenAI.ChatGPT', 'OpenAI.ChatGPT-Desktop', 'OpenAI.Codex')
+$pkg = $names |
+  ForEach-Object { Get-AppxPackage -Name $_ -ErrorAction SilentlyContinue } |
   Sort-Object -Property Version -Descending |
   Select-Object -First 1
+if (-not $pkg) {
+  $pkg = Get-AppxPackage |
+    Where-Object {
+      $_.Name -like 'OpenAI.ChatGPT*' -or
+      $_.Name -like 'OpenAI.Codex*' -or
+      $_.PackageFamilyName -like 'OpenAI.ChatGPT*' -or
+      $_.PackageFamilyName -like 'OpenAI.Codex*'
+    } |
+  Sort-Object -Property Version -Descending |
+  Select-Object -First 1
+}
 if ($pkg -and -not [string]::IsNullOrWhiteSpace($pkg.PackageFamilyName)) {
   Write-Output ([string]($pkg.PackageFamilyName.Trim() + '!App'))
 }"#;
@@ -3517,6 +3586,10 @@ pub(crate) fn detect_codex_exec_path() -> Option<std::path::PathBuf> {
     #[cfg(target_os = "macos")]
     {
         if let Some(path) = find_codex_process_exe() {
+            return Some(path);
+        }
+        let path = std::path::PathBuf::from(CODEX_CHATGPT_APP_PATH);
+        if path.exists() {
             return Some(path);
         }
         let path = std::path::PathBuf::from(CODEX_APP_PATH);
@@ -3968,7 +4041,7 @@ fn resolve_workbuddy_launch_path() -> Result<std::path::PathBuf, String> {
 #[cfg(target_os = "macos")]
 fn resolve_codex_launch_path() -> Result<std::path::PathBuf, String> {
     if let Some(custom) = normalize_custom_path(Some(&config::get_user_config().codex_app_path)) {
-        if let Some(exec) = resolve_macos_exec_path(&custom, "Codex") {
+        if let Some(exec) = resolve_codex_macos_exec_path(&custom) {
             return Ok(exec);
         }
         if let Some(detected) = detect_and_save_codex_launch_path() {
@@ -8908,7 +8981,7 @@ pub fn collect_codex_process_entries() -> Vec<(u32, Option<String>)> {
     let mut result = Vec::new();
     let mut pids: Vec<u32> = Vec::new();
     if let Ok(output) = Command::new("pgrep")
-        .args(["-f", "Codex.app/Contents/MacOS/Codex"])
+        .args(["-f", "(ChatGPT|Codex)\\.app/Contents/MacOS/(ChatGPT|Codex)"])
         .output()
     {
         if output.status.success() {
@@ -8941,10 +9014,8 @@ pub fn collect_codex_process_entries() -> Vec<(u32, Option<String>)> {
                 Ok(value) => value,
                 Err(_) => continue,
             };
-            if !cmdline
-                .to_lowercase()
-                .contains("codex.app/contents/macos/codex")
-            {
+            let lower = cmdline.to_lowercase();
+            if !is_codex_macos_main_process_command_line(&lower) {
                 continue;
             }
             pids.push(pid);
@@ -8970,7 +9041,7 @@ pub fn collect_codex_process_entries() -> Vec<(u32, Option<String>)> {
             continue;
         }
         let lower = cmdline.to_lowercase();
-        if !lower.contains("codex.app/contents/macos/codex") {
+        if !is_codex_macos_main_process_command_line(&lower) {
             continue;
         }
         let tokens = split_command_tokens(&cmdline);
@@ -9031,10 +9102,9 @@ fn collect_codex_process_entries_from_powershell(
     expected_exe_path: &str,
 ) -> Vec<(u32, Option<String>)> {
     let mut entries: Vec<(u32, Option<String>)> = Vec::new();
-    let process = escape_powershell_single_quoted("Codex.exe");
     let expected = escape_powershell_single_quoted(expected_exe_path);
     let script = format!(
-        r#"$processName='{process}';
+        r#"$processNames=@('ChatGPT.exe','Codex.exe');
 $expectedRaw='{expected}';
 function Normalize-ExePath([string]$path) {{
   if ([string]::IsNullOrWhiteSpace($path)) {{ return $null }}
@@ -9069,11 +9139,15 @@ function Get-ExePathFromCmdLine([string]$cmdline) {{
 }}
 $expected = Normalize-ExePath $expectedRaw
 if ([string]::IsNullOrWhiteSpace($expected)) {{ exit 0 }}
-Get-CimInstance Win32_Process -Filter ("Name='" + $processName + "'") |
+Get-CimInstance Win32_Process |
   Where-Object {{
-    $exe = Normalize-ExePath $_.ExecutablePath
-    if (-not $exe) {{ $exe = Normalize-ExePath (Get-ExePathFromCmdLine $_.CommandLine) }}
-    $exe -eq $expected
+    if (-not ($processNames -contains $_.Name)) {{
+      $false
+    }} else {{
+      $exe = Normalize-ExePath $_.ExecutablePath
+      if (-not $exe) {{ $exe = Normalize-ExePath (Get-ExePathFromCmdLine $_.CommandLine) }}
+      $exe -eq $expected
+    }}
   }} |
   ForEach-Object {{ "$($_.ProcessId)|$($_.ParentProcessId)|$($_.CommandLine)" }}"#
     );
@@ -9178,7 +9252,11 @@ fn collect_codex_process_entries_from_sysinfo_fallback(
             .and_then(|value| value.to_str())
             .unwrap_or("")
             .to_lowercase();
-        if name != "codex.exe" && !exe_path.ends_with("\\codex.exe") {
+        if name != "codex.exe"
+            && name != "chatgpt.exe"
+            && !exe_path.ends_with("\\codex.exe")
+            && !exe_path.ends_with("\\chatgpt.exe")
+        {
             continue;
         }
         let (resolved_exe, _) = resolve_windows_process_exe_for_match(process);
@@ -9240,7 +9318,7 @@ fn collect_codex_main_process_pids_from_sysinfo_fast(expected_exe_path: &str) ->
         }
 
         let name = process.name().to_string_lossy().to_ascii_lowercase();
-        if name != "codex.exe" {
+        if name != "codex.exe" && name != "chatgpt.exe" {
             continue;
         }
         let (resolved_exe, _) = resolve_windows_process_exe_for_match(process);
@@ -12754,6 +12832,24 @@ mod legacy_platform_adapter_cleanup_tests {
     }
 }
 
+#[cfg(all(test, target_os = "macos"))]
+mod codex_macos_launch_tests {
+    use super::is_codex_macos_main_process_command_line;
+
+    #[test]
+    fn matches_chatgpt_and_legacy_codex_main_processes() {
+        assert!(is_codex_macos_main_process_command_line(
+            "/applications/chatgpt.app/contents/macos/chatgpt"
+        ));
+        assert!(is_codex_macos_main_process_command_line(
+            "/applications/codex.app/contents/macos/codex"
+        ));
+        assert!(!is_codex_macos_main_process_command_line(
+            "/applications/chatgpt.app/contents/resources/codex app-server"
+        ));
+    }
+}
+
 #[cfg(all(test, target_os = "windows"))]
 mod tests {
     use super::{windows_app_launch_signature, windows_trae_candidate_matches_platform};
@@ -12808,6 +12904,19 @@ mod tests {
             .exe_names
             .iter()
             .any(|name| name.eq_ignore_ascii_case("Antigravity.exe")));
+    }
+
+    #[test]
+    fn codex_signature_accepts_chatgpt_and_legacy_codex_executables() {
+        let signature = windows_app_launch_signature("codex").expect("codex signature must exist");
+        assert!(signature
+            .exe_names
+            .iter()
+            .any(|name| name.eq_ignore_ascii_case("ChatGPT.exe")));
+        assert!(signature
+            .exe_names
+            .iter()
+            .any(|name| name.eq_ignore_ascii_case("Codex.exe")));
     }
 
     #[test]

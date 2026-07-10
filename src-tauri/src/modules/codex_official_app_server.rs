@@ -10,7 +10,10 @@ use serde_json::{json, Value as JsonValue};
 use std::os::windows::process::CommandExt;
 
 #[cfg(target_os = "macos")]
-const CODEX_APP_SERVER_MACOS_EXECUTABLE: &str = "/Applications/Codex.app/Contents/Resources/codex";
+const CODEX_APP_SERVER_MACOS_EXECUTABLES: &[&str] = &[
+    "/Applications/ChatGPT.app/Contents/Resources/codex",
+    "/Applications/Codex.app/Contents/Resources/codex",
+];
 const CODEX_APP_SERVER_EXECUTABLE_ENV: &str = "CODEX_APP_SERVER_EXECUTABLE";
 const APP_SERVER_RESPONSE_TIMEOUT: Duration = Duration::from_secs(20);
 
@@ -203,7 +206,9 @@ fn add_codex_app_server_candidates(candidates: &mut Vec<PathBuf>) {
     }
 
     #[cfg(target_os = "macos")]
-    push_candidate(candidates, PathBuf::from(CODEX_APP_SERVER_MACOS_EXECUTABLE));
+    for executable in CODEX_APP_SERVER_MACOS_EXECUTABLES {
+        push_candidate(candidates, PathBuf::from(executable));
+    }
 }
 
 fn push_candidate_from_codex_launch_path(candidates: &mut Vec<PathBuf>, launch_path: &Path) {
@@ -232,12 +237,25 @@ fn app_server_executable_from_codex_launch_path(path: &Path) -> Option<PathBuf> 
         return Some(path.join("Contents").join("Resources").join("codex"));
     }
 
+    if path_file_name_eq(path, "chatgpt.app") {
+        return Some(path.join("Contents").join("Resources").join("codex"));
+    }
+
     if path_file_name_eq(path, "codex") && parent_file_name_eq(path, "macos") {
         let contents_dir = path.parent()?.parent()?;
         return Some(contents_dir.join("Resources").join("codex"));
     }
 
+    if path_file_name_eq(path, "chatgpt") && parent_file_name_eq(path, "macos") {
+        let contents_dir = path.parent()?.parent()?;
+        return Some(contents_dir.join("Resources").join("codex"));
+    }
+
     if path_file_name_eq(path, "codex.exe") {
+        return Some(path.parent()?.join("resources").join("codex.exe"));
+    }
+
+    if path_file_name_eq(path, "chatgpt.exe") {
         return Some(path.parent()?.join("resources").join("codex.exe"));
     }
 
@@ -351,6 +369,18 @@ mod tests {
     }
 
     #[test]
+    fn maps_chatgpt_macos_launch_binary_to_resources_app_server() {
+        let launch_path = PathBuf::from("/Applications/ChatGPT.app/Contents/MacOS/ChatGPT");
+        let app_server_path = app_server_executable_from_codex_launch_path(&launch_path)
+            .expect("resolve app-server path");
+
+        assert_eq!(
+            app_server_path,
+            PathBuf::from("/Applications/ChatGPT.app/Contents/Resources/codex")
+        );
+    }
+
+    #[test]
     fn maps_macos_app_root_to_resources_app_server() {
         let launch_path = PathBuf::from("/Applications/Codex.app");
         let app_server_path = app_server_executable_from_codex_launch_path(&launch_path)
@@ -359,6 +389,18 @@ mod tests {
         assert_eq!(
             app_server_path,
             PathBuf::from("/Applications/Codex.app/Contents/Resources/codex")
+        );
+    }
+
+    #[test]
+    fn maps_chatgpt_macos_app_root_to_resources_app_server() {
+        let launch_path = PathBuf::from("/Applications/ChatGPT.app");
+        let app_server_path = app_server_executable_from_codex_launch_path(&launch_path)
+            .expect("resolve app-server path");
+
+        assert_eq!(
+            app_server_path,
+            PathBuf::from("/Applications/ChatGPT.app/Contents/Resources/codex")
         );
     }
 
@@ -373,6 +415,21 @@ mod tests {
             app_server_path,
             PathBuf::from(
                 "C:/Program Files/WindowsApps/OpenAI.Codex_1.2.3/app/resources/codex.exe"
+            )
+        );
+    }
+
+    #[test]
+    fn maps_chatgpt_windows_launch_binary_to_resources_app_server() {
+        let launch_path =
+            PathBuf::from("C:/Program Files/WindowsApps/OpenAI.ChatGPT_1.2.3/app/ChatGPT.exe");
+        let app_server_path = app_server_executable_from_codex_launch_path(&launch_path)
+            .expect("resolve app-server path");
+
+        assert_eq!(
+            app_server_path,
+            PathBuf::from(
+                "C:/Program Files/WindowsApps/OpenAI.ChatGPT_1.2.3/app/resources/codex.exe"
             )
         );
     }
