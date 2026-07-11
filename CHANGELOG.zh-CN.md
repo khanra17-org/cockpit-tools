@@ -7,6 +7,19 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)。
 
 ---
+## [1.2.0] - 2026-07-11
+
+### 新增
+
+- **新增 ZCode 平台账号管理**：支持 Z.ai 与 BigModel OAuth 和 API Key 账号、本机与 JSON 导入导出、真实切号、配额查询、标签筛选、批量操作、启动路径设置，以及 macOS、Windows、Linux 隔离多开。
+
+### 变更
+
+- **Codex 模型加载改为动态发现**：移除基于 CDP 的 `codex_model_injector` 和 Cockpit 静态模型目录覆盖，官方客户端改为从当前模型供应商或实例专属本地网关动态发现模型，同时保留用户自定义模型目录。
+- **Codex Chat Completions 供应商改用稳定的客户端模型别名**：上游模型会映射到官方客户端兼容槽位，并在请求发出前还原为真实上游模型；不再使用时会清理生成的 profile 覆盖。
+- **macOS Codex OAuth 支持应用内无痕 WebView**：Windows 与 Linux 继续使用普通浏览器和手动回调流程，不显示该入口。
+
+---
 ## [1.1.5] - 2026-07-11
 
 ### 新增

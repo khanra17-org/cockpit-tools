@@ -4625,6 +4625,13 @@
     "token": {
       "desc": "Cockpit tarafından dışa aktarılan ZCode hesap JSON'unu yapıştırın."
     },
+    "apiKey": {
+      "tab": "API Anahtarı",
+      "desc": "Resmî bir Z.ai veya BigModel API Anahtarı ekleyin. Hesap değiştirme ve yönetilen örnekler anahtarı kendi config.json dosyasına yazar.",
+      "placeholder": "API Anahtarını yapıştırın",
+      "add": "API Anahtarı ekle",
+      "provider": "API Anahtarı hizmeti"
+    },
     "import": {
       "localDesc": "Şifreli yerel ZCode kimlik bilgilerini veya JSON dosyasını içe aktarın.",
       "localClient": "Yerel ZCode'dan Aktar"

@@ -4618,6 +4618,13 @@
     "token": {
       "desc": "Paste a ZCode account JSON exported by Cockpit."
     },
+    "apiKey": {
+      "tab": "API Key",
+      "desc": "Add an official Z.ai or BigModel API Key. Account switching and managed instances write it to their own config.json.",
+      "placeholder": "Paste API Key",
+      "add": "Add API Key",
+      "provider": "API Key service"
+    },
     "import": {
       "localDesc": "Import from encrypted local ZCode credentials or a JSON file.",
       "localClient": "Import from Local ZCode"

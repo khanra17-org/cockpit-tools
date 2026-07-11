@@ -4625,6 +4625,13 @@
     "token": {
       "desc": "貼上由 Cockpit 匯出的 ZCode 帳號 JSON。"
     },
+    "apiKey": {
+      "tab": "API 金鑰",
+      "desc": "新增 Z.ai 或 BigModel 官方 API Key。切換帳號與受管執行個體會寫入各自的 config.json。",
+      "placeholder": "貼上 API Key",
+      "add": "新增 API Key",
+      "provider": "API Key 服務"
+    },
     "import": {
       "localDesc": "從本機 ZCode 加密憑證或 JSON 檔案匯入帳號。",
       "localClient": "從本機 ZCode 匯入"

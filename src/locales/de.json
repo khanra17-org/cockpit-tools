@@ -4625,6 +4625,13 @@
     "token": {
       "desc": "Fügen Sie ein von Cockpit exportiertes ZCode-Konto-JSON ein."
     },
+    "apiKey": {
+      "tab": "API-Schlüssel",
+      "desc": "Fügen Sie einen offiziellen API-Schlüssel von Z.ai oder BigModel hinzu. Beim Kontowechsel und in verwalteten Instanzen wird er in deren config.json geschrieben.",
+      "placeholder": "API-Schlüssel einfügen",
+      "add": "API-Schlüssel hinzufügen",
+      "provider": "API-Schlüsseldienst"
+    },
     "import": {
       "localDesc": "Aus verschlüsselten lokalen ZCode-Zugangsdaten oder einer JSON-Datei importieren.",
       "localClient": "Aus lokalem ZCode importieren"

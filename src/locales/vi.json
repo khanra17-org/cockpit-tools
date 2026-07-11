@@ -4625,6 +4625,13 @@
     "token": {
       "desc": "Dán JSON tài khoản ZCode đã xuất từ Cockpit."
     },
+    "apiKey": {
+      "tab": "Khóa API",
+      "desc": "Thêm Khóa API chính thức của Z.ai hoặc BigModel. Khi chuyển tài khoản và dùng phiên bản được quản lý, khóa được ghi vào config.json riêng.",
+      "placeholder": "Dán Khóa API",
+      "add": "Thêm Khóa API",
+      "provider": "Dịch vụ Khóa API"
+    },
     "import": {
       "localDesc": "Nhập thông tin ZCode cục bộ đã mã hóa hoặc tệp JSON.",
       "localClient": "Nhập từ ZCode cục bộ"

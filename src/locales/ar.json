@@ -4671,6 +4671,13 @@
     "token": {
       "desc": "الصق ملف JSON لحساب ZCode مُصدّرًا من Cockpit."
     },
+    "apiKey": {
+      "tab": "مفتاح API",
+      "desc": "أضف مفتاح API رسميًا من Z.ai أو BigModel. عند تبديل الحساب أو تشغيل مثيلات متعددة، يُكتب المفتاح في config.json الخاص بكل مثيل.",
+      "placeholder": "الصق مفتاح API",
+      "add": "إضافة مفتاح API",
+      "provider": "خدمة مفتاح API"
+    },
     "import": {
       "localDesc": "استورد بيانات اعتماد ZCode المحلية المشفرة أو ملف JSON.",
       "localClient": "استيراد من ZCode المحلي"

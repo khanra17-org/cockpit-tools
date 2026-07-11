@@ -4466,6 +4466,13 @@
     "token": {
       "desc": "Tempel JSON akun ZCode yang diekspor oleh Cockpit."
     },
+    "apiKey": {
+      "tab": "Kunci API",
+      "desc": "Tambahkan Kunci API resmi Z.ai atau BigModel. Pergantian akun dan instans terkelola menuliskannya ke config.json masing-masing.",
+      "placeholder": "Tempel Kunci API",
+      "add": "Tambah Kunci API",
+      "provider": "Layanan Kunci API"
+    },
     "import": {
       "localDesc": "Impor kredensial lokal ZCode terenkripsi atau berkas JSON.",
       "localClient": "Impor dari ZCode Lokal"

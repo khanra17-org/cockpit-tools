@@ -4619,7 +4619,7 @@
       "desc": "粘贴由 Cockpit 导出的 ZCode 账号 JSON。"
     },
     "apiKey": {
-      "tab": "API Key",
+      "tab": "API 密钥",
       "desc": "添加 ZCode 官方支持的 Z.ai 或 BigModel API Key。切号和多开实例会写入各自的 config.json。",
       "placeholder": "粘贴 API Key",
       "add": "添加 API Key",

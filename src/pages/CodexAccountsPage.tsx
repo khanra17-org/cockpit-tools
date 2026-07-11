@@ -135,6 +135,7 @@ import { CodexModelProviderManager } from "../components/codex/CodexModelProvide
 import { CodexSpeedSelect } from "../components/codex/CodexSpeedSelect";
 import { QuickSettingsPopover } from "../components/QuickSettingsPopover";
 import { useProviderAccountsPage } from "../hooks/useProviderAccountsPage";
+import { usePlatformRuntimeSupport } from "../hooks/usePlatformRuntimeSupport";
 import {
   MultiSelectFilterDropdown,
   type MultiSelectFilterOption,
@@ -866,6 +867,7 @@ function resolveApiProviderPresetDefaults(
 }
 
 export function CodexAccountsPage() {
+  const isMacOS = usePlatformRuntimeSupport("macos-only");
   const sponsorModule = useSponsorStore((state) => state.state.sponsorModule);
   const fetchSponsorState = useSponsorStore((state) => state.fetchState);
   const [activeTab, setActiveTab] = useState<CodexTab>("overview");
@@ -13330,7 +13332,7 @@ export function CodexAccountsPage() {
                                   "Open in Browser",
                                 )}
                           </button>
-                          {!isOauthTimeoutState && (
+                          {!isOauthTimeoutState && isMacOS && (
                             <button
                               type="button"
                               className="btn btn-secondary btn-full"

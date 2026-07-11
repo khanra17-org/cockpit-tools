@@ -4625,6 +4625,13 @@
     "token": {
       "desc": "Cockpit からエクスポートした ZCode アカウント JSON を貼り付けます。"
     },
+    "apiKey": {
+      "tab": "API キー",
+      "desc": "Z.ai または BigModel の公式 API キーを追加します。アカウント切り替えや管理対象インスタンスでは、それぞれの config.json に書き込みます。",
+      "placeholder": "API キーを貼り付け",
+      "add": "API キーを追加",
+      "provider": "API キーサービス"
+    },
     "import": {
       "localDesc": "ローカルの暗号化された ZCode 認証情報または JSON ファイルからインポートします。",
       "localClient": "ローカル ZCode からインポート"
