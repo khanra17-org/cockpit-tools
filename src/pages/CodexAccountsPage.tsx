@@ -156,6 +156,7 @@ import {
 import { CodexModelProviderManager } from "../components/codex/CodexModelProviderManager";
 import { CodexSpeedSelect } from "../components/codex/CodexSpeedSelect";
 import { QuickSettingsPopover } from "../components/QuickSettingsPopover";
+import { AggregateQuotaProjectionChart } from "../components/AggregateQuotaProjectionChart";
 import { useProviderAccountsPage } from "../hooks/useProviderAccountsPage";
 import { usePlatformRuntimeSupport } from "../hooks/usePlatformRuntimeSupport";
 import {
@@ -13417,6 +13418,9 @@ export function CodexAccountsPage() {
               </button>
             </div>
           )}
+
+          {/* Aggregate capacity projection panel */}
+          <AggregateQuotaProjectionChart platform="codex" accounts={filteredAccounts} />
 
           {activeGroup && (
             <div className="folder-breadcrumb">

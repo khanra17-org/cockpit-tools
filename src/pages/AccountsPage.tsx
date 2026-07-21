@@ -91,6 +91,8 @@ import {
 } from '../utils/antigravityAccountSort'
 import { OverviewTabsHeader } from '../components/OverviewTabsHeader'
 import styles from '../styles/CompactView.module.css'
+import { AggregateQuotaProjectionChart } from '../components/AggregateQuotaProjectionChart'
+import '../styles/pages/accounts.css'
 import { FileCorruptedModal, parseFileCorruptedError, type FileCorruptedError } from '../components/FileCorruptedModal'
 import { AccountSelectionToolbar } from '../components/AccountSelectionToolbar'
 import { QuickSettingsPopover } from '../components/QuickSettingsPopover'
@@ -3636,6 +3638,9 @@ export function AccountsPage({ onNavigate }: AccountsPageProps) {
           onOpenManual={() => onNavigate?.('manual')}
           subtitle={t('overview.subtitle')}
         />
+
+        {/* Aggregate Antigravity Usage Projection Panel */}
+        <AggregateQuotaProjectionChart platform="antigravity" accounts={filteredAccounts} />
 
         {/* 面包屑：进入分组后显示 */}
         {activeGroup && (
