@@ -1,0 +1,105 @@
+name: ⚡ Personal Windows x64 NSIS
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "personal-windows-nsis-*"
+
+concurrency:
+  group: personal-windows-nsis-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-nsis:
+    name: "🏗️ Build: Windows x64 NSIS"
+    runs-on: blacksmith-32vcpu-windows-2025
+    permissions:
+      contents: read
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🦀 Rust setup
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: 🦀 Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          key: personal-windows-x64-nsis
+
+      - name: 🐹 Go setup
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: sidecars/cockpit-cliproxy/go.mod
+          cache-dependency-path: sidecars/cockpit-cliproxy/go.sum
+
+      - name: ⚙️ Node.js setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: 📦 Install frontend dependencies
+        run: npm ci
+
+      - name: 🔄 Sync versions
+        run: npm run sync-version
+
+      - name: 💾 Cache Tauri tooling
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\tauri
+          key: tauri-windows-x64-${{ hashFiles('package-lock.json', '**/Cargo.toml') }}
+          restore-keys: |
+            tauri-windows-x64-
+
+      - name: 🏗️ Build NSIS installer
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -o pipefail
+          npx tauri build --ci --bundles nsis 2>&1 | tee build-windows-x64-nsis.log
+
+      - name: 📜 Print build log on failure
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f build-windows-x64-nsis.log ]; then
+            tail -n 200 build-windows-x64-nsis.log
+          else
+            echo "Build log not found"
+          fi
+
+      - name: 📊 Write build summary
+        if: always()
+        shell: bash
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          if [ "$JOB_STATUS" = "success" ]; then
+            result="✅ **NSIS installer built successfully.**"
+          else
+            result="❌ **NSIS installer build failed.**"
+          fi
+
+          {
+            echo "### ⚡ Personal Windows x64 NSIS"
+            echo
+            echo "$result"
+            echo
+            echo "- Runner: \`blacksmith-32vcpu-windows-2025\`"
+            echo "- Bundle: \`target/release/bundle/nsis/*.exe\`"
+            echo
+            echo "---"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 📤 Upload NSIS installer
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cockpit-tools-windows-x64-nsis
+          retention-days: 14
+          if-no-files-found: error
+          path: target/release/bundle/nsis/*.exe
