@@ -1,0 +1,8 @@
+{
+  "build": {
+    "beforeBuildCommand": "node scripts/prepare-tauri.cjs && npm run sync-version && npx vite build"
+  },
+  "bundle": {
+    "createUpdaterArtifacts": false
+  }
+}
