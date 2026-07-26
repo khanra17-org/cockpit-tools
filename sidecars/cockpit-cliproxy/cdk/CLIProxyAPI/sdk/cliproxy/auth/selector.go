@@ -368,6 +368,69 @@ func (s *FillFirstSelector) Pick(ctx context.Context, provider, model string, op
 	return available[0], nil
 }
 
+func matchWildcard(pattern, value string) bool {
+	if pattern == "" {
+		return false
+	}
+
+	if !strings.Contains(pattern, "*") {
+		return pattern == value
+	}
+
+	parts := strings.Split(pattern, "*")
+	if prefix := parts[0]; prefix != "" {
+		if !strings.HasPrefix(value, prefix) {
+			return false
+		}
+		value = value[len(prefix):]
+	}
+
+	if suffix := parts[len(parts)-1]; suffix != "" {
+		if !strings.HasSuffix(value, suffix) {
+			return false
+		}
+		value = value[:len(value)-len(suffix)]
+	}
+
+	for i := 1; i < len(parts)-1; i++ {
+		segment := parts[i]
+		if segment == "" {
+			continue
+		}
+		idx := strings.Index(value, segment)
+		if idx < 0 {
+			return false
+		}
+		value = value[idx+len(segment):]
+	}
+
+	return true
+}
+
+func isModelExcludedForAuth(auth *Auth, model string) bool {
+	if auth == nil || auth.Attributes == nil || model == "" {
+		return false
+	}
+	rawExcluded, ok := auth.Attributes["excluded_models"]
+	if !ok || strings.TrimSpace(rawExcluded) == "" {
+		return false
+	}
+	patterns := strings.Split(rawExcluded, ",")
+	targetModel := strings.ToLower(strings.TrimSpace(model))
+	baseModel := strings.ToLower(canonicalModelKey(model))
+
+	for _, rawPat := range patterns {
+		pat := strings.ToLower(strings.TrimSpace(rawPat))
+		if pat == "" {
+			continue
+		}
+		if matchWildcard(pat, targetModel) || (baseModel != "" && matchWildcard(pat, baseModel)) {
+			return true
+		}
+	}
+	return false
+}
+
 func isAuthBlockedForModel(auth *Auth, model string, now time.Time) (bool, blockReason, time.Time) {
 	if auth == nil {
 		return true, blockReasonOther, time.Time{}
@@ -376,6 +439,9 @@ func isAuthBlockedForModel(auth *Auth, model string, now time.Time) (bool, block
 		return true, blockReasonDisabled, time.Time{}
 	}
 	if model != "" {
+		if isModelExcludedForAuth(auth, model) {
+			return true, blockReasonDisabled, time.Time{}
+		}
 		if len(auth.ModelStates) > 0 {
 			state, ok := auth.ModelStates[model]
 			if (!ok || state == nil) && model != "" {
@@ -426,6 +492,7 @@ func isAuthBlockedForModel(auth *Auth, model string, now time.Time) (bool, block
 	}
 	return false, blockReasonNone, time.Time{}
 }
+
 
 // sessionPattern matches Claude Code user_id format:
 // user_{hash}_account__session_{uuid}

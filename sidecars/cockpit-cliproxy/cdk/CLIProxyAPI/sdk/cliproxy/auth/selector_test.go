@@ -1453,3 +1453,43 @@ func TestSessionAffinitySelector_Concurrent(t *testing.T) {
 	default:
 	}
 }
+
+func TestSelector_ExcludedModels(t *testing.T) {
+	t.Parallel()
+
+	selector := &RoundRobinSelector{}
+	blockedAccount := &Auth{
+		ID:         "blocked-acc",
+		Attributes: map[string]string{"excluded_models": "gpt-5.6-terra,gpt-5.6-luna"},
+	}
+	allowedAccount := &Auth{
+		ID:         "allowed-acc",
+		Attributes: map[string]string{},
+	}
+	auths := []*Auth{blockedAccount, allowedAccount}
+
+	// Requesting gpt-5.6-luna should exclude blocked-acc and select allowed-acc
+	for i := 0; i < 5; i++ {
+		got, err := selector.Pick(context.Background(), "codex", "gpt-5.6-luna", cliproxyexecutor.Options{}, auths)
+		if err != nil {
+			t.Fatalf("Pick() error = %v", err)
+		}
+		if got.ID != "allowed-acc" {
+			t.Fatalf("Pick() got = %q, want %q", got.ID, "allowed-acc")
+		}
+	}
+
+	// Requesting a non-excluded model should allow both accounts
+	pickedIDs := make(map[string]bool)
+	for i := 0; i < 10; i++ {
+		got, err := selector.Pick(context.Background(), "codex", "gpt-5.5", cliproxyexecutor.Options{}, auths)
+		if err != nil {
+			t.Fatalf("Pick() error = %v", err)
+		}
+		pickedIDs[got.ID] = true
+	}
+	if !pickedIDs["blocked-acc"] || !pickedIDs["allowed-acc"] {
+		t.Fatalf("Expected both accounts to be picked for non-excluded model, got %v", pickedIDs)
+	}
+}
+
