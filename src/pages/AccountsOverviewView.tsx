@@ -20,6 +20,8 @@ import { MultiSelectFilterDropdown } from '../components/MultiSelectFilterDropdo
 import { AccountTagFilterDropdown } from '../components/AccountTagFilterDropdown';
 import { getMfaOtpToken, loadSavedMfaRecords } from '../utils/mfaVault';
 import type { AccountsFilterType, useAccountsPageController } from "./AccountsPage";
+import { AggregateQuotaProjectionChart } from '../components/AggregateQuotaProjectionChart';
+import '../styles/pages/accounts.css';
 
 export type AccountsOverviewViewProps = ReturnType<typeof useAccountsPageController>;
 
@@ -247,6 +249,8 @@ export function AccountsOverviewView(props: AccountsOverviewViewProps) {
           onOpenManual={() => onNavigate?.('manual')}
           subtitle={t('overview.subtitle')}
         />
+
+        <AggregateQuotaProjectionChart platform="antigravity" accounts={filteredAccounts} />
 
         {/* 面包屑：进入分组后显示 */}
         {activeGroup && (
