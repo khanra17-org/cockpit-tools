@@ -18,6 +18,7 @@ import { MultiSelectFilterDropdown } from '../components/MultiSelectFilterDropdo
 import { AccountTagFilterDropdown } from '../components/AccountTagFilterDropdown';
 import { getMfaOtpToken, loadSavedMfaRecords } from '../utils/mfaVault';
 import type { AccountsFilterType, useAccountsPageController } from "./AccountsPage";
+import { QuotaOutlookPanel } from '../components/QuotaOutlookPanel';
 
 export type AccountsOverviewViewProps = ReturnType<typeof useAccountsPageController>;
 
@@ -225,6 +226,8 @@ export function AccountsOverviewView(props: AccountsOverviewViewProps) {
           onOpenManual={() => onNavigate?.('manual')}
           subtitle={t('overview.subtitle')}
         />
+
+        <QuotaOutlookPanel platform="antigravity" accounts={filteredAccounts} />
 
         {/* 工具栏 */}
         <div className="toolbar">

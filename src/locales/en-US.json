@@ -606,7 +606,23 @@
       },
       "clear": "Clear",
       "loginSuccess": "Login successful",
-      "switchAccount": "Switch Account"
+      "switchAccount": "Switch Account",
+      "quotaProjection": {
+        "title": "Quota outlook",
+        "caption": "Combined quota left across the accounts shown, assuming no further usage",
+        "cycleShort": "Short windows",
+        "cycleLong": "Weekly & longer",
+        "cyclesLabel": "Quota window length",
+        "now": "Now",
+        "fullAt": "Full {{time}}",
+        "fullNow": "Full now",
+        "notFullInRange": "Not full in this range",
+        "accountsLeft": "≈ {{left}} of {{total}} accounts left",
+        "resetsNear": "Resets near this time",
+        "allHidden": "All lines are hidden. Turn one on in the legend.",
+        "chartLabel": "Projected combined quota left over time",
+        "seriesToggle": "Show or hide {{name}}"
+      }
     },
     "appName": "Cockpit Tools",
     "collapse": "Collapse",

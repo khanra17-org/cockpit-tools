@@ -594,7 +594,23 @@
       },
       "clear": "Temizle",
       "loginSuccess": "Giriş başarılı",
-      "switchAccount": "Hesap Değiştir"
+      "switchAccount": "Hesap Değiştir",
+      "quotaProjection": {
+        "title": "Kota görünümü",
+        "caption": "Ek kullanım olmadığı varsayımıyla gösterilen hesapların toplam kalan kotası",
+        "cycleShort": "Kısa dönemler",
+        "cycleLong": "Haftalık ve daha uzun",
+        "cyclesLabel": "Kota dönemi uzunluğu",
+        "now": "Şimdi",
+        "fullAt": "{{time}} tamamen dolu",
+        "fullNow": "Şu an dolu",
+        "notFullInRange": "Bu aralıkta tamamen dolmuyor",
+        "accountsLeft": "≈ {{total}} hesaptan {{left}} kaldı",
+        "resetsNear": "Bu saate yakın sıfırlamalar",
+        "allHidden": "Tüm çizgiler gizli. Göstergeden birini açın.",
+        "chartLabel": "Toplam kalan kotanın zaman içindeki tahmini",
+        "seriesToggle": "{{name}} göster veya gizle"
+      }
     },
     "sessionSharing": {
       "title": "Geçişte yerel oturumları paylaş",

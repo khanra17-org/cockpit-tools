@@ -606,7 +606,23 @@
       },
       "clear": "Hapus",
       "loginSuccess": "Login berhasil",
-      "switchAccount": "Ganti Akun"
+      "switchAccount": "Ganti Akun",
+      "quotaProjection": {
+        "title": "Perkiraan kuota",
+        "caption": "Total sisa kuota akun yang ditampilkan, tanpa pemakaian tambahan",
+        "cycleShort": "Periode pendek",
+        "cycleLong": "Mingguan atau lebih",
+        "cyclesLabel": "Panjang periode kuota",
+        "now": "Sekarang",
+        "fullAt": "Penuh pada {{time}}",
+        "fullNow": "Sudah penuh",
+        "notFullInRange": "Tidak penuh dalam rentang ini",
+        "accountsLeft": "≈ tersisa {{left}} dari {{total}} akun",
+        "resetsNear": "Reset di sekitar waktu ini",
+        "allHidden": "Semua garis disembunyikan. Aktifkan satu di legenda.",
+        "chartLabel": "Perkiraan total sisa kuota dari waktu ke waktu",
+        "seriesToggle": "Tampilkan atau sembunyikan {{name}}"
+      }
     },
     "appName": "Cockpit Tools​",
     "collapse": "Ciutkan",

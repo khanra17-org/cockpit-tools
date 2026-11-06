@@ -599,7 +599,23 @@
       },
       "clear": "Limpar",
       "loginSuccess": "Login bem-sucedido",
-      "switchAccount": "Trocar conta"
+      "switchAccount": "Trocar conta",
+      "quotaProjection": {
+        "title": "Previsão de cota",
+        "caption": "Cota restante somada das contas exibidas, sem uso adicional",
+        "cycleShort": "Janelas curtas",
+        "cycleLong": "Semanal ou mais",
+        "cyclesLabel": "Duração da janela de cota",
+        "now": "Agora",
+        "fullAt": "Completa em {{time}}",
+        "fullNow": "Já está completa",
+        "notFullInRange": "Não completa neste período",
+        "accountsLeft": "≈ {{left}} de {{total}} contas restantes",
+        "resetsNear": "Redefinições perto deste horário",
+        "allHidden": "Todas as linhas estão ocultas. Ative uma na legenda.",
+        "chartLabel": "Previsão da cota restante somada ao longo do tempo",
+        "seriesToggle": "Mostrar ou ocultar {{name}}"
+      }
     },
     "topRightAd": {
       "ariaLabel": "Slot global de anúncio no canto superior direito",

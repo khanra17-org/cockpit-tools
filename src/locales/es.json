@@ -599,7 +599,23 @@
       },
       "clear": "Limpiar",
       "loginSuccess": "Inicio de sesión exitoso",
-      "switchAccount": "Cambiar cuenta"
+      "switchAccount": "Cambiar cuenta",
+      "quotaProjection": {
+        "title": "Previsión de cuota",
+        "caption": "Cuota restante combinada de las cuentas mostradas, sin uso adicional",
+        "cycleShort": "Ventanas cortas",
+        "cycleLong": "Semanal o más",
+        "cyclesLabel": "Duración de la ventana de cuota",
+        "now": "Ahora",
+        "fullAt": "Completa el {{time}}",
+        "fullNow": "Ya está completa",
+        "notFullInRange": "No se completa en este periodo",
+        "accountsLeft": "≈ {{left}} de {{total}} cuentas restantes",
+        "resetsNear": "Reinicios cerca de este momento",
+        "allHidden": "Todas las líneas están ocultas. Activa una en la leyenda.",
+        "chartLabel": "Previsión de la cuota restante combinada en el tiempo",
+        "seriesToggle": "Mostrar u ocultar {{name}}"
+      }
     },
     "topRightAd": {
       "ariaLabel": "Espacio publicitario global en la esquina superior derecha",

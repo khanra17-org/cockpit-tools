@@ -599,7 +599,23 @@
       },
       "clear": "지우기",
       "loginSuccess": "로그인 성공",
-      "switchAccount": "계정 전환"
+      "switchAccount": "계정 전환",
+      "quotaProjection": {
+        "title": "할당량 전망",
+        "caption": "추가 사용이 없다고 가정한, 표시된 계정 전체의 남은 할당량 합계",
+        "cycleShort": "짧은 주기",
+        "cycleLong": "주간 이상",
+        "cyclesLabel": "할당량 주기 길이",
+        "now": "지금",
+        "fullAt": "{{time}}에 완전 회복",
+        "fullNow": "완전 회복됨",
+        "notFullInRange": "이 기간 안에는 완전 회복되지 않음",
+        "accountsLeft": "약 {{left}} / {{total}}개 계정분 남음",
+        "resetsNear": "이 시각 근처의 재설정",
+        "allHidden": "모든 선이 숨겨져 있습니다. 범례에서 하나를 켜세요.",
+        "chartLabel": "남은 할당량 합계의 시간별 예측",
+        "seriesToggle": "{{name}} 표시 또는 숨기기"
+      }
     },
     "topRightAd": {
       "ariaLabel": "전역 우측 상단 광고 영역",

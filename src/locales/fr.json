@@ -599,7 +599,23 @@
       },
       "clear": "Effacer",
       "loginSuccess": "Connexion réussie",
-      "switchAccount": "Changer de compte"
+      "switchAccount": "Changer de compte",
+      "quotaProjection": {
+        "title": "Prévision du quota",
+        "caption": "Quota restant cumulé des comptes affichés, sans utilisation supplémentaire",
+        "cycleShort": "Fenêtres courtes",
+        "cycleLong": "Hebdomadaire et plus",
+        "cyclesLabel": "Durée de la fenêtre de quota",
+        "now": "Maintenant",
+        "fullAt": "Plein le {{time}}",
+        "fullNow": "Déjà plein",
+        "notFullInRange": "Pas plein sur cette période",
+        "accountsLeft": "≈ {{left}} comptes sur {{total}} restants",
+        "resetsNear": "Réinitialisations vers ce moment",
+        "allHidden": "Toutes les courbes sont masquées. Activez-en une dans la légende.",
+        "chartLabel": "Prévision du quota restant cumulé dans le temps",
+        "seriesToggle": "Afficher ou masquer {{name}}"
+      }
     },
     "topRightAd": {
       "ariaLabel": "Emplacement publicitaire global en haut à droite",
