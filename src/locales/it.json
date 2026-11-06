@@ -599,7 +599,23 @@
       },
       "clear": "Cancella",
       "loginSuccess": "Accesso riuscito",
-      "switchAccount": "Cambia account"
+      "switchAccount": "Cambia account",
+      "quotaProjection": {
+        "title": "Previsione quota",
+        "caption": "Quota residua complessiva degli account mostrati, senza ulteriore utilizzo",
+        "cycleShort": "Finestre brevi",
+        "cycleLong": "Settimanale o più",
+        "cyclesLabel": "Durata della finestra di quota",
+        "now": "Adesso",
+        "fullAt": "Piena il {{time}}",
+        "fullNow": "Già piena",
+        "notFullInRange": "Non piena in questo intervallo",
+        "accountsLeft": "≈ {{left}} account su {{total}} rimasti",
+        "resetsNear": "Ripristini vicino a quest’ora",
+        "allHidden": "Tutte le linee sono nascoste. Attivane una nella legenda.",
+        "chartLabel": "Previsione della quota residua complessiva nel tempo",
+        "seriesToggle": "Mostra o nascondi {{name}}"
+      }
     },
     "topRightAd": {
       "ariaLabel": "Slot pubblicitario globale in alto a destra",

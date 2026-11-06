@@ -599,7 +599,23 @@
       },
       "clear": "Löschen",
       "loginSuccess": "Anmeldung erfolgreich",
-      "switchAccount": "Konto wechseln"
+      "switchAccount": "Konto wechseln",
+      "quotaProjection": {
+        "title": "Kontingent-Ausblick",
+        "caption": "Gesamtes Restkontingent der angezeigten Konten, ohne weitere Nutzung",
+        "cycleShort": "Kurze Zeitfenster",
+        "cycleLong": "Wöchentlich und länger",
+        "cyclesLabel": "Länge des Kontingentfensters",
+        "now": "Jetzt",
+        "fullAt": "Voll am {{time}}",
+        "fullNow": "Bereits voll",
+        "notFullInRange": "In diesem Zeitraum nicht wieder voll",
+        "accountsLeft": "≈ {{left}} von {{total}} Konten übrig",
+        "resetsNear": "Zurücksetzungen um diese Zeit",
+        "allHidden": "Alle Linien sind ausgeblendet. Blende eine in der Legende ein.",
+        "chartLabel": "Prognose des gesamten Restkontingents über die Zeit",
+        "seriesToggle": "{{name}} ein- oder ausblenden"
+      }
     },
     "topRightAd": {
       "ariaLabel": "Globaler Anzeigenplatz oben rechts",

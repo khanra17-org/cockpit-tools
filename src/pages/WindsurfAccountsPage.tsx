@@ -76,6 +76,7 @@ import {
   removeAccountsOverviewFilterField,
   writeAccountsOverviewFilterField,
 } from '../utils/accountsOverviewFilterPersistence';
+import { QuotaOutlookPanel } from '../components/QuotaOutlookPanel';
 
 const WINDSURF_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.windsurf.flow_notice_collapsed';
 const WINDSURF_CURRENT_ACCOUNT_ID_KEY = 'agtools.windsurf.current_account_id';
@@ -1356,6 +1357,8 @@ export function WindsurfAccountsPage() {
           <button onClick={() => setMessage(null)}><X size={14} /></button>
         </div>
       )}
+
+      <QuotaOutlookPanel platform="windsurf" accounts={filteredAccounts} />
 
       <div className="toolbar">
         <div className="toolbar-left">

@@ -594,7 +594,23 @@
       },
       "clear": "Xóa",
       "loginSuccess": "Đăng nhập thành công",
-      "switchAccount": "Chuyển tài khoản"
+      "switchAccount": "Chuyển tài khoản",
+      "quotaProjection": {
+        "title": "Dự báo hạn mức",
+        "caption": "Tổng hạn mức còn lại của các tài khoản đang hiển thị, giả định không dùng thêm",
+        "cycleShort": "Chu kỳ ngắn",
+        "cycleLong": "Hằng tuần trở lên",
+        "cyclesLabel": "Độ dài chu kỳ hạn mức",
+        "now": "Bây giờ",
+        "fullAt": "Đầy lại lúc {{time}}",
+        "fullNow": "Đã đầy",
+        "notFullInRange": "Không đầy trong khoảng này",
+        "accountsLeft": "Còn khoảng {{left}} / {{total}} tài khoản",
+        "resetsNear": "Lần đặt lại gần thời điểm này",
+        "allHidden": "Tất cả đường đều bị ẩn. Hãy bật một đường trong chú thích.",
+        "chartLabel": "Dự báo tổng hạn mức còn lại theo thời gian",
+        "seriesToggle": "Hiện hoặc ẩn {{name}}"
+      }
     },
     "sessionSharing": {
       "title": "Chia sẻ phiên cục bộ khi chuyển tài khoản",

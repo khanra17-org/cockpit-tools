@@ -599,7 +599,23 @@
       },
       "clear": "クリア",
       "loginSuccess": "ログイン成功",
-      "switchAccount": "アカウント切替"
+      "switchAccount": "アカウント切替",
+      "quotaProjection": {
+        "title": "クォータ見通し",
+        "caption": "今後使用しない前提での、表示中のアカウント全体の残りクォータ合計",
+        "cycleShort": "短い期間",
+        "cycleLong": "週単位以上",
+        "cyclesLabel": "クォータ期間の長さ",
+        "now": "現在",
+        "fullAt": "{{time}} に全回復",
+        "fullNow": "全回復済み",
+        "notFullInRange": "この期間内には全回復しません",
+        "accountsLeft": "残り約 {{left}} / {{total}} アカウント分",
+        "resetsNear": "この時刻付近のリセット",
+        "allHidden": "すべての線が非表示です。凡例から表示してください。",
+        "chartLabel": "残りクォータ合計の推移予測",
+        "seriesToggle": "{{name}} の表示を切り替え"
+      }
     },
     "topRightAd": {
       "ariaLabel": "全ページ共通の右上広告枠",

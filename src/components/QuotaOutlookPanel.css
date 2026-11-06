@@ -1,0 +1,341 @@
+.quota-outlook {
+  --quota-outlook-c0: var(--primary);
+  --quota-outlook-c1: var(--accent);
+  --quota-outlook-c2: #7c3aed;
+  --quota-outlook-c3: #d97706;
+  --quota-outlook-c4: #db2777;
+  min-width: 0;
+  margin-bottom: 16px;
+  padding: 16px 18px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 18px);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--primary) 4%, transparent), transparent 40%),
+    var(--bg-card);
+}
+
+[data-theme="dark"] .quota-outlook {
+  --quota-outlook-c2: #a78bfa;
+  --quota-outlook-c3: #fbbf24;
+  --quota-outlook-c4: #f472b6;
+}
+
+.quota-outlook.is-collapsed {
+  padding-bottom: 14px;
+}
+
+.quota-outlook [data-color="0"] { --series: var(--quota-outlook-c0); }
+.quota-outlook [data-color="1"] { --series: var(--quota-outlook-c1); }
+.quota-outlook [data-color="2"] { --series: var(--quota-outlook-c2); }
+.quota-outlook [data-color="3"] { --series: var(--quota-outlook-c3); }
+.quota-outlook [data-color="4"] { --series: var(--quota-outlook-c4); }
+
+.quota-outlook__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.quota-outlook__heading {
+  min-width: 0;
+}
+
+.quota-outlook h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 720;
+  letter-spacing: -0.01em;
+}
+
+.quota-outlook__caption {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.quota-outlook__actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.quota-outlook__cycles {
+  display: flex;
+  gap: 6px;
+}
+
+.quota-outlook__actions .btn {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.quota-outlook__cycles .btn.is-active {
+  border-color: color-mix(in srgb, var(--primary) 48%, var(--border));
+  background: color-mix(in srgb, var(--primary) 11%, var(--bg-card));
+  color: var(--primary);
+}
+
+.quota-outlook__actions .quota-outlook__collapse {
+  width: 28px;
+  padding: 0;
+  justify-content: center;
+}
+
+.quota-outlook__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 6px;
+  padding: 0;
+  list-style: none;
+}
+
+.quota-outlook__legend-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  max-width: 100%;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--series) 30%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--series) 7%, transparent);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.quota-outlook__legend-item:hover {
+  background: color-mix(in srgb, var(--series) 13%, transparent);
+}
+
+.quota-outlook__legend-item:focus-visible {
+  outline: 2px solid var(--series);
+  outline-offset: 2px;
+}
+
+.quota-outlook__legend-item.is-hidden {
+  border-style: dashed;
+  background: transparent;
+  opacity: 0.55;
+}
+
+.quota-outlook__legend-item.is-hidden .quota-outlook__swatch {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--series);
+}
+
+.quota-outlook__swatch {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--series);
+  align-self: center;
+}
+
+.quota-outlook__legend-name {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quota-outlook__count {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.quota-outlook__legend-value {
+  color: var(--series);
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.quota-outlook__legend-full {
+  color: var(--text-secondary);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.quota-outlook__chart-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: 200px;
+}
+
+.quota-outlook__chart {
+  display: block;
+  overflow: visible;
+}
+
+.quota-outlook__grid {
+  stroke: color-mix(in srgb, var(--border) 60%, transparent);
+  stroke-dasharray: 2 6;
+  stroke-width: 1;
+}
+
+.quota-outlook__baseline {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.quota-outlook__axis {
+  fill: var(--text-secondary);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.quota-outlook__axis.is-now {
+  fill: var(--text-primary);
+  font-weight: 650;
+}
+
+.quota-outlook__area {
+  fill: color-mix(in srgb, var(--series) 9%, transparent);
+}
+
+.quota-outlook__line {
+  fill: none;
+  stroke: var(--series);
+  stroke-linejoin: round;
+  stroke-width: 2.25;
+}
+
+.quota-outlook__reset {
+  stroke: var(--series);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.quota-outlook__hit {
+  fill: transparent;
+  cursor: crosshair;
+  pointer-events: all;
+}
+
+.quota-outlook__hover-line {
+  stroke: color-mix(in srgb, var(--text-secondary) 70%, transparent);
+  stroke-dasharray: 3 4;
+  stroke-width: 1;
+}
+
+.quota-outlook__hover-dot {
+  fill: var(--bg-secondary);
+  stroke: var(--series);
+  stroke-width: 2.25;
+}
+
+.quota-outlook__empty {
+  position: absolute;
+  inset: 14px 16px 28px 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md, 12px);
+  background: color-mix(in srgb, var(--bg-secondary) 70%, transparent);
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-align: center;
+}
+
+.quota-outlook__tooltip {
+  position: absolute;
+  top: 6px;
+  z-index: 5;
+  min-width: 200px;
+  max-width: 280px;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  box-shadow: 0 12px 30px -16px rgba(15, 23, 42, 0.45);
+  color: var(--text-primary);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.quota-outlook__tooltip-time {
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.quota-outlook__tooltip-row,
+.quota-outlook__tooltip-reset {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 7px;
+  padding: 2px 0;
+}
+
+.quota-outlook__tooltip-row strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.quota-outlook__tooltip-row .quota-outlook__tooltip-sub {
+  grid-column: 2 / 4;
+}
+
+.quota-outlook__tooltip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quota-outlook__tooltip-sub {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+.quota-outlook__tooltip-resets {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+
+.quota-outlook__tooltip-heading {
+  margin-bottom: 2px;
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.quota-outlook__gain {
+  color: var(--success);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 720px) {
+  .quota-outlook__header {
+    flex-wrap: wrap;
+  }
+
+  .quota-outlook__actions {
+    margin-left: auto;
+  }
+
+  .quota-outlook__legend-full {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quota-outlook__legend-item {
+    transition: none;
+  }
+}

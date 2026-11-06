@@ -599,7 +599,23 @@
       },
       "clear": "清除",
       "loginSuccess": "登入成功",
-      "switchAccount": "切換帳號"
+      "switchAccount": "切換帳號",
+      "quotaProjection": {
+        "title": "額度預測",
+        "caption": "在不繼續使用的前提下，目前列表中所有帳號的合計剩餘額度",
+        "cycleShort": "短週期",
+        "cycleLong": "每週及更長",
+        "cyclesLabel": "額度週期長度",
+        "now": "現在",
+        "fullAt": "{{time}} 恢復滿額",
+        "fullNow": "已滿額",
+        "notFullInRange": "此時間範圍內不會恢復滿額",
+        "accountsLeft": "約剩 {{left}} / {{total}} 個帳號",
+        "resetsNear": "此時間附近的重置",
+        "allHidden": "所有曲線都已隱藏，請在圖例中開啟一條。",
+        "chartLabel": "合計剩餘額度隨時間的預測",
+        "seriesToggle": "顯示或隱藏 {{name}}"
+      }
     },
     "topRightAd": {
       "ariaLabel": "全域右上角廣告位",

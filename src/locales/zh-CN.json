@@ -606,7 +606,23 @@
       },
       "clear": "清除",
       "loginSuccess": "登录成功",
-      "switchAccount": "切换账号"
+      "switchAccount": "切换账号",
+      "quotaProjection": {
+        "title": "额度预测",
+        "caption": "在不继续使用的前提下，当前列表中所有账号的合计剩余额度",
+        "cycleShort": "短周期",
+        "cycleLong": "每周及更长",
+        "cyclesLabel": "额度周期长度",
+        "now": "现在",
+        "fullAt": "{{time}} 恢复满额",
+        "fullNow": "已满额",
+        "notFullInRange": "此时间范围内不会恢复满额",
+        "accountsLeft": "约剩 {{left}} / {{total}} 个账号",
+        "resetsNear": "此时间附近的重置",
+        "allHidden": "所有曲线都已隐藏，请在图例中开启一条。",
+        "chartLabel": "合计剩余额度随时间的预测",
+        "seriesToggle": "显示或隐藏 {{name}}"
+      }
     },
     "appName": "Cockpit Tools",
     "collapse": "收起",
