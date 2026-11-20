@@ -23,6 +23,7 @@ import { getMfaOtpToken } from '../utils/mfaVault';
 import { loadSavedMfaRecords } from '../services/mfaRecoveryService';
 import { ANTIGRAVITY_CLIENT_LABELS, ANTIGRAVITY_DESKTOP_CLIENTS } from '../utils/antigravityRuntimeTarget';
 import type { AccountsFilterType, useAccountsPageController } from "./AccountsPage";
+import { QuotaOutlookPanel } from '../components/QuotaOutlookPanel';
 
 export type AccountsOverviewViewProps = Omit<ReturnType<typeof useAccountsPageController>,
   'launchAccount' | 'closeLaunchDialog' | 'confirmLaunchSwitch'>;
@@ -241,6 +242,8 @@ export function AccountsOverviewView(props: AccountsOverviewViewProps) {
         <AntigravityTokenUsageSummary
           onOpenDetail={() => onNavigate?.('antigravity-usage')}
         />
+
+        <QuotaOutlookPanel platform="antigravity" accounts={filteredAccounts} />
 
         {/* 工具栏 */}
         <div className="toolbar">

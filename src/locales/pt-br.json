@@ -721,6 +721,22 @@
         "singleToken": "Exemplo único (Token)",
         "singleJson": "Exemplo único (JSON)",
         "batchJson": "Exemplo em lote (JSON)"
+      },
+      "quotaProjection": {
+        "title": "Previsão de cota",
+        "caption": "Cota restante somada das contas exibidas, sem uso adicional",
+        "cycleShort": "Janelas curtas",
+        "cycleLong": "Semanal ou mais",
+        "cyclesLabel": "Duração da janela de cota",
+        "now": "Agora",
+        "fullAt": "Completa em {{time}}",
+        "fullNow": "Já está completa",
+        "notFullInRange": "Não completa neste período",
+        "accountsLeft": "≈ {{left}} de {{total}} contas restantes",
+        "resetsNear": "Redefinições perto deste horário",
+        "allHidden": "Todas as linhas estão ocultas. Ative uma na legenda.",
+        "chartLabel": "Previsão da cota restante somada ao longo do tempo",
+        "seriesToggle": "Mostrar ou ocultar {{name}}"
       }
     },
     "topRightAd": {

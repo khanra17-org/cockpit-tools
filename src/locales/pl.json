@@ -716,6 +716,22 @@
         "singleToken": "Pojedynczy przykład (Token)",
         "singleJson": "Pojedynczy przykład (JSON)",
         "batchJson": "Przykład wsadowy (JSON)"
+      },
+      "quotaProjection": {
+        "title": "Prognoza limitu",
+        "caption": "Łączny pozostały limit wyświetlanych kont, bez dalszego użycia",
+        "cycleShort": "Krótkie okna",
+        "cycleLong": "Tygodniowe i dłuższe",
+        "cyclesLabel": "Długość okna limitu",
+        "now": "Teraz",
+        "fullAt": "Pełny {{time}}",
+        "fullNow": "Już pełny",
+        "notFullInRange": "Nie będzie pełny w tym zakresie",
+        "accountsLeft": "≈ {{left}} z {{total}} kont pozostało",
+        "resetsNear": "Resety w pobliżu tej chwili",
+        "allHidden": "Wszystkie linie są ukryte. Włącz jedną w legendzie.",
+        "chartLabel": "Prognoza łącznego pozostałego limitu w czasie",
+        "seriesToggle": "Pokaż lub ukryj {{name}}"
       }
     },
     "sessionSharing": {

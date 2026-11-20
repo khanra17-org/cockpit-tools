@@ -716,6 +716,22 @@
         "singleToken": "Jednotlivý příklad (Token)",
         "singleJson": "Jednotlivý příklad (JSON)",
         "batchJson": "Dávkový příklad (JSON)"
+      },
+      "quotaProjection": {
+        "title": "Výhled kvóty",
+        "caption": "Celková zbývající kvóta zobrazených účtů bez dalšího využití",
+        "cycleShort": "Krátká okna",
+        "cycleLong": "Týdenní a delší",
+        "cyclesLabel": "Délka okna kvóty",
+        "now": "Nyní",
+        "fullAt": "Plná {{time}}",
+        "fullNow": "Již plná",
+        "notFullInRange": "V tomto rozsahu nebude plná",
+        "accountsLeft": "≈ zbývá {{left}} z {{total}} účtů",
+        "resetsNear": "Obnovení kolem tohoto času",
+        "allHidden": "Všechny čáry jsou skryté. Zapněte jednu v legendě.",
+        "chartLabel": "Předpověď celkové zbývající kvóty v čase",
+        "seriesToggle": "Zobrazit nebo skrýt {{name}}"
       }
     },
     "sessionSharing": {
