@@ -34,6 +34,7 @@ import { CodexRecycleBinModal } from "../components/CodexRecycleBinModal";
 import { emitAccountsChanged } from "../utils/accountSyncEvents";
 import { PELICAN_GROUPS_CHANGED } from "../components/codex/pelican/PelicanResults";
 import { filterCodexSavedProviders } from "./codexAccountsControllerModel";
+import { QuotaOutlookPanel } from "../components/QuotaOutlookPanel";
 
 
 /** 渲染 CodexAccountsView 的 activeTab === "overview" 业务面板。 */
@@ -412,6 +413,8 @@ export function CodexAccountsOverviewPanel(props: CodexAccountsViewProps) {
               </button>
             </div>
           )}
+
+          <QuotaOutlookPanel platform="codex" accounts={filteredAccounts} />
 
           <div className="toolbar">
             <div className="toolbar-left">

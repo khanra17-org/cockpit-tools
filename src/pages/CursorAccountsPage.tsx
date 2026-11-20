@@ -79,6 +79,7 @@ import {
 import { useProviderAccountsPage } from '../hooks/useProviderAccountsPage';
 import { CursorOverviewTabsHeader, CursorTab } from '../components/CursorOverviewTabsHeader';
 import { CursorInstancesContent } from './CursorInstancesPage';
+import { QuotaOutlookPanel } from '../components/QuotaOutlookPanel';
 
 const CURSOR_FLOW_NOTICE_COLLAPSED_KEY = 'agtools.cursor.flow_notice_collapsed';
 const CURSOR_FILTER_PERSISTENCE_SCOPE = normalizeAccountsOverviewScope('Cursor');
@@ -766,6 +767,8 @@ export function CursorAccountsPage() {
           <button onClick={() => setMessage(null)}><X size={14} /></button>
         </div>
       )}
+
+      <QuotaOutlookPanel platform="cursor" accounts={filteredAccounts} />
 
       <div className="toolbar">
         <div className="toolbar-left">
