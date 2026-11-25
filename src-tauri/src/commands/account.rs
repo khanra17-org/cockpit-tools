@@ -352,9 +352,22 @@ pub async fn get_current_account(
 ) -> Result<Option<models::Account>, String> {
     tauri::async_runtime::spawn_blocking(move || {
         let runtime_target = normalize_antigravity_runtime_target(runtime_target.as_deref());
-        let bound_account_id = runtime_target.bound_account_id();
+        // The default instance either follows whichever account is signed in to the
+        // local client, or stays bound to one account. Resolve it the same way the
+        // instance list does, so "current" tracks client-side switches.
+        let default_account_id = match runtime_target {
+            AntigravityRuntimeTarget::Legacy => {
+                let settings =
+                    modules::antigravity_legacy_instance::load_default_settings().unwrap_or_default();
+                crate::commands::antigravity_legacy_instance::resolve_default_account_id(&settings)
+            }
+            AntigravityRuntimeTarget::Ide => {
+                let settings = modules::instance::load_default_settings().unwrap_or_default();
+                crate::commands::instance::resolve_default_account_id(&settings)
+            }
+        };
 
-        if let Some(account_id) = bound_account_id.as_deref() {
+        if let Some(account_id) = default_account_id.as_deref() {
             match modules::load_account(account_id) {
                 Ok(mut account) => {
                     let _ = modules::quota_cache::apply_cached_quota(&mut account, "authorized");

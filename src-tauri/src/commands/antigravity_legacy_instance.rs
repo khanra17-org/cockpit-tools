@@ -12,7 +12,7 @@ fn is_profile_initialized(user_data_dir: &str) -> bool {
     modules::antigravity_legacy_instance::is_profile_initialized(Path::new(user_data_dir))
 }
 
-fn resolve_default_account_id(settings: &DefaultInstanceSettings) -> Option<String> {
+pub(crate) fn resolve_default_account_id(settings: &DefaultInstanceSettings) -> Option<String> {
     if settings.follow_local_account {
         resolve_local_account_id().or_else(|| modules::get_current_account_id().ok().flatten())
     } else {
